@@ -1,0 +1,27 @@
+{
+  "id": "timeline-2330",
+  "symbol": "2330",
+  "points": [
+    {
+      "at": "2026-05-01",
+      "label": "Synthetic earnings context",
+      "note": "Mock quarterly headline digest"
+    },
+    {
+      "at": "2026-05-03",
+      "label": "Synthetic supply chain indicator",
+      "note": "Mock channel checks"
+    },
+    {
+      "at": "2026-05-06",
+      "label": "Synthetic risk adjustment",
+      "note": "Mock volatility normalization"
+    }
+  ],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

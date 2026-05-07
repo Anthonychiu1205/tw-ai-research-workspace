@@ -1,0 +1,18 @@
+{
+  "runId": "run-2330-mock",
+  "symbol": "2330",
+  "name": "台積電",
+  "status": "completed",
+  "findings": [
+    "Synthetic finding: balanced profitability and cyclical caution.",
+    "Synthetic finding: watch macro demand normalization."
+  ],
+  "score": 0.64,
+  "generatedAt": "2026-05-08T10:00:00+08:00",
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "strategy-compare-2330",
+  "symbol": "2330",
+  "strategies": [
+    {
+      "id": "strat-a",
+      "name": "Synthetic Quality Momentum",
+      "syntheticReturn": 0.124,
+      "syntheticDrawdown": 0.081,
+      "riskLabel": "medium"
+    },
+    {
+      "id": "strat-b",
+      "name": "Synthetic Mean Reversion",
+      "syntheticReturn": 0.087,
+      "syntheticDrawdown": 0.062,
+      "riskLabel": "medium-low"
+    },
+    {
+      "id": "strat-c",
+      "name": "Synthetic Defensive Blend",
+      "syntheticReturn": 0.069,
+      "syntheticDrawdown": 0.041,
+      "riskLabel": "low"
+    }
+  ],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

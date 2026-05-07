@@ -1,0 +1,36 @@
+{
+  "id": "report-2330-mock",
+  "symbol": "2330",
+  "generatedAt": "2026-05-08T10:05:00+08:00",
+  "sections": [
+    {
+      "id": "sec1",
+      "title": "Synthetic Executive Summary",
+      "content": "This synthetic report is generated for workspace UX demonstration only.",
+      "evidenceIds": ["ev-1", "ev-2"]
+    },
+    {
+      "id": "sec2",
+      "title": "Synthetic Signal Interpretation",
+      "content": "Mock signal stack shows mixed direction with medium confidence.",
+      "evidenceIds": ["ev-3"]
+    }
+  ],
+  "quality": {
+    "completeness": 0.83,
+    "consistency": 0.86,
+    "caution": 0.95
+  },
+  "trace": {
+    "model": "mock-research",
+    "tokensIn": 312,
+    "tokensOut": 448,
+    "latencyMs": 930
+  },
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

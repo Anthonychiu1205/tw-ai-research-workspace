@@ -1,0 +1,58 @@
+{
+  "pipelineId": "pipeline-2330-demo",
+  "plan": {
+    "id": "plan-2330",
+    "objective": "Synthesize mock research for 2330 台積電",
+    "steps": [
+      {
+        "id": "step-1",
+        "title": "Collect synthetic evidence",
+        "status": "completed",
+        "detail": "Loaded synthetic timeline and watchlist signals"
+      },
+      {
+        "id": "step-2",
+        "title": "Evaluate synthetic factors",
+        "status": "completed",
+        "detail": "Computed mock signal distribution"
+      },
+      {
+        "id": "step-3",
+        "title": "Draft bounded summary",
+        "status": "completed",
+        "detail": "Generated synthetic report sections with caution notes"
+      }
+    ]
+  },
+  "execution": {
+    "planId": "plan-2330",
+    "toolCalls": [
+      {
+        "toolName": "runResearch",
+        "startedAt": "2026-05-08T10:01:00+08:00",
+        "completedAt": "2026-05-08T10:01:01+08:00",
+        "latencyMs": 820,
+        "status": "success"
+      },
+      {
+        "toolName": "evaluateSignals",
+        "startedAt": "2026-05-08T10:01:02+08:00",
+        "completedAt": "2026-05-08T10:01:03+08:00",
+        "latencyMs": 650,
+        "status": "success"
+      }
+    ],
+    "notes": ["Synthetic run", "No market order path"]
+  },
+  "reflection": {
+    "summary": "Synthetic pipeline completed with balanced confidence and explicit non-advice framing.",
+    "cautionFlags": ["mock data", "non-advice"],
+    "confidence": 0.61
+  },
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

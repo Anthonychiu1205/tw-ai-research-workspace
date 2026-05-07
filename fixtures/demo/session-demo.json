@@ -1,0 +1,70 @@
+{
+  "sessions": [
+    {
+      "id": "session-1",
+      "title": "2330 Synthetic Workspace",
+      "runtimeMode": "mock",
+      "modelId": "mock-research",
+      "provider": "mock",
+      "messages": [
+        {
+          "id": "msg-1",
+          "role": "assistant",
+          "content": "Synthetic workspace initialized. Not financial advice.",
+          "createdAt": "2026-05-08T10:00:00+08:00"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact-1",
+          "kind": "research_card",
+          "title": "2330 research card",
+          "createdAt": "2026-05-08T10:00:10+08:00"
+        },
+        {
+          "id": "artifact-2",
+          "kind": "report",
+          "title": "2330 synthetic report",
+          "createdAt": "2026-05-08T10:00:20+08:00"
+        }
+      ],
+      "updatedAt": "2026-05-08T10:02:00+08:00"
+    },
+    {
+      "id": "session-2",
+      "title": "Watchlist synthetic scan",
+      "runtimeMode": "mock",
+      "modelId": "mock-research",
+      "provider": "mock",
+      "messages": [],
+      "artifacts": [],
+      "updatedAt": "2026-05-08T10:03:00+08:00"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact-1",
+      "kind": "research_card",
+      "title": "2330 research card",
+      "createdAt": "2026-05-08T10:00:10+08:00"
+    },
+    {
+      "id": "artifact-2",
+      "kind": "report",
+      "title": "2330 synthetic report",
+      "createdAt": "2026-05-08T10:00:20+08:00"
+    },
+    {
+      "id": "artifact-3",
+      "kind": "pipeline_trace",
+      "title": "2330 planner trace",
+      "createdAt": "2026-05-08T10:00:30+08:00"
+    }
+  ],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

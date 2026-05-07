@@ -1,0 +1,43 @@
+{
+  "id": "signal-eval-2330-mock",
+  "symbol": "2330",
+  "distribution": {
+    "positive": 4,
+    "neutral": 3,
+    "negative": 2
+  },
+  "factors": [
+    {
+      "factor": "valuation",
+      "coverage": 0.72
+    },
+    {
+      "factor": "quality",
+      "coverage": 0.68
+    },
+    {
+      "factor": "risk",
+      "coverage": 0.75
+    }
+  ],
+  "contributions": [
+    {
+      "agent": "valuation",
+      "weight": 0.4
+    },
+    {
+      "agent": "macro",
+      "weight": 0.3
+    },
+    {
+      "agent": "risk",
+      "weight": 0.3
+    }
+  ],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

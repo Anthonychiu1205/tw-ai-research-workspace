@@ -1,0 +1,52 @@
+{
+  "pipelineId": "pipeline-2330-mock",
+  "plan": {
+    "id": "plan-mock-1",
+    "objective": "Generate bounded synthetic research result",
+    "steps": [
+      {
+        "id": "plan-step-1",
+        "title": "Load synthetic context",
+        "status": "completed",
+        "detail": "Loaded fixture watchlist and timeline"
+      },
+      {
+        "id": "plan-step-2",
+        "title": "Run mock tools",
+        "status": "completed",
+        "detail": "Executed mock-only tools"
+      }
+    ]
+  },
+  "execution": {
+    "planId": "plan-mock-1",
+    "toolCalls": [
+      {
+        "toolName": "runResearch",
+        "startedAt": "2026-05-08T10:06:00+08:00",
+        "completedAt": "2026-05-08T10:06:01+08:00",
+        "latencyMs": 500,
+        "status": "success"
+      },
+      {
+        "toolName": "generateReport",
+        "startedAt": "2026-05-08T10:06:02+08:00",
+        "completedAt": "2026-05-08T10:06:03+08:00",
+        "latencyMs": 580,
+        "status": "success"
+      }
+    ],
+    "notes": ["No autonomous loop", "No web browsing"]
+  },
+  "reflection": {
+    "summary": "Synthetic pipeline complete. Output remains non-advice and no-trading.",
+    "cautionFlags": ["synthetic data", "mock provider"],
+    "confidence": 0.63
+  },
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

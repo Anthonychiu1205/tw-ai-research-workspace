@@ -1,0 +1,30 @@
+{
+  "id": "signal-matrix-watchlist",
+  "watchlist": ["2330", "2317", "2454", "2308", "0050"],
+  "signals": [
+    {
+      "agent": "macro",
+      "direction": "neutral",
+      "confidence": 0.58,
+      "rationale": "Synthetic macro regime uncertainty"
+    },
+    {
+      "agent": "valuation",
+      "direction": "positive",
+      "confidence": 0.66,
+      "rationale": "Synthetic valuation spread support"
+    },
+    {
+      "agent": "risk",
+      "direction": "negative",
+      "confidence": 0.52,
+      "rationale": "Synthetic event risk from supply-chain variability"
+    }
+  ],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

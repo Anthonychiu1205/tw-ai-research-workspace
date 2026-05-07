@@ -1,0 +1,14 @@
+{
+  "id": "card-2330",
+  "symbol": "2330",
+  "name": "台積電",
+  "summary": "Synthetic summary: found balanced long-cycle growth and valuation caution signals.",
+  "score": 0.64,
+  "updatedAt": "2026-05-08T10:00:00+08:00",
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

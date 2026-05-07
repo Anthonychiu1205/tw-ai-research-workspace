@@ -1,0 +1,30 @@
+{
+  "id": "report-sections-2330",
+  "symbol": "2330",
+  "sections": [
+    {
+      "id": "sec-overview",
+      "title": "Research Overview (Synthetic)",
+      "content": "This synthetic section summarizes mock findings from a bounded local workspace run.",
+      "evidenceIds": ["ev-1", "ev-2"]
+    },
+    {
+      "id": "sec-signals",
+      "title": "Signal Synthesis (Synthetic)",
+      "content": "Signal stack indicates mixed trend with moderate confidence and explicit caution flags.",
+      "evidenceIds": ["ev-3"]
+    },
+    {
+      "id": "sec-risk",
+      "title": "Risk Notes (Synthetic)",
+      "content": "No trading execution. This workspace does not issue buy/sell recommendations.",
+      "evidenceIds": ["ev-4"]
+    }
+  ],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}
