@@ -16,7 +16,7 @@ export function RunBacktestV2Form({
 
   return (
     <form
-      className="flex items-center gap-2"
+      className="flex flex-wrap items-center gap-2"
       onSubmit={(event) => {
         event.preventDefault();
         const tickers = tickersText
@@ -28,7 +28,7 @@ export function RunBacktestV2Form({
     >
       <input
         aria-label={t("operations.runBacktestV2")}
-        className="h-8 w-56 rounded border bg-background px-2 text-xs"
+        className="h-9 w-56 rounded border bg-background px-2 text-xs"
         value={tickersText}
         onChange={(event) => setTickersText(event.target.value)}
       />

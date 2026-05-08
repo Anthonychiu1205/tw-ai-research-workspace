@@ -15,7 +15,6 @@ function backendStatusTone(connection: BackendConnectionState | undefined) {
 
 export function Topbar({
   mode,
-  backendStatus,
   modelLabel,
   connection,
 }: {
@@ -34,28 +33,32 @@ export function Topbar({
   const runtimeLabel = mounted ? (mode === "mock" ? t("runtime.mockMode") : t("runtime.apiMode")) : t("runtime.initializing");
   const backendLabel = mounted
     ? connection?.mode === "mock"
-      ? t("backend.mockWorkspace")
+      ? t("backend.optional")
       : connection?.reachable
-        ? t("backend.apiConnected")
+        ? t("backend.connected")
         : connection?.fallbackActive
-          ? t("backend.apiFallback")
+          ? t("runtime.fallback")
           : t("backend.unreachable")
     : t("backend.checking");
   const modelText = mounted ? modelLabel ?? "mock-research" : "—";
   const backendTone = mounted ? backendStatusTone(connection) : "neutral";
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border/80 bg-workspace-panel px-4" data-testid="topbar">
-      <div className="text-sm font-medium">{t("app.title")}</div>
+    <header className="flex h-14 items-center justify-between border-b border-border/70 bg-workspace-panel/95 px-4" data-testid="topbar">
+      <div>
+        <div className="text-sm font-semibold">{t("app.title")}</div>
+        <p className="text-[11px] text-muted-foreground">{t("runtime.mockFirst")} · {t("runtime.localOnly")}</p>
+      </div>
+
       <div className="flex items-center gap-2 text-xs" data-testid="topbar-core-statuses">
         <StatusBadge tone={mode === "mock" ? "mock" : "backend"} className="topbar-status">
-          {runtimeLabel}
+          {t("runtime.mode")}: {runtimeLabel}
         </StatusBadge>
         <StatusBadge tone={backendTone} className="topbar-status">
-          {backendLabel}
+          {t("runtime.backend")}: {backendLabel}
         </StatusBadge>
         <StatusBadge tone="trace" className="topbar-status">
-          {modelText}
+          {t("runtime.model")}: {modelText}
         </StatusBadge>
         <LanguageSwitcher />
       </div>

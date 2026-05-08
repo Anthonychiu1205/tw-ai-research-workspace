@@ -14,6 +14,10 @@ export const zhTWDictionary: Dictionary = {
     reports: "報告",
     strategies: "策略",
     traces: "軌跡",
+    portfolio: "Portfolio",
+    navigation: "導覽",
+    operations: "操作",
+    scenarios: "Scenarios",
     quickActions: "快速操作",
   },
   runtime: {
@@ -36,14 +40,14 @@ export const zhTWDictionary: Dictionary = {
     settingsSection: "Runtime 設定",
     contextSection: "Context",
     mockFirst: "mock-first",
-    localOnly: "local-only",
+    localOnly: "本機工作區",
     fallback: "備援",
   },
   model: {
     unavailable: "提供者不可用",
   },
   backend: {
-    optional: "可選",
+    optional: "後端可選",
     connected: "後端已連線",
     fallback: "後端無法連線，已切回 mock 資料",
     unreachable: "後端不可用",
@@ -105,6 +109,8 @@ export const zhTWDictionary: Dictionary = {
   },
   artifacts: {
     title: "研究 Artifacts",
+    recentArtifacts: "近期 Artifacts",
+    recentArtifactsHint: "依類型篩選並開啟目前研究產出",
     researchCard: "研究卡片",
     report: "研究報告",
     pipelineTrace: "Pipeline 軌跡",
@@ -139,6 +145,14 @@ export const zhTWDictionary: Dictionary = {
   },
   scenarios: {
     analyze2330: "分析 2330",
+    guidedTitle: "Guided Scenarios",
+    guidedSubtitle: "以 deterministic 流程快速完成 mock-first 研究示範。",
+    steps: "Scenario 步驟",
+    progress: "Scenario 進度",
+    noRunYet: "目前尚未執行 scenario。",
+    noStepsYet: "目前尚無 scenario 步驟。",
+    artifactsCreated: "已建立 artifacts",
+    scenarioLabel: "Scenario",
   },
   onboarding: {
     start2330: "開始 2330 示範",
@@ -151,6 +165,9 @@ export const zhTWDictionary: Dictionary = {
   },
   emptyStates: {
     noSelection: "目前沒有選擇 artifact。",
+    noArtifactSelection: "目前沒有符合條件的 artifact。",
+    selectScenarioPrompt: "選擇一個 scenario，或直接輸入研究問題開始。",
+    backendUnavailable: "後端目前不可用。Workspace 已自動使用 mock fallback，你仍可完成 demo flow。",
   },
   disclaimers: {
     nonAdvice: "本系統僅供研究與教育用途，非投資建議。",
@@ -193,5 +210,7 @@ export const zhTWDictionary: Dictionary = {
     yes: "是",
     no: "否",
     missing: "缺少",
+    viewAll: "查看全部",
+    exportImport: "匯出 / 匯入",
   },
 };

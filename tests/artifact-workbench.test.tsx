@@ -64,7 +64,7 @@ describe("artifact workbench", () => {
       evidenceIds: ["ev-1", "ev-2"],
     });
     render(<ArtifactDetailPanel artifact={artifact} />);
-    expect(screen.getByText(/evidence ids/i)).toBeInTheDocument();
+    expect(screen.getByText(/evidence ids|證據引用/i)).toBeInTheDocument();
     expect(screen.getByText("ev-1")).toBeInTheDocument();
     expect(screen.getByText("ev-2")).toBeInTheDocument();
   });

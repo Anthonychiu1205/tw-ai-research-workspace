@@ -29,7 +29,7 @@ export function RuntimeSettingsPanel({
   const providers: ModelProvider[] = ["mock", "openai", "anthropic", "local", "groq", "deepseek", "ollama"];
 
   return (
-    <div className="space-y-3 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="runtime-settings-panel">
+    <div className="space-y-3 text-sm" data-testid="runtime-settings-panel">
       <div className="flex items-center justify-between">
         <div className="text-sm font-medium">{t("runtime.settingsTitle")}</div>
         <StatusBadge tone={settings.mode === "mock" ? "mock" : "backend"}>
@@ -119,7 +119,7 @@ export function RuntimeSettingsPanel({
         <label className="space-y-1">
           <span className="block">{t("runtime.maxToolSteps")}</span>
           <input
-            className="h-8 w-full rounded border bg-background px-2"
+            className="h-9 w-full rounded-md border bg-background px-2"
             type="number"
             min={1}
             max={8}
@@ -135,19 +135,22 @@ export function RuntimeSettingsPanel({
         {providerUnavailableReason ? <StatusBadge tone="warning">{t("model.unavailable")}: {providerUnavailableReason}</StatusBadge> : null}
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {providers.map((provider) => (
-          <Button
-            key={provider}
-            type="button"
-            size="sm"
-            variant={settings.selectedProvider === provider ? "default" : "outline"}
-            onClick={() => onChange({ selectedProvider: provider })}
-          >
-            {provider}
-          </Button>
-        ))}
-      </div>
+      <details className="rounded-md border border-border/60 bg-background/20 p-2">
+        <summary className="cursor-pointer text-xs font-medium">{t("runtime.provider")}</summary>
+        <div className="mt-2 flex flex-wrap gap-2">
+          {providers.map((provider) => (
+            <Button
+              key={provider}
+              type="button"
+              size="sm"
+              variant={settings.selectedProvider === provider ? "default" : "outline"}
+              onClick={() => onChange({ selectedProvider: provider })}
+            >
+              {provider}
+            </Button>
+          ))}
+        </div>
+      </details>
 
       <div className="flex flex-wrap gap-2">
         <Button type="button" size="sm" variant="outline" onClick={onReset}>

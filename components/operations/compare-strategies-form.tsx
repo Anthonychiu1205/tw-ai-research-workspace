@@ -16,7 +16,7 @@ export function CompareStrategiesForm({
 
   return (
     <form
-      className="flex items-center gap-2"
+      className="flex flex-wrap items-center gap-2"
       onSubmit={(event) => {
         event.preventDefault();
         const tickers = tickersText
@@ -26,7 +26,7 @@ export function CompareStrategiesForm({
         void onSubmit(tickers);
       }}
     >
-      <input aria-label={t("operations.compareStrategies")} className="h-8 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
+      <input aria-label={t("operations.compareStrategies")} className="h-9 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
       <Button type="submit" size="sm" disabled={disabled}>{t("operations.compareStrategies")}</Button>
     </form>
   );

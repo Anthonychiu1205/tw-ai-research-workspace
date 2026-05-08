@@ -11,13 +11,13 @@ export function RunResearchForm({ onSubmit, disabled }: { onSubmit: (ticker: str
 
   return (
     <form
-      className="flex items-center gap-2"
+      className="flex flex-wrap items-center gap-2"
       onSubmit={(event) => {
         event.preventDefault();
         void onSubmit(ticker, includePhase2Agents);
       }}
     >
-      <input aria-label={t("operations.runResearch")} className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
+      <input aria-label={t("operations.runResearch")} className="h-9 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
       <label className="inline-flex items-center gap-1 text-xs">
         <input
           type="checkbox"

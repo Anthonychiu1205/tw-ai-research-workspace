@@ -21,7 +21,7 @@ export function MessageComposer({
 
   return (
     <form
-      className="flex gap-2"
+      className="flex flex-wrap items-center gap-2"
       onSubmit={(event) => {
         event.preventDefault();
         if (!value.trim() || disabled) {
@@ -35,6 +35,7 @@ export function MessageComposer({
       </label>
       <Input
         id="chat-composer-input"
+        className="min-w-[240px] flex-1"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={t("chat.promptPlaceholder")}
@@ -48,7 +49,9 @@ export function MessageComposer({
           }
         }}
       />
-      <Button type="button" variant="ghost" disabled={disabled || value.length === 0} onClick={() => onChange("")}>{t("chat.clear")}</Button>
+      <Button type="button" variant="ghost" disabled={disabled || value.length === 0} onClick={() => onChange("")}>
+        {t("chat.clear")}
+      </Button>
       {disabled ? (
         <Button type="button" variant="outline" onClick={onStop}>
           {t("chat.stop")}

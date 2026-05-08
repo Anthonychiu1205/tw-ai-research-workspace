@@ -9,6 +9,8 @@ import { ScenarioCard } from "@/components/scenarios/scenario-card";
 import { ScenarioStepper } from "@/components/scenarios/scenario-stepper";
 import { ScenarioResultPanel } from "@/components/scenarios/scenario-result-panel";
 import { ScenarioProgress } from "@/components/scenarios/scenario-progress";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ScenarioLauncher({
   artifactStore,
@@ -21,6 +23,7 @@ export function ScenarioLauncher({
   onArtifactCreated?: (artifactId: string) => void;
   onScenarioCompleted?: (scenarioId: WorkspaceScenarioId) => void;
 }) {
+  const { t } = useI18n();
   const [runningScenarioId, setRunningScenarioId] = useState<WorkspaceScenarioId | null>(null);
   const [result, setResult] = useState<ScenarioRunResult | null>(null);
 
@@ -42,20 +45,20 @@ export function ScenarioLauncher({
   };
 
   return (
-    <div className="space-y-3 rounded-md border p-3" data-testid="scenario-launcher">
-      <div className="text-sm font-medium">Guided Scenarios</div>
+    <div className="space-y-3" data-testid="scenario-launcher">
+      <SectionHeading title={t("scenarios.guidedTitle")} subtitle={t("scenarios.guidedSubtitle")} />
       <div className="grid gap-2 md:grid-cols-2">
         {scenarios.map((scenario) => (
-          <ScenarioCard
-            key={scenario.id}
-            scenario={scenario}
-            running={Boolean(runningScenarioId)}
-            onRun={run}
-          />
+          <ScenarioCard key={scenario.id} scenario={scenario} running={Boolean(runningScenarioId)} onRun={run} />
         ))}
       </div>
       <ScenarioProgress steps={result?.steps ?? []} />
-      <ScenarioStepper steps={result?.steps ?? []} />
+      <details className="rounded-lg border border-border/70 bg-background/20 p-3" open={false}>
+        <summary className="cursor-pointer text-sm font-medium">{t("scenarios.steps")}</summary>
+        <div className="mt-2">
+          <ScenarioStepper steps={result?.steps ?? []} />
+        </div>
+      </details>
       <ScenarioResultPanel result={result} onOpenArtifact={onArtifactCreated} />
     </div>
   );

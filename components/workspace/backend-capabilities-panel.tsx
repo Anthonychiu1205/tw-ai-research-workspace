@@ -1,15 +1,17 @@
 import type { BackendCapabilitiesReport } from "@/lib/api/capabilities";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { useI18n } from "@/lib/i18n/use-i18n";
+import { Panel } from "@/components/ui/panel";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 export function BackendCapabilitiesPanel({ report }: { report: BackendCapabilitiesReport }) {
   const { t } = useI18n();
   const categories = Array.from(new Set(report.capabilities.map((capability) => capability.category)));
 
   return (
-    <div className="space-y-2 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="backend-capabilities-panel">
+    <Panel className="space-y-2" data-testid="backend-capabilities-panel">
       <div className="flex items-center justify-between">
-        <div className="text-sm font-medium">{t("backend.capabilitiesTitle")}</div>
+        <SectionHeading title={t("backend.capabilitiesTitle")} />
         <StatusBadge tone={report.mode === "mock" ? "mock" : "backend"}>{report.mode}</StatusBadge>
       </div>
       <div className="text-xs text-muted-foreground">{t("backend.baseUrl")}: {report.baseUrl}</div>
@@ -30,23 +32,30 @@ export function BackendCapabilitiesPanel({ report }: { report: BackendCapabiliti
           {warning}
         </div>
       ))}
-      <div className="space-y-1">
-        {report.capabilities.map((capability) => (
-          <div key={capability.id} className="flex items-center justify-between rounded border p-2 text-xs">
-            <div>
-              <div>{capability.label}</div>
-              <div className="text-muted-foreground">{capability.method} {capability.endpoint}</div>
+      <details className="rounded-md border border-border/60 bg-background/20 p-2" data-testid="backend-capabilities-details">
+        <summary className="cursor-pointer text-xs font-medium">
+          {t("backend.capabilitiesTitle")} ({report.capabilities.length})
+        </summary>
+        <div className="mt-2 space-y-1">
+          {report.capabilities.map((capability) => (
+            <div key={capability.id} className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs hover:bg-muted/35">
+              <div>
+                <div>{capability.label}</div>
+                <div className="text-muted-foreground">{capability.method} {capability.endpoint}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <StatusBadge tone="backend">{capability.category}</StatusBadge>
+                <StatusBadge tone={capability.available ? "success" : "danger"}>
+                  {capability.available ? t("common.available") : t("common.unavailable")}
+                </StatusBadge>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <StatusBadge tone="backend">{capability.category}</StatusBadge>
-              <StatusBadge tone={capability.available ? "success" : "danger"}>{capability.available ? t("common.available") : t("common.unavailable")}</StatusBadge>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      </details>
       {report.missing.length > 0 ? (
         <div className="text-xs text-orange-300">{t("common.missing")}: {report.missing.join(", ")}</div>
       ) : null}
-    </div>
+    </Panel>
   );
 }

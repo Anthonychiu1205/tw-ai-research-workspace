@@ -6,7 +6,6 @@ import { AppShell } from "@/components/app-shell/app-shell";
 import { CommandMenu } from "@/components/app-shell/command-menu";
 import { KeyboardShortcutsHelp } from "@/components/app-shell/keyboard-shortcuts-help";
 import { ResearchChat } from "@/components/chat/research-chat";
-import { SessionHistory } from "@/components/workspace/session-history";
 import { ArtifactBrowser } from "@/components/workspace/artifact-browser";
 import { ArtifactDetailPanel } from "@/components/workspace/artifact-detail-panel";
 import { WorkspaceContextPanel } from "@/components/workspace/workspace-context-panel";
@@ -46,6 +45,13 @@ import {
 import type { BackendConnectionState, WorkspaceSession } from "@/lib/schemas/workspace";
 import type { WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
 import { useI18n } from "@/lib/i18n/use-i18n";
+import { Panel } from "@/components/ui/panel";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { Button } from "@/components/ui/button";
+import { workspaceContextColumnClass, workspaceMainColumnClass, workspacePageLayoutClass } from "@/lib/ui/layout";
+
+type WorkspaceTab = "operations" | "scenarios" | "artifacts";
 
 function seedSessions(): WorkspaceSession[] {
   return (sessionDemo.sessions as any[]).map((session) => ({
@@ -93,6 +99,7 @@ export default function WorkspacePage() {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(sessions[0]?.id ?? null);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<WorkspaceView>("chat");
+  const [activeTab, setActiveTab] = useState<WorkspaceTab>("scenarios");
   const [commandMenuOpen, setCommandMenuOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [sidebarHidden, setSidebarHidden] = useState(false);
@@ -136,6 +143,7 @@ export default function WorkspacePage() {
     }
     if (urlState.artifact) {
       setSelectedArtifactId(urlState.artifact);
+      setActiveTab("artifacts");
     }
     if (urlState.view) {
       setActiveView(urlState.view);
@@ -148,10 +156,8 @@ export default function WorkspacePage() {
       artifact: selectedArtifactId ?? undefined,
       view: activeView,
     });
-    if (typeof window !== "undefined") {
-      const url = `${window.location.pathname}${next}`;
-      window.history.replaceState(null, "", url);
-    }
+    const url = `${window.location.pathname}${next}`;
+    window.history.replaceState(null, "", url);
   }, [activeView, selectedArtifactId, selectedSessionId]);
 
   const checkConnection = async () => {
@@ -235,6 +241,7 @@ export default function WorkspacePage() {
     if (result.artifactIds[0]) {
       setSelectedArtifactId(result.artifactIds[0]);
       setActiveView("chat");
+      setActiveTab("artifacts");
     }
     refreshArtifacts();
     emitSystemEvent(
@@ -249,7 +256,6 @@ export default function WorkspacePage() {
     <AppShell
       sessions={sessions.map((session) => ({ id: session.id, title: session.title }))}
       artifacts={artifacts.map((artifact) => ({ id: artifact.id, title: artifact.title }))}
-      backendStatus={connectionState.reachable ? "ok" : "optional"}
       mode={runtimeSettings.mode}
       modelLabel={runtimeSettings.selectedModel}
       connection={connectionState}
@@ -258,77 +264,20 @@ export default function WorkspacePage() {
         await runOperationAndTrack(createDefaultOperationRequest("run_research"));
       }}
     >
-      <div className="grid h-full grid-cols-12 gap-4" data-testid="workspace-page-grid">
-        <aside className="col-span-3 min-h-0 space-y-3 overflow-auto">
-          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("app.workspace")}</div>
-          <SessionHistory
-            sessions={sessions.map((session) => ({ id: session.id, title: session.title }))}
-            selectedSessionId={selectedSessionId}
-            onCreate={() => {
-              const session = sessionStore.create(t("app.workspace"));
-              setSelectedSessionId(session.id);
-              refreshSessions();
-            }}
-            onSelect={setSelectedSessionId}
-            onDelete={(id) => {
-              sessionStore.remove(id);
-              if (selectedSessionId === id) setSelectedSessionId(null);
-              refreshSessions();
-            }}
-          />
-
-          <ArtifactBrowser artifacts={artifacts} selectedArtifactId={selectedArtifactId} onSelect={setSelectedArtifactId} />
-
-          <CommandMenu
-            commands={commands}
-            open={commandMenuOpen}
-            onClose={() => setCommandMenuOpen(false)}
-            onRun={async (command) => {
-              await command.run({
-                canUseApiMode: connectionState.reachable,
-                enqueueOperation: async (request) => runOperationAndTrack(request),
-                navigate: (path) => {
-                  if (path.includes("report")) setActiveView("report");
-                  else if (path.includes("trace")) setActiveView("trace");
-                  else if (path.includes("strategy")) setActiveView("strategy");
-                  else if (path.includes("signal")) setActiveView("signals");
-                  else if (path.includes("portfolio")) setActiveView("portfolio");
-                  else setActiveView("chat");
-                },
-                setRuntimeMode: (mode) => applySettings({ mode }),
-                checkBackendHealth: checkConnection,
-              });
-            }}
-          />
-
-          {shortcutsOpen ? <KeyboardShortcutsHelp /> : null}
-        </aside>
-
-        <section className="col-span-6 min-h-0 space-y-3 overflow-auto">
-          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("chat.title")}</div>
-          {showOnboarding ? (
-            <div className="space-y-3" data-testid="workspace-onboarding">
-              <WelcomePanel
-                onStart2330={async () => {
-                  await runOperationAndTrack(createDefaultOperationRequest("run_research"));
-                }}
-                onCompareWatchlist={async () => {
-                  await runOperationAndTrack(createDefaultOperationRequest("compare_strategies"));
-                }}
-                onOpenTrace={async () => {
-                  setActiveView("trace");
-                  await runOperationAndTrack(createDefaultOperationRequest("run_pipeline"));
-                }}
-                onConnectBackend={() => {
-                  applySettings({ mode: "api", apiBridgeMode: "proxy" });
-                }}
-              />
-              <DemoJourney />
-              <DemoWalkthroughPanel />
-              <QuickstartChecklist />
-              <WorkspaceModeExplainer />
+      <div className={workspacePageLayoutClass()} data-testid="workspace-page-grid">
+        <section className={workspaceMainColumnClass()}>
+          <Panel>
+            <SectionHeading
+              title={t("app.workspace")}
+              subtitle={runtimeSettings.mode === "mock" ? t("disclaimers.mockData") : t("backend.apiConnected")}
+            />
+            <div className="mt-2 flex flex-wrap items-center gap-2">
+              <StatusBadge tone="mock">{t("disclaimers.syntheticBadge")}</StatusBadge>
+              {!connectionState.reachable && runtimeSettings.mode === "api" ? (
+                <StatusBadge tone="warning">{t("emptyStates.backendUnavailable")}</StatusBadge>
+              ) : null}
             </div>
-          ) : null}
+          </Panel>
 
           <ResearchChat
             runtimeSettings={runtimeSettings}
@@ -355,92 +304,138 @@ export default function WorkspacePage() {
               });
 
               setSelectedArtifactId(artifact.id);
+              setActiveTab("artifacts");
               refreshArtifacts();
             }}
             onOpenArtifact={(artifactId) => {
               setSelectedArtifactId(artifactId);
+              setActiveTab("artifacts");
             }}
           />
 
-          <ScenarioLauncher
-            artifactStore={artifactStore}
-            onScenarioMessage={(content) => emitSystemEvent(content)}
-            onArtifactCreated={(artifactId) => {
-              setSelectedArtifactId(artifactId);
-              refreshArtifacts();
-            }}
-            onScenarioCompleted={(scenarioId) => {
-              setScenariosCompleted((prev) => (prev.includes(scenarioId) ? prev : [...prev, scenarioId]));
-              emitSystemEvent(`${scenarioId} completed. ${t("disclaimers.nonAdvice")}`);
-            }}
-          />
+          <Panel>
+            <div className="mb-3 flex flex-wrap gap-2" data-testid="workspace-segmented-tabs">
+              {(["operations", "scenarios", "artifacts"] as WorkspaceTab[]).map((tab) => (
+                <Button
+                  key={tab}
+                  type="button"
+                  size="sm"
+                  variant={activeTab === tab ? "default" : "outline"}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab === "operations" ? t("nav.operations") : tab === "scenarios" ? t("nav.scenarios") : t("artifacts.title")}
+                </Button>
+              ))}
+            </div>
 
-          <ResearchOperationPanel
-            artifactStore={artifactStore}
-            onOperationCompleted={(result) => {
-              emitSystemEvent(
-                `Ran ${result.kind} operation from panel. status=${result.status}. artifact=${result.artifactIds[0] ?? "none"}.`,
-              );
-            }}
-            onArtifactCreated={(id) => {
-              setSelectedArtifactId(id);
-              setActiveView("chat");
-              refreshArtifacts();
+            <div className={activeTab === "operations" ? "block" : "hidden"} data-testid="workspace-operations-zone">
+              <ResearchOperationPanel
+                artifactStore={artifactStore}
+                onOperationCompleted={(result) => {
+                  emitSystemEvent(
+                    `Ran ${result.kind} operation from panel. status=${result.status}. artifact=${result.artifactIds[0] ?? "none"}.`,
+                  );
+                }}
+                onArtifactCreated={(id) => {
+                  setSelectedArtifactId(id);
+                  setActiveView("chat");
+                  setActiveTab("artifacts");
+                  refreshArtifacts();
+                }}
+              />
+            </div>
+
+            <div className={activeTab === "scenarios" ? "block space-y-3" : "hidden"} data-testid="workspace-scenarios-zone">
+                {showOnboarding ? (
+                  <div className="space-y-3" data-testid="workspace-onboarding">
+                    <WelcomePanel
+                      onStart2330={async () => {
+                        await runOperationAndTrack(createDefaultOperationRequest("run_research"));
+                      }}
+                      onCompareWatchlist={async () => {
+                        await runOperationAndTrack(createDefaultOperationRequest("compare_strategies"));
+                      }}
+                      onOpenTrace={async () => {
+                        setActiveView("trace");
+                        await runOperationAndTrack(createDefaultOperationRequest("run_pipeline"));
+                      }}
+                      onConnectBackend={() => {
+                        applySettings({ mode: "api", apiBridgeMode: "proxy" });
+                      }}
+                    />
+                    <DemoJourney />
+                    <DemoWalkthroughPanel />
+                    <QuickstartChecklist />
+                    <WorkspaceModeExplainer />
+                  </div>
+                ) : null}
+
+                <ScenarioLauncher
+                  artifactStore={artifactStore}
+                  onScenarioMessage={(content) => emitSystemEvent(content)}
+                  onArtifactCreated={(artifactId) => {
+                    setSelectedArtifactId(artifactId);
+                    setActiveTab("artifacts");
+                    refreshArtifacts();
+                  }}
+                  onScenarioCompleted={(scenarioId) => {
+                    setScenariosCompleted((prev) => (prev.includes(scenarioId) ? prev : [...prev, scenarioId]));
+                    emitSystemEvent(`${scenarioId} completed. ${t("disclaimers.nonAdvice")}`);
+                  }}
+                />
+            </div>
+
+            <div className={activeTab === "artifacts" ? "block space-y-3" : "hidden"} data-testid="workspace-artifacts-zone">
+                <ArtifactBrowser artifacts={artifacts} selectedArtifactId={selectedArtifactId} onSelect={setSelectedArtifactId} />
+                {selectedArtifact ? (
+                  <Panel className="border-border/60 bg-background/20">
+                    <SectionHeading title={selectedArtifact.title} subtitle={selectedArtifact.summary ?? t("emptyStates.noSelection")} />
+                  </Panel>
+                ) : (
+                  <div className="rounded-md border border-dashed border-border/60 p-3 text-sm text-muted-foreground">
+                    {t("emptyStates.noSelection")}
+                  </div>
+                )}
+            </div>
+          </Panel>
+
+          {shortcutsOpen ? <KeyboardShortcutsHelp /> : null}
+
+          <CommandMenu
+            commands={commands}
+            open={commandMenuOpen}
+            onClose={() => setCommandMenuOpen(false)}
+            onRun={async (command) => {
+              await command.run({
+                canUseApiMode: connectionState.reachable,
+                enqueueOperation: async (request) => runOperationAndTrack(request),
+                navigate: (path) => {
+                  if (path.includes("report")) setActiveView("report");
+                  else if (path.includes("trace")) setActiveView("trace");
+                  else if (path.includes("strategy")) setActiveView("strategy");
+                  else if (path.includes("signal")) setActiveView("signals");
+                  else if (path.includes("portfolio")) setActiveView("portfolio");
+                  else setActiveView("chat");
+                },
+                setRuntimeMode: (mode) => applySettings({ mode }),
+                checkBackendHealth: checkConnection,
+              });
             }}
           />
         </section>
 
-        <aside className="col-span-3 min-h-0 space-y-3 overflow-auto">
-          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("runtime.connectionSection")}</div>
+        <aside className={workspaceContextColumnClass()}>
+          <Panel>
+            <SectionHeading title={t("runtime.contextSection")} subtitle={t("runtime.connectionSection")} />
+          </Panel>
+
           <BackendConnectionCard
             state={connectionState}
             lastLiveIntegration={lastLiveIntegration}
             onRefresh={() => void checkConnection()}
           />
 
-          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("runtime.settingsSection")}</div>
-          <RuntimeSettingsPanel
-            settings={runtimeSettings}
-            models={modelOptions}
-            providerUnavailableReason={getProviderUnavailableReason(runtimeSettings.selectedProvider)}
-            fallbackActive={connectionState.fallbackActive}
-            onChange={applySettings}
-            onReset={() => {
-              const defaults = resetRuntimeSettings();
-              setRuntimeSettings(defaults);
-            }}
-            onCheckBackend={() => void checkConnection()}
-          />
-
           <BackendCapabilitiesPanel report={capabilitiesReport} />
-
-          <WorkspaceExportActions
-            sessions={sessions}
-            artifacts={artifacts}
-            runtimeSettings={runtimeSettings}
-            scenariosCompleted={scenariosCompleted}
-            onImport={({ sessions: importedSessions, artifacts: importedArtifacts, runtimeSettings: importedSettings, scenariosCompleted: importedScenarios }) => {
-              sessionStore.clear();
-              importedSessions.forEach((session) => sessionStore.upsert(session));
-              artifactStore.clear();
-              artifactStore.importJson(JSON.stringify(importedArtifacts));
-              setRuntimeSettings(importedSettings);
-              setScenariosCompleted(Array.isArray(importedScenarios) ? importedScenarios : []);
-              refreshSessions();
-              refreshArtifacts();
-            }}
-            onReset={() => {
-              sessionStore.clear();
-              artifactStore.clear();
-              refreshSessions();
-              refreshArtifacts();
-              setSelectedSessionId(null);
-              setSelectedArtifactId(null);
-              setScenariosCompleted([]);
-              const defaults = resetRuntimeSettings();
-              setRuntimeSettings(defaults);
-            }}
-          />
 
           <ArtifactDetailPanel
             artifact={selectedArtifact}
@@ -454,8 +449,58 @@ export default function WorkspacePage() {
             }}
           />
 
-          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("runtime.contextSection")}</div>
           <WorkspaceContextPanel artifact={selectedArtifact} />
+
+          <details className="rounded-lg border border-border/70 bg-workspace-panel/90 p-3" open={false}>
+            <summary className="cursor-pointer text-sm font-medium">{t("runtime.settingsTitle")}</summary>
+            <div className="mt-3">
+              <RuntimeSettingsPanel
+                settings={runtimeSettings}
+                models={modelOptions}
+                providerUnavailableReason={getProviderUnavailableReason(runtimeSettings.selectedProvider)}
+                fallbackActive={connectionState.fallbackActive}
+                onChange={applySettings}
+                onReset={() => {
+                  const defaults = resetRuntimeSettings();
+                  setRuntimeSettings(defaults);
+                }}
+                onCheckBackend={() => void checkConnection()}
+              />
+            </div>
+          </details>
+
+          <details className="rounded-lg border border-border/70 bg-workspace-panel/90 p-3" open={false}>
+            <summary className="cursor-pointer text-sm font-medium">{t("common.exportImport")}</summary>
+            <div className="mt-3">
+              <WorkspaceExportActions
+                sessions={sessions}
+                artifacts={artifacts}
+                runtimeSettings={runtimeSettings}
+                scenariosCompleted={scenariosCompleted}
+                onImport={({ sessions: importedSessions, artifacts: importedArtifacts, runtimeSettings: importedSettings, scenariosCompleted: importedScenarios }) => {
+                  sessionStore.clear();
+                  importedSessions.forEach((session) => sessionStore.upsert(session));
+                  artifactStore.clear();
+                  artifactStore.importJson(JSON.stringify(importedArtifacts));
+                  setRuntimeSettings(importedSettings);
+                  setScenariosCompleted(Array.isArray(importedScenarios) ? importedScenarios : []);
+                  refreshSessions();
+                  refreshArtifacts();
+                }}
+                onReset={() => {
+                  sessionStore.clear();
+                  artifactStore.clear();
+                  refreshSessions();
+                  refreshArtifacts();
+                  setSelectedSessionId(null);
+                  setSelectedArtifactId(null);
+                  setScenariosCompleted([]);
+                  const defaults = resetRuntimeSettings();
+                  setRuntimeSettings(defaults);
+                }}
+              />
+            </div>
+          </details>
         </aside>
       </div>
     </AppShell>

@@ -5,6 +5,7 @@ import type { ArtifactKind, WorkspaceArtifactRecord } from "@/lib/artifacts/arti
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 const filterKinds: Array<ArtifactKind | "all"> = [
   "all",
@@ -31,6 +32,11 @@ function artifactTypeLabel(kind: ArtifactKind, t: (path: string) => string) {
   if (kind === "rebalance_plan") return t("artifacts.rebalancePlan");
   if (kind === "backtest_v2_summary") return t("artifacts.backtestV2Summary");
   return kind;
+}
+
+function filterLabel(kind: ArtifactKind | "all", t: (path: string) => string) {
+  if (kind === "all") return "all";
+  return artifactTypeLabel(kind, t);
 }
 
 function artifactTone(kind: ArtifactKind) {
@@ -62,45 +68,48 @@ export function ArtifactBrowser({
   }, [artifacts, filterKind]);
 
   return (
-    <div className="space-y-2 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="artifact-browser">
-      <div className="flex items-center justify-between">
-        <div className="text-xs uppercase tracking-wide text-muted-foreground">{t("artifacts.title")}</div>
+    <div className="space-y-3" data-testid="artifact-browser">
+      <div className="flex items-end justify-between gap-2">
+        <SectionHeading title={t("artifacts.title")} subtitle={t("artifacts.recentArtifactsHint")} />
         <select
           aria-label="Artifact type filter"
-          className="h-8 rounded border bg-background px-2 text-xs"
+          className="h-9 min-w-[172px] rounded-md border bg-background px-3 text-xs"
           value={filterKind}
           onChange={(event) => setFilterKind(event.target.value as ArtifactKind | "all")}
         >
           {filterKinds.map((kind) => (
             <option key={kind} value={kind}>
-              {kind}
+              {filterLabel(kind, t)}
             </option>
           ))}
         </select>
       </div>
 
-      {filtered.length === 0 ? <div className="rounded-md border border-dashed p-2 text-xs text-muted-foreground">{t("artifacts.noArtifacts")}</div> : null}
+      {filtered.length === 0 ? (
+        <div className="rounded-md border border-dashed border-border/60 p-3 text-sm text-muted-foreground">{t("emptyStates.noArtifactSelection")}</div>
+      ) : null}
 
-      {filtered.map((artifact) => {
-        const selected = selectedArtifactId === artifact.id;
+      <div className="space-y-1.5">
+        {filtered.map((artifact) => {
+          const selected = selectedArtifactId === artifact.id;
 
-        return (
-          <div key={artifact.id} className="rounded-md border border-border/70 bg-background/40 p-2 text-sm">
-            <div className="mb-1 flex items-center justify-between">
-              <div>{artifact.title}</div>
-              <StatusBadge tone={artifactTone(artifact.type)}>{artifactTypeLabel(artifact.type, t)}</StatusBadge>
+          return (
+            <div key={artifact.id} className={`rounded-md px-2.5 py-2 ${selected ? "bg-muted/50" : "hover:bg-muted/35"}`}>
+              <div className="mb-1 flex items-center justify-between gap-2">
+                <div className="line-clamp-2 text-sm leading-5">{artifact.title}</div>
+                <StatusBadge tone={artifactTone(artifact.type)}>{artifactTypeLabel(artifact.type, t)}</StatusBadge>
+              </div>
+              <div className="mb-2 flex items-center gap-1.5 text-[11px] text-muted-foreground">
+                <StatusBadge tone={artifact.source === "api" ? "backend" : "mock"}>{artifact.source}</StatusBadge>
+                {artifact.synthetic ? <StatusBadge tone="mock">synthetic</StatusBadge> : null}
+              </div>
+              <Button type="button" size="sm" variant={selected ? "default" : "outline"} onClick={() => onSelect?.(artifact.id)}>
+                {selected ? t("common.selected") : t("common.open")}
+              </Button>
             </div>
-            <div className="mb-2 flex flex-wrap gap-1 text-[10px] text-muted-foreground">
-              <StatusBadge tone={artifact.source === "api" ? "backend" : "mock"}>{artifact.source}</StatusBadge>
-              <StatusBadge tone="mock">{artifact.synthetic ? "synthetic" : "api"}</StatusBadge>
-              <StatusBadge tone="warning">{t("disclaimers.nonAdvice")}</StatusBadge>
-            </div>
-            <Button type="button" size="sm" variant={selected ? "default" : "outline"} onClick={() => onSelect?.(artifact.id)}>
-              {selected ? t("common.selected") : t("common.open")}
-            </Button>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }

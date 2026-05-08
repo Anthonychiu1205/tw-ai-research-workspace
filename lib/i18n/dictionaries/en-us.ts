@@ -14,6 +14,10 @@ export const enUSDictionary: Dictionary = {
     reports: "Reports",
     strategies: "Strategies",
     traces: "Traces",
+    portfolio: "Portfolio",
+    navigation: "Navigation",
+    operations: "Operations",
+    scenarios: "Scenarios",
     quickActions: "Quick Actions",
   },
   runtime: {
@@ -36,14 +40,14 @@ export const enUSDictionary: Dictionary = {
     settingsSection: "Runtime Settings",
     contextSection: "Context",
     mockFirst: "mock-first",
-    localOnly: "local-only",
+    localOnly: "local workspace",
     fallback: "Fallback",
   },
   model: {
     unavailable: "Provider unavailable",
   },
   backend: {
-    optional: "optional",
+    optional: "backend optional",
     connected: "Backend Connected",
     fallback: "Backend unavailable; using mock fallback",
     unreachable: "Backend unavailable",
@@ -105,6 +109,8 @@ export const enUSDictionary: Dictionary = {
   },
   artifacts: {
     title: "Research Artifacts",
+    recentArtifacts: "Recent Artifacts",
+    recentArtifactsHint: "Filter by artifact type and open current research outputs.",
     researchCard: "Research Card",
     report: "Research Report",
     pipelineTrace: "Pipeline Trace",
@@ -139,6 +145,14 @@ export const enUSDictionary: Dictionary = {
   },
   scenarios: {
     analyze2330: "Analyze 2330",
+    guidedTitle: "Guided Scenarios",
+    guidedSubtitle: "Deterministic demo workflows for mock-first research runs.",
+    steps: "Scenario steps",
+    progress: "Scenario progress",
+    noRunYet: "No scenario run yet.",
+    noStepsYet: "No scenario steps yet.",
+    artifactsCreated: "Artifacts created",
+    scenarioLabel: "Scenario",
   },
   onboarding: {
     start2330: "Start with 2330 Demo",
@@ -151,6 +165,9 @@ export const enUSDictionary: Dictionary = {
   },
   emptyStates: {
     noSelection: "No active artifact selected.",
+    noArtifactSelection: "No artifact matches this filter yet.",
+    selectScenarioPrompt: "Pick a scenario, or ask a research question to begin.",
+    backendUnavailable: "Backend is currently unavailable. Workspace switched to mock fallback so the demo flow still works.",
   },
   disclaimers: {
     nonAdvice: "This workspace is for research and educational use only. It is not financial advice.",
@@ -193,5 +210,7 @@ export const enUSDictionary: Dictionary = {
     yes: "yes",
     no: "no",
     missing: "missing",
+    viewAll: "View all",
+    exportImport: "Export / Import",
   },
 };

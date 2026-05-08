@@ -41,7 +41,7 @@ describe("i18n operations/commands/artifacts", () => {
       </I18nProvider>,
     );
 
-    expect(screen.getByText("研究卡片")).toBeInTheDocument();
+    expect(screen.getAllByText("研究卡片").length).toBeGreaterThan(0);
   });
 
   test("no trading command exists", () => {

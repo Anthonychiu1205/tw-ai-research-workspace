@@ -8,7 +8,6 @@ export function AppShell({
   children,
   sessions = [],
   artifacts = [],
-  backendStatus,
   modelLabel,
   mode = "mock",
   connection,
@@ -26,16 +25,11 @@ export function AppShell({
   sidebarHidden?: boolean;
 }) {
   return (
-    <div className="flex h-screen w-full bg-workspace-canvas">
+    <div className="flex h-screen w-full overflow-hidden bg-workspace-canvas">
       <Sidebar sessions={sessions} artifacts={artifacts} onQuickAnalyze={onQuickAnalyze} hidden={sidebarHidden} />
       <div className="flex min-w-0 flex-1 flex-col">
-        <Topbar
-          mode={mode}
-          backendStatus={backendStatus ?? (mode === "mock" ? "mock" : "optional")}
-          modelLabel={modelLabel}
-          connection={connection}
-        />
-        <main className="min-h-0 flex-1 p-4 md:p-5">{children}</main>
+        <Topbar mode={mode} modelLabel={modelLabel} connection={connection} />
+        <main className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:px-5">{children}</main>
       </div>
     </div>
   );

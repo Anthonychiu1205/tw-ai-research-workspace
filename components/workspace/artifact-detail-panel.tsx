@@ -4,6 +4,9 @@ import { ArtifactLineage } from "@/components/workspace/artifact-lineage";
 import { ArtifactJsonViewer } from "@/components/workspace/artifact-json-viewer";
 import { ArtifactExportActions } from "@/components/workspace/artifact-export-actions";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { Panel } from "@/components/ui/panel";
+import { SectionHeading } from "@/components/ui/section-heading";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ArtifactDetailPanel({
   artifact,
@@ -12,19 +15,23 @@ export function ArtifactDetailPanel({
   artifact?: WorkspaceArtifactRecord;
   onPinToggle?: (artifactId: string, pinned: boolean) => void;
 }) {
+  const { t } = useI18n();
   if (!artifact) {
-    return <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground">Select an artifact to inspect metadata and lineage.</div>;
+    return (
+      <Panel className="border-dashed text-xs text-muted-foreground">
+        {t("emptyStates.noSelection")}
+      </Panel>
+    );
   }
 
   return (
-    <div className="space-y-3 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="artifact-detail-panel">
-      <div className="text-sm font-medium">{artifact.title}</div>
-      {artifact.summary ? <div className="text-xs text-muted-foreground">{artifact.summary}</div> : null}
+    <Panel className="space-y-3" data-testid="artifact-detail-panel">
+      <SectionHeading title={artifact.title} subtitle={artifact.summary ?? undefined} />
       <ArtifactMetadataCard artifact={artifact} />
       <ArtifactLineage artifact={artifact} />
       {artifact.evidenceIds.length > 0 ? (
-        <div className="rounded-md border p-3 text-xs">
-          <div className="mb-1">evidence ids</div>
+        <div className="rounded-md bg-background/20 p-3 text-xs">
+          <div className="mb-1 font-medium">{t("tools.evidenceRefs")}</div>
           <div className="flex flex-wrap gap-1">
             {artifact.evidenceIds.map((evidenceId) => (
               <StatusBadge key={evidenceId} tone="evidence">{evidenceId}</StatusBadge>
@@ -33,10 +40,17 @@ export function ArtifactDetailPanel({
         </div>
       ) : null}
       {artifact.relatedArtifactIds.length > 0 ? (
-        <div className="rounded-md border p-3 text-xs">related artifacts: {artifact.relatedArtifactIds.join(", ")}</div>
+        <div className="rounded-md bg-background/20 p-3 text-xs">
+          related artifacts: {artifact.relatedArtifactIds.join(", ")}
+        </div>
       ) : null}
       <ArtifactExportActions artifact={artifact} onPinToggle={onPinToggle} />
-      <ArtifactJsonViewer data={artifact.data ?? artifact} />
-    </div>
+      <details className="rounded-md border border-border/60 bg-background/20 p-2">
+        <summary className="cursor-pointer text-xs font-medium">{t("artifacts.exportJson")}</summary>
+        <div className="mt-2">
+          <ArtifactJsonViewer data={artifact.data ?? artifact} />
+        </div>
+      </details>
+    </Panel>
   );
 }

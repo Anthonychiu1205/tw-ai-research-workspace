@@ -36,6 +36,6 @@ describe("backend capabilities", () => {
     const report = await discoverBackendCapabilities({ ...getDefaultRuntimeSettings(), mode: "mock" });
     render(<BackendCapabilitiesPanel report={report} />);
     expect(screen.getByTestId("backend-capabilities-panel")).toBeInTheDocument();
-    expect(screen.getByText(/Backend Capabilities|後端能力/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/Backend Capabilities|後端能力/i).length).toBeGreaterThan(0);
   });
 });

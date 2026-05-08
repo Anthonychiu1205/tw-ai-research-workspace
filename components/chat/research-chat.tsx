@@ -11,6 +11,8 @@ import { useResearchChat } from "@/lib/ai/use-research-chat";
 import type { BackendConnectionState, RuntimeSettings } from "@/lib/schemas/workspace";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { Panel } from "@/components/ui/panel";
+import { SectionHeading } from "@/components/ui/section-heading";
 
 const WELCOME_MESSAGE_CREATED_AT = "2026-01-01T00:00:00.000Z";
 
@@ -73,22 +75,13 @@ export function ResearchChat({
   }, [chat, systemEvents]);
 
   return (
-    <div className="space-y-3 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="research-chat">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm font-medium">{t("chat.title")}</div>
-        <div className="flex items-center gap-2 text-xs">
-          <StatusBadge tone={runtimeSettings.mode === "mock" ? "mock" : "backend"}>
-            {t("runtime.mode")}: {runtimeSettings.mode === "mock" ? t("runtime.mockMode") : t("runtime.apiMode")}
-          </StatusBadge>
-          <StatusBadge tone="trace">
-            {t("runtime.provider")}: {selectedProvider}
-          </StatusBadge>
-          <StatusBadge tone="trace">
-            {t("runtime.model")}: {runtimeSettings.selectedModel}
-          </StatusBadge>
-          <StatusBadge tone={connectionState.reachable ? "success" : "warning"}>
-            {t("runtime.backend")}: {connectionState.reachable ? t("backend.connected") : t("backend.optional")}
-          </StatusBadge>
+    <Panel data-testid="research-chat" className="space-y-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <SectionHeading title={t("chat.title")} subtitle={t("emptyStates.selectScenarioPrompt")} />
+        <div className="flex flex-wrap items-center gap-1.5 text-xs">
+          <StatusBadge tone={runtimeSettings.mode === "mock" ? "mock" : "backend"}>{runtimeSettings.mode === "mock" ? t("runtime.mockMode") : t("runtime.apiMode")}</StatusBadge>
+          <StatusBadge tone={connectionState.reachable ? "success" : "warning"}>{connectionState.reachable ? t("backend.connected") : t("backend.optional")}</StatusBadge>
+          <StatusBadge tone="trace">{runtimeSettings.selectedModel}</StatusBadge>
         </div>
       </div>
 
@@ -99,7 +92,7 @@ export function ResearchChat({
           onUnavailableSelect={(reason) => setRuntimeWarning(`${t("model.unavailable")}；${t("backend.fallback")} ${reason}`)}
         />
         <select
-          className="h-9 rounded-md border bg-background px-2 text-xs"
+          className="h-9 rounded-md border bg-background px-3 text-xs"
           value={runtimeSettings.mode}
           aria-label={t("chat.runtimeMode")}
           onChange={(event) => onRuntimeSettingsChange({ mode: event.target.value as "mock" | "api" })}
@@ -108,13 +101,13 @@ export function ResearchChat({
           <option value="api">{t("runtime.apiMode")}</option>
         </select>
         {!modelAvailability.available ? (
-          <StatusBadge tone="warning">{t("runtime.fallback")}: {modelAvailability.reasonUnavailable ?? t("model.unavailable")}</StatusBadge>
+          <StatusBadge tone="warning">{modelAvailability.reasonUnavailable ?? t("model.unavailable")}</StatusBadge>
         ) : null}
       </div>
 
-      {runtimeWarning ? <div className="rounded-md border border-yellow-500/40 bg-yellow-500/10 p-2 text-xs">{runtimeWarning}</div> : null}
+      {runtimeWarning ? <div className="rounded-md border border-orange-500/35 bg-orange-500/10 p-2 text-xs">{runtimeWarning}</div> : null}
       {chat.lastError ? (
-        <div className="rounded-md border border-red-500/40 bg-red-500/10 p-2 text-xs">
+        <div className="rounded-md border border-rose-500/35 bg-rose-500/10 p-2 text-xs">
           <div className="mb-2">{chat.lastError}</div>
           <div className="flex gap-2">
             <RetryMessageButton onRetry={() => void chat.retryLast()} disabled={chat.isStreaming} />
@@ -125,9 +118,17 @@ export function ResearchChat({
         </div>
       ) : null}
 
-      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" data-testid="prompt-examples">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3" data-testid="prompt-examples">
         {promptExamples.map((example) => (
-          <Button key={example} type="button" size="sm" variant="outline" onClick={() => void chat.sendMessage(example)} disabled={chat.isStreaming}>
+          <Button
+            key={example}
+            type="button"
+            size="sm"
+            variant="outline"
+            className="justify-start whitespace-normal text-left leading-5"
+            onClick={() => void chat.sendMessage(example)}
+            disabled={chat.isStreaming}
+          >
             {example}
           </Button>
         ))}
@@ -141,18 +142,6 @@ export function ResearchChat({
         onStop={chat.stop}
         disabled={chat.isStreaming}
       />
-
-      {runtimeSettings.showTokenUsage && chat.tokenUsage ? (
-        <div className="rounded-md border p-2 text-xs text-muted-foreground">
-          {t("chat.tokenUsage")}: {JSON.stringify(chat.tokenUsage)}
-        </div>
-      ) : null}
-
-      {runtimeSettings.showToolCalls && chat.activeToolCalls.length > 0 ? (
-        <div className="rounded-md border p-2 text-xs text-muted-foreground">
-          {t("chat.activeToolCalls")}: {chat.activeToolCalls.length}
-        </div>
-      ) : null}
-    </div>
+    </Panel>
   );
 }
