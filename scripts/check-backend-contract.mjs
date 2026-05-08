@@ -73,6 +73,18 @@ function validateContractByFileName(fileName, json, label) {
     }
   }
 
+  if (fileName.includes("portfolio-review")) {
+    if (!hasFields(json, ["targetWeights", "rebalancePlan", "cashWeight"])) {
+      issues.push(`${label}/${fileName}: portfolio review must include targetWeights/rebalancePlan/cashWeight`);
+    }
+  }
+
+  if (fileName.includes("backtest-v2")) {
+    if (!hasFields(json, ["portfolioMetrics", "benchmarkMetrics", "exposure"])) {
+      issues.push(`${label}/${fileName}: backtest v2 must include portfolioMetrics/benchmarkMetrics/exposure`);
+    }
+  }
+
   if (fileName === "session-demo.json") {
     const allowed = new Set([
       "research_card",
@@ -82,6 +94,9 @@ function validateContractByFileName(fileName, json, label) {
       "signal_evaluation",
       "evidence_timeline",
       "backtest_summary",
+      "portfolio_review",
+      "rebalance_plan",
+      "backtest_v2_summary",
     ]);
 
     const artifacts = Array.isArray(json.artifacts) ? json.artifacts : [];

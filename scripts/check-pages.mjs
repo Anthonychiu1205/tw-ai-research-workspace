@@ -6,12 +6,14 @@ const root = process.cwd();
 const requiredRouteFiles = [
   "app/page.tsx",
   "app/workspace/page.tsx",
+  "app/portfolio/page.tsx",
   "app/reports/page.tsx",
   "app/strategies/page.tsx",
   "app/traces/page.tsx",
   "app/api/chat/route.ts",
   "app/api/health/route.ts",
   "app/api/backend/health/route.ts",
+  "app/api/backend/portfolio/route.ts",
 ];
 
 const missing = requiredRouteFiles.filter((file) => !fs.existsSync(path.resolve(root, file)));

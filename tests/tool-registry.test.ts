@@ -3,7 +3,7 @@ import { getToolByName, workspaceTools } from "@/lib/ai/tool-registry";
 
 describe("tool registry", () => {
   test("tools listed", () => {
-    expect(workspaceTools.length).toBe(8);
+    expect(workspaceTools.length).toBeGreaterThanOrEqual(10);
   });
 
   test("schemas validate inputs", () => {

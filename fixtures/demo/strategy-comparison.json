@@ -24,6 +24,13 @@
       "riskLabel": "low"
     }
   ],
+  "portfolioMetrics": {
+    "finalEquity": 1113800,
+    "totalReturn": 0.1138,
+    "maxDrawdown": 0.097,
+    "turnover": 0.33,
+    "benchmarkReturn": 0.089
+  },
   "metadata": {
     "provider": "mock",
     "dataType": "synthetic_mock",

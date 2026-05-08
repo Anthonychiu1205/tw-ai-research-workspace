@@ -1,4 +1,4 @@
-export type WorkspaceView = "chat" | "report" | "trace" | "strategy" | "signals";
+export type WorkspaceView = "chat" | "report" | "trace" | "strategy" | "signals" | "portfolio";
 
 export type WorkspaceUrlState = {
   ticker?: string;
@@ -7,7 +7,7 @@ export type WorkspaceUrlState = {
   view: WorkspaceView;
 };
 
-const allowedViews: WorkspaceView[] = ["chat", "report", "trace", "strategy", "signals"];
+const allowedViews: WorkspaceView[] = ["chat", "report", "trace", "strategy", "signals", "portfolio"];
 
 export function parseWorkspaceUrlState(search: string): WorkspaceUrlState {
   const params = new URLSearchParams(search.startsWith("?") ? search.slice(1) : search);

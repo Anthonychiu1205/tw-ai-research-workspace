@@ -11,7 +11,7 @@ import type { Locale } from "@/lib/i18n/types";
 type UseResearchChatOptions = {
   runtimeSettings: RuntimeSettings;
   modelId: string;
-  provider: "mock" | "openai" | "anthropic" | "local";
+  provider: "mock" | "openai" | "anthropic" | "local" | "groq" | "deepseek" | "ollama";
   locale?: Locale;
   initialMessages?: WorkspaceChatMessage[];
   onToolResult?: (payload: Record<string, unknown>) => void;

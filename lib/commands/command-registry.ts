@@ -8,6 +8,8 @@ type CommandCopy = {
   pipeline2330: string;
   compareWatchlist: string;
   signalWatchlist: string;
+  reviewPortfolioWatchlist: string;
+  runBacktestV2: string;
   switchMock: string;
   checkBackend: string;
   openArtifactBrowser: string;
@@ -23,6 +25,8 @@ const COMMAND_COPY: Record<Locale, CommandCopy> = {
     pipeline2330: "Run 2330 Planner Pipeline",
     compareWatchlist: "Compare Watchlist Strategies",
     signalWatchlist: "Evaluate Watchlist Signals",
+    reviewPortfolioWatchlist: "Review portfolio for watchlist",
+    runBacktestV2: "Run portfolio-managed backtest",
     switchMock: "Switch to Mock Mode",
     checkBackend: "Check Backend Health",
     openArtifactBrowser: "Open artifact browser",
@@ -36,6 +40,8 @@ const COMMAND_COPY: Record<Locale, CommandCopy> = {
     pipeline2330: "執行 2330 planner pipeline",
     compareWatchlist: "比較 watchlist 策略",
     signalWatchlist: "評估 watchlist 訊號",
+    reviewPortfolioWatchlist: "檢視 watchlist 投組",
+    runBacktestV2: "執行投組管理回測",
     switchMock: "切換到 mock 模式",
     checkBackend: "檢查後端連線",
     openArtifactBrowser: "開啟 artifact 瀏覽",
@@ -97,6 +103,24 @@ export function getWorkspaceCommands(input: { canUseApiMode: boolean; locale?: L
       category: "operations",
       run: async (context) => {
         await context.enqueueOperation(createDefaultOperationRequest("evaluate_signals"));
+      },
+    },
+    {
+      id: "portfolio-review-watchlist",
+      label: copy.reviewPortfolioWatchlist,
+      description: "Create a synthetic portfolio review with rebalance targets",
+      category: "operations",
+      run: async (context) => {
+        await context.enqueueOperation(createDefaultOperationRequest("run_portfolio_review"));
+      },
+    },
+    {
+      id: "backtest-v2-watchlist",
+      label: copy.runBacktestV2,
+      description: "Run synthetic portfolio-managed backtest summary",
+      category: "operations",
+      run: async (context) => {
+        await context.enqueueOperation(createDefaultOperationRequest("run_backtest_v2"));
       },
     },
     {

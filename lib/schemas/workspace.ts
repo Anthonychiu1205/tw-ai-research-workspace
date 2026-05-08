@@ -1,7 +1,20 @@
 import { z } from "zod";
 
 export const workspaceRuntimeModeSchema = z.enum(["mock", "api"]);
-export const modelProviderSchema = z.enum(["mock", "openai", "anthropic", "local"]);
+export const modelProviderSchema = z.enum(["mock", "openai", "anthropic", "local", "groq", "deepseek", "ollama"]);
+
+const artifactTypeSchema = z.enum([
+  "research_card",
+  "report",
+  "pipeline_trace",
+  "strategy_comparison",
+  "signal_evaluation",
+  "evidence_timeline",
+  "backtest_summary",
+  "portfolio_review",
+  "rebalance_plan",
+  "backtest_v2_summary",
+]);
 
 export const workspaceRuntimeConfigSchema = z.object({
   mode: workspaceRuntimeModeSchema.default("mock"),
@@ -67,28 +80,8 @@ export const workspaceMessageSchema = z.object({
 
 export const workspaceArtifactSchema = z.object({
   id: z.string(),
-  kind: z
-    .enum([
-      "research_card",
-      "report",
-      "pipeline_trace",
-      "strategy_comparison",
-      "signal_evaluation",
-      "evidence_timeline",
-      "backtest_summary",
-    ])
-    .optional(),
-  type: z
-    .enum([
-      "research_card",
-      "report",
-      "pipeline_trace",
-      "strategy_comparison",
-      "signal_evaluation",
-      "evidence_timeline",
-      "backtest_summary",
-    ])
-    .optional(),
+  kind: artifactTypeSchema.optional(),
+  type: artifactTypeSchema.optional(),
   title: z.string(),
   summary: z.string().optional(),
   sessionId: z.string().optional(),

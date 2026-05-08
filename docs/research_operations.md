@@ -7,6 +7,8 @@ Kinds:
 - generate report
 - run pipeline
 - run backtest preview
+- run portfolio review
+- run backtest v2
 - compare strategies
 - evaluate signals
 

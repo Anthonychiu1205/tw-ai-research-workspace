@@ -34,5 +34,7 @@ describe("workspace demo bundle", () => {
     expect(bundle.reportSections).toBeTruthy();
     expect(bundle.plannerTrace).toBeTruthy();
     expect(bundle.strategyComparison).toBeTruthy();
+    expect(bundle.portfolioReview).toBeTruthy();
+    expect(bundle.backtestV2Summary).toBeTruthy();
   });
 });

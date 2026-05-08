@@ -3,7 +3,7 @@ import { createAnthropic } from "@ai-sdk/anthropic";
 import { getEnvConfig } from "@/lib/config/env";
 
 export type ProviderReady = {
-  name: "mock" | "openai" | "anthropic" | "local";
+  name: "mock" | "openai" | "anthropic" | "local" | "groq" | "deepseek" | "ollama";
   available: boolean;
   reason?: string;
 };
@@ -26,6 +26,21 @@ export function getProviderAvailability(): ProviderReady[] {
       name: "local",
       available: env.enableRealModels && Boolean(env.localModelBaseUrl),
       reason: env.enableRealModels && env.localModelBaseUrl ? undefined : "env-gated",
+    },
+    {
+      name: "groq",
+      available: env.enableRealModels && env.enableGroq && Boolean(env.groqApiKey),
+      reason: env.enableRealModels && env.enableGroq && env.groqApiKey ? undefined : "env-gated",
+    },
+    {
+      name: "deepseek",
+      available: env.enableRealModels && env.enableDeepseek && Boolean(env.deepseekApiKey),
+      reason: env.enableRealModels && env.enableDeepseek && env.deepseekApiKey ? undefined : "env-gated",
+    },
+    {
+      name: "ollama",
+      available: env.enableRealModels && env.enableOllama && Boolean(env.ollamaBaseUrl),
+      reason: env.enableRealModels && env.enableOllama && env.ollamaBaseUrl ? undefined : "env-gated",
     },
   ];
 }

@@ -14,6 +14,9 @@ const requiredDocs = [
   "docs/backend_live_mode.md",
   "docs/workspace_final_audit.md",
   "docs/i18n.md",
+  "docs/portfolio_workspace.md",
+  "docs/backtesting_v2_workspace.md",
+  "docs/multi_model_runtime.md",
 ];
 
 const requiredScripts = [

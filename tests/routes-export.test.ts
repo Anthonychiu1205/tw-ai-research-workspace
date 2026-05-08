@@ -13,6 +13,7 @@ describe("routes export", () => {
     const json = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), "artifacts/routes.json"), "utf-8"));
     const routes = json.routes.map((item: any) => item.route);
     expect(routes).toContain("/workspace");
+    expect(routes).toContain("/portfolio");
     expect(routes).toContain("/reports");
     expect(routes).toContain("/strategies");
     expect(routes).toContain("/traces");
@@ -23,6 +24,7 @@ describe("routes export", () => {
     const routes = json.routes.map((item: any) => item.route);
     expect(routes).toContain("/api/chat");
     expect(routes).toContain("/api/backend/health");
+    expect(routes).toContain("/api/backend/portfolio");
   });
 
   test("routes doc exists", () => {

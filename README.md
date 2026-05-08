@@ -44,6 +44,15 @@ All bundled demo data is synthetic mock data and non-advice.
 - publish-readiness scripts (secret scan, boundary check, final audit, publish plan)
 - expanded route/page QA and route inventory export
 
+## v0.8 Highlights
+
+- provider readiness surfaced in workspace runtime UI for `Groq` / `DeepSeek` / `Ollama` (all env-gated)
+- portfolio review operations and artifact renderers (`portfolio_review`, `rebalance_plan`)
+- backtesting v2 summary operation and workspace renderer (`backtest_v2_summary`)
+- strategy comparison can show portfolio-level metrics when available
+- API client/adapters extended for portfolio and portfolio-managed backtest routes
+- demo/share bundle updated with portfolio and backtest v2 synthetic artifacts
+
 ## v0.5 Highlights
 
 - guided scenario workflows for demo-ready research journeys
@@ -108,6 +117,9 @@ Key behavior:
 - `TW_AI_RESEARCH_API_BASE_URL`: optional backend URL
 - `NEXT_PUBLIC_ENABLE_REAL_MODELS`: controls real provider enablement
 - `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`: optional, env-gated only
+- `NEXT_PUBLIC_ENABLE_GROQ` / `GROQ_API_KEY`: optional, env-gated only
+- `NEXT_PUBLIC_ENABLE_DEEPSEEK` / `DEEPSEEK_API_KEY`: optional, env-gated only
+- `NEXT_PUBLIC_ENABLE_OLLAMA` / `OLLAMA_BASE_URL`: optional, env-gated only
 
 ## Setup
 
@@ -154,6 +166,7 @@ No server-side persistence is used; sessions and artifacts remain local-only.
 ## Workspace UX
 
 - `/workspace`: chat-first runtime + operations + artifact workbench
+- `/portfolio`: portfolio research simulation view
 - `/reports`: synthetic report viewer
 - `/strategies`: synthetic strategy comparison
 - `/traces`: planner/executor/reflection view
@@ -166,6 +179,8 @@ Workspace tools:
 - `runPipeline`
 - `compareStrategies`
 - `evaluateSignals`
+- `runPortfolioReview`
+- `runBacktestV2`
 - `getEvidenceTimeline`
 - `getSignalMatrix`
 - `getAgentConsensus`

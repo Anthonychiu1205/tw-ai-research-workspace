@@ -31,6 +31,8 @@ function computeBundleChecksum(input) {
 }
 
 const sessionDemo = readJson("fixtures/demo/session-demo.json");
+const portfolioReview = readJson("fixtures/demo/portfolio-review-2330-watchlist.json");
+const backtestV2Summary = readJson("fixtures/demo/backtest-v2-summary.json");
 const scenariosCompleted = [
   "analyze_2330",
   "generate_2330_report",
@@ -71,7 +73,57 @@ const base = {
   notFinancialAdvice: true,
   noTradingExecution: true,
   sessions,
-  artifacts: sessionDemo.artifacts ?? [],
+  artifacts: [
+    ...(sessionDemo.artifacts ?? []),
+    {
+      id: "artifact-portfolio-review-demo",
+      kind: "portfolio_review",
+      type: "portfolio_review",
+      title: "Portfolio review watchlist",
+      summary: "Synthetic portfolio review artifact",
+      createdAt: "2026-05-08T10:05:00+08:00",
+      source: "mock",
+      synthetic: true,
+      notFinancialAdvice: true,
+      noTradingExecution: true,
+      evidenceIds: [],
+      relatedArtifactIds: ["artifact-rebalance-plan-demo"],
+      data: portfolioReview,
+      pinned: false,
+    },
+    {
+      id: "artifact-rebalance-plan-demo",
+      kind: "rebalance_plan",
+      type: "rebalance_plan",
+      title: "Rebalance plan watchlist",
+      summary: "Synthetic rebalance target plan",
+      createdAt: "2026-05-08T10:06:00+08:00",
+      source: "mock",
+      synthetic: true,
+      notFinancialAdvice: true,
+      noTradingExecution: true,
+      evidenceIds: [],
+      relatedArtifactIds: ["artifact-portfolio-review-demo"],
+      data: portfolioReview.rebalancePlan,
+      pinned: false,
+    },
+    {
+      id: "artifact-backtest-v2-demo",
+      kind: "backtest_v2_summary",
+      type: "backtest_v2_summary",
+      title: "Backtest v2 summary",
+      summary: "Synthetic portfolio-managed backtest summary",
+      createdAt: "2026-05-08T10:07:00+08:00",
+      source: "mock",
+      synthetic: true,
+      notFinancialAdvice: true,
+      noTradingExecution: true,
+      evidenceIds: [],
+      relatedArtifactIds: [],
+      data: backtestV2Summary,
+      pinned: false,
+    },
+  ],
   runtimeSettings,
   scenariosCompleted,
 };

@@ -15,6 +15,13 @@ v0.5 is workspace-first, not dashboard-first.
 - share bundle export/import actions
 - backend live-mode dry-run guide
 
+## Extended in v0.8
+
+- portfolio review panel and rebalance plan rendering
+- backtest v2 summary view (portfolio-managed hypothetical results)
+- artifact context renderers for `portfolio_review`, `rebalance_plan`, `backtest_v2_summary`
+- dedicated `/portfolio` page for research simulation views
+
 ## Safety
 
 - synthetic output labeling

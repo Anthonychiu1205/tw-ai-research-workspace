@@ -40,6 +40,16 @@ describe("chat route runtime", () => {
     expect(starts).toContain("evaluateSignals");
   });
 
+  test("portfolio prompt triggers runPortfolioReview event", async () => {
+    const starts = await toolStartsForPrompt("Run portfolio review for 2330 watchlist");
+    expect(starts).toContain("runPortfolioReview");
+  });
+
+  test("backtest v2 prompt triggers runBacktestV2 event", async () => {
+    const starts = await toolStartsForPrompt("Run portfolio backtest v2 for watchlist");
+    expect(starts).toContain("runBacktestV2");
+  });
+
   test("general prompt still returns final", async () => {
     const runtime = await runAssistantRuntime({
       messages: [{ role: "user", content: "Hello workspace" }],

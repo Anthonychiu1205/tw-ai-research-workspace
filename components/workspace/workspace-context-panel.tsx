@@ -6,6 +6,9 @@ import { StrategyComparison } from "@/components/workspace/strategy-comparison";
 import { SignalExplorer } from "@/components/workspace/signal-explorer";
 import { EvidenceTimeline } from "@/components/research/evidence-timeline";
 import { ArtifactJsonViewer } from "@/components/workspace/artifact-json-viewer";
+import { PortfolioReviewPanel } from "@/components/portfolio/portfolio-review-panel";
+import { RebalancePlanView } from "@/components/portfolio/rebalance-plan-view";
+import { BacktestV2SummaryView } from "@/components/backtesting/backtest-v2-summary";
 
 export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifactRecord }) {
   if (!artifact) {
@@ -35,7 +38,7 @@ export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifa
       )}
 
       {(artifact.type === "strategy_comparison" || artifact.kind === "strategy_comparison") && (
-        <StrategyComparison strategies={data.strategies ?? []} />
+        <StrategyComparison strategies={data.strategies ?? []} portfolioMetrics={data.portfolioMetrics} />
       )}
 
       {(artifact.type === "signal_evaluation" || artifact.kind === "signal_evaluation") && (
@@ -50,6 +53,33 @@ export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifa
         <div className="rounded border p-3 text-xs text-muted-foreground">Backtest summary is mock-only preview with no execution path.</div>
       )}
 
+      {(artifact.type === "portfolio_review" || artifact.kind === "portfolio_review") && data.rebalancePlan ? (
+        <PortfolioReviewPanel review={data as any} />
+      ) : null}
+
+      {(artifact.type === "rebalance_plan" || artifact.kind === "rebalance_plan") && (
+        <RebalancePlanView
+          plan={
+            (data as any).decisions
+              ? (data as any)
+              : {
+                  planId: "rebalance-plan-missing",
+                  asOfDate: new Date().toISOString().slice(0, 10),
+                  targetWeights: {},
+                  cashWeight: 1,
+                  turnoverEstimate: 0,
+                  riskSummary: {},
+                  decisions: [],
+                }
+          }
+        />
+      )}
+
+      {(artifact.type === "backtest_v2_summary" || artifact.kind === "backtest_v2_summary") &&
+      data.mode === "portfolio_manager" ? (
+        <BacktestV2SummaryView summary={data as any} />
+      ) : null}
+
       {![
         "research_card",
         "report",
@@ -58,6 +88,9 @@ export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifa
         "signal_evaluation",
         "evidence_timeline",
         "backtest_summary",
+        "portfolio_review",
+        "rebalance_plan",
+        "backtest_v2_summary",
       ].includes(artifact.type) ? <ArtifactJsonViewer data={data} /> : null}
     </div>
   );

@@ -96,6 +96,15 @@ describe("workspace share bundle", () => {
     expect(bundle.noTradingExecution).toBe(true);
   });
 
+  test("generated bundle includes portfolio/backtest v2 artifacts", () => {
+    const bundlePath = path.resolve(process.cwd(), "artifacts/workspace-share-bundle.json");
+    const json = JSON.parse(fs.readFileSync(bundlePath, "utf-8"));
+    const artifactTypes = (json.artifacts ?? []).map((item: any) => item.type ?? item.kind);
+    expect(artifactTypes).toContain("portfolio_review");
+    expect(artifactTypes).toContain("rebalance_plan");
+    expect(artifactTypes).toContain("backtest_v2_summary");
+  });
+
   test("corrupted bundle rejected", () => {
     const bundle = createWorkspaceShareBundle({ ...sampleState(), scenariosCompleted: [] });
     const bad = { ...bundle, checksum: "tampered" };

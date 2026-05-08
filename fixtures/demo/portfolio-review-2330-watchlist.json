@@ -1,0 +1,43 @@
+{
+  "analysisId": "portfolio-analysis-2330-watchlist-demo",
+  "asOfDate": "2026-05-06",
+  "tickers": ["2330", "2317", "2454", "2308", "0050"],
+  "targetWeights": {
+    "2330": 0.2,
+    "2317": 0.16,
+    "2454": 0.14,
+    "2308": 0.12,
+    "0050": 0.18
+  },
+  "cashWeight": 0.2,
+  "rebalancePlan": {
+    "planId": "rebalance-plan-watchlist-demo",
+    "asOfDate": "2026-05-06",
+    "targetWeights": {
+      "2330": 0.2,
+      "2317": 0.16,
+      "2454": 0.14,
+      "2308": 0.12,
+      "0050": 0.18
+    },
+    "cashWeight": 0.2,
+    "turnoverEstimate": 0.24,
+    "riskSummary": {"longOnly": true, "maxPositionWeight": 0.2},
+    "decisions": [
+      {"ticker": "2330", "action": "increase", "fromWeight": 0.12, "toWeight": 0.2, "reason": "synthetic target rebalance", "constraintsApplied": ["max_position_weight"]}
+    ]
+  },
+  "warnings": ["Synthetic output for workspace demo only."],
+  "assumptions": ["No broker integration", "No order execution"],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  },
+  "title": "Portfolio Review 2330 Watchlist",
+  "titleZh": "2330 Watchlist 投組檢視",
+  "titleEn": "Portfolio Review 2330 Watchlist",
+  "summaryZh": "Synthetic 投組檢視範例。",
+  "summaryEn": "Synthetic portfolio review example."
+}

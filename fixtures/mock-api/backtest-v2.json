@@ -1,0 +1,41 @@
+{
+  "id": "backtest-v2-2330-watchlist",
+  "mode": "portfolio_manager",
+  "startDate": "2024-01-01",
+  "endDate": "2024-12-31",
+  "portfolioMetrics": {
+    "finalEquity": 1134200,
+    "totalReturn": 0.1342,
+    "maxDrawdown": 0.108,
+    "turnover": 0.37,
+    "benchmarkReturn": 0.098,
+    "costs": 0.0042
+  },
+  "benchmarkMetrics": {
+    "benchmarkReturn": 0.098,
+    "trackingError": 0.042,
+    "informationRatio": 0.83
+  },
+  "monthlyReturns": [
+    {"month": "2024-01", "return": 0.021},
+    {"month": "2024-02", "return": 0.013},
+    {"month": "2024-03", "return": -0.008}
+  ],
+  "exposure": {
+    "byTicker": {"2330": 0.2, "2317": 0.16, "2454": 0.14, "2308": 0.12, "0050": 0.18},
+    "bySector": {"semiconductor": 0.34, "electronics": 0.28, "etf": 0.18}
+  },
+  "assumptions": ["Hypothetical backtest", "No look-ahead", "No execution path"],
+  "noLookaheadAudit": "pass",
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  },
+  "title": "Backtest v2 Summary",
+  "titleZh": "Backtest v2 摘要",
+  "titleEn": "Backtest v2 Summary",
+  "summaryZh": "Synthetic portfolio-managed backtest 結果。",
+  "summaryEn": "Synthetic portfolio-managed backtest result."
+}

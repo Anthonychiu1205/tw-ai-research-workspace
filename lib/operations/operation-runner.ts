@@ -3,6 +3,8 @@ import {
   generateReport,
   runPipeline,
   runBacktest,
+  runPortfolioReview,
+  runBacktestV2,
   compareStrategies,
   evaluateSignals,
   type FrontendSafeMeta,
@@ -13,6 +15,9 @@ import {
   adaptPipelineToPlannerTrace,
   adaptStrategyComparisonToTable,
   adaptSignalEvaluationToExplorer,
+  adaptPortfolioReview,
+  adaptRebalancePlan,
+  adaptBacktestV2Summary,
 } from "@/lib/api/adapters";
 import { createArtifactStore, type ArtifactStoreApi } from "@/lib/artifacts/artifact-store";
 import { createArtifactTitle, operationKindToArtifactType, operationSummary } from "@/lib/operations/operation-artifacts";
@@ -29,7 +34,15 @@ type SafeResponse<T> = {
 };
 
 function normalizeSafeResponse<T extends Record<string, unknown>>(
-  result: Awaited<ReturnType<typeof runResearch>> | Awaited<ReturnType<typeof generateReport>> | Awaited<ReturnType<typeof runPipeline>> | Awaited<ReturnType<typeof runBacktest>> | Awaited<ReturnType<typeof compareStrategies>> | Awaited<ReturnType<typeof evaluateSignals>>,
+  result:
+    | Awaited<ReturnType<typeof runResearch>>
+    | Awaited<ReturnType<typeof generateReport>>
+    | Awaited<ReturnType<typeof runPipeline>>
+    | Awaited<ReturnType<typeof runBacktest>>
+    | Awaited<ReturnType<typeof runPortfolioReview>>
+    | Awaited<ReturnType<typeof runBacktestV2>>
+    | Awaited<ReturnType<typeof compareStrategies>>
+    | Awaited<ReturnType<typeof evaluateSignals>>,
 ): SafeResponse<T> {
   if (result.ok) {
     return {
@@ -119,6 +132,18 @@ export async function runResearchOperation(
     } else if (request.kind === "run_backtest") {
       safeData = normalizeSafeResponse(await runBacktest(basePayload));
       artifactData = safeData.data;
+    } else if (request.kind === "run_portfolio_review") {
+      safeData = normalizeSafeResponse(await runPortfolioReview(basePayload));
+      artifactData = adaptPortfolioReview(
+        safeData.data,
+        toFrontendMeta(safeData.source, safeData.fallbackUsed, safeData.fallbackReason),
+      );
+    } else if (request.kind === "run_backtest_v2") {
+      safeData = normalizeSafeResponse(await runBacktestV2(basePayload));
+      artifactData = adaptBacktestV2Summary(
+        safeData.data,
+        toFrontendMeta(safeData.source, safeData.fallbackUsed, safeData.fallbackReason),
+      );
     } else if (request.kind === "compare_strategies") {
       safeData = normalizeSafeResponse(await compareStrategies(basePayload));
       artifactData = adaptStrategyComparisonToTable(
@@ -148,6 +173,40 @@ export async function runResearchOperation(
         operationId: request.id,
       },
     });
+
+    if (request.kind === "run_portfolio_review") {
+      const review = artifactData as Record<string, unknown>;
+      const planArtifact = artifactStore.create({
+        sessionId: "session-1",
+        type: "rebalance_plan",
+        title: `${request.ticker ?? request.tickers?.join(",") ?? "watchlist"} rebalance plan`,
+        summary: "Synthetic rebalance target plan (research simulation only, not orders)",
+        ticker: request.ticker,
+        tickers: request.tickers,
+        asOfDate: request.asOfDate,
+        source: safeData.source,
+        synthetic: safeData.source !== "api",
+        data: adaptRebalancePlan(review, toFrontendMeta(safeData.source, safeData.fallbackUsed, safeData.fallbackReason)),
+        lineage: {
+          operationId: request.id,
+          sourceArtifactIds: [artifact.id],
+        },
+      });
+
+      artifactStore.update(artifact.id, {
+        relatedArtifactIds: [...(artifact.relatedArtifactIds ?? []), planArtifact.id],
+      });
+
+      return {
+        operationId: request.id,
+        kind: request.kind,
+        status: "succeeded",
+        summary: operationSummary(request.kind, request.ticker ?? request.tickers?.join(",") ?? "watchlist"),
+        artifactIds: [artifact.id, planArtifact.id],
+        warnings: safeData.warning ? [safeData.warning] : [],
+        source: safeData.source,
+      };
+    }
 
     return {
       operationId: request.id,

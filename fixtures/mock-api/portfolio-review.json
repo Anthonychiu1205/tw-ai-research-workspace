@@ -1,0 +1,49 @@
+{
+  "analysisId": "portfolio-analysis-2330-watchlist",
+  "asOfDate": "2026-05-06",
+  "tickers": ["2330", "2317", "2454", "2308", "0050"],
+  "targetWeights": {
+    "2330": 0.2,
+    "2317": 0.16,
+    "2454": 0.14,
+    "2308": 0.12,
+    "0050": 0.18
+  },
+  "cashWeight": 0.2,
+  "rebalancePlan": {
+    "planId": "rebalance-plan-2330-watchlist",
+    "asOfDate": "2026-05-06",
+    "targetWeights": {
+      "2330": 0.2,
+      "2317": 0.16,
+      "2454": 0.14,
+      "2308": 0.12,
+      "0050": 0.18
+    },
+    "cashWeight": 0.2,
+    "turnoverEstimate": 0.22,
+    "riskSummary": {
+      "longOnly": true,
+      "maxPositionWeight": 0.2,
+      "notes": ["synthetic portfolio construction", "no execution"]
+    },
+    "decisions": [
+      {"ticker": "2330", "action": "increase", "fromWeight": 0.15, "toWeight": 0.2, "reason": "composite score positive", "constraintsApplied": ["max_position_weight"]},
+      {"ticker": "2317", "action": "hold", "fromWeight": 0.16, "toWeight": 0.16, "reason": "stable synthetic signal", "constraintsApplied": []},
+      {"ticker": "2454", "action": "enter", "fromWeight": 0.0, "toWeight": 0.14, "reason": "signal confidence improved", "constraintsApplied": ["max_names"]}
+    ]
+  },
+  "warnings": ["Synthetic allocation target only. Not investment advice."],
+  "assumptions": ["No order execution", "Local hypothetical constraints"],
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  },
+  "title": "Portfolio Review Watchlist",
+  "titleZh": "Watchlist 投組檢視",
+  "titleEn": "Portfolio Review Watchlist",
+  "summaryZh": "Synthetic 投組權重與再平衡方案。",
+  "summaryEn": "Synthetic portfolio weights and rebalance plan."
+}

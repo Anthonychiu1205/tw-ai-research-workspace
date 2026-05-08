@@ -5,7 +5,10 @@ export type ArtifactKind =
   | "strategy_comparison"
   | "signal_evaluation"
   | "evidence_timeline"
-  | "backtest_summary";
+  | "backtest_summary"
+  | "portfolio_review"
+  | "rebalance_plan"
+  | "backtest_v2_summary";
 
 export type WorkspaceArtifactRecord = {
   id: string;

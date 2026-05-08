@@ -24,7 +24,7 @@ export function RuntimeSettingsPanel({
   onCheckBackend: () => void;
   fallbackActive?: boolean;
 }) {
-  const providers: ModelProvider[] = ["mock", "openai", "anthropic", "local"];
+  const providers: ModelProvider[] = ["mock", "openai", "anthropic", "local", "groq", "deepseek", "ollama"];
 
   return (
     <div className="space-y-3 rounded-md border p-3" data-testid="runtime-settings-panel">

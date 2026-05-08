@@ -15,6 +15,9 @@ const filterKinds: Array<ArtifactKind | "all"> = [
   "signal_evaluation",
   "evidence_timeline",
   "backtest_summary",
+  "portfolio_review",
+  "rebalance_plan",
+  "backtest_v2_summary",
 ];
 
 function artifactTypeLabel(kind: ArtifactKind, t: (path: string) => string) {
@@ -24,6 +27,9 @@ function artifactTypeLabel(kind: ArtifactKind, t: (path: string) => string) {
   if (kind === "strategy_comparison") return t("artifacts.strategyComparison");
   if (kind === "signal_evaluation") return t("artifacts.signalEvaluation");
   if (kind === "evidence_timeline") return t("artifacts.evidenceTimeline");
+  if (kind === "portfolio_review") return t("artifacts.portfolioReview");
+  if (kind === "rebalance_plan") return t("artifacts.rebalancePlan");
+  if (kind === "backtest_v2_summary") return t("artifacts.backtestV2Summary");
   return kind;
 }
 

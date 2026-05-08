@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  },
+  "artifactType": "rebalance_plan",
+  "ref": "fixtures/demo/portfolio-review-2330-watchlist.json#rebalancePlan",
+  "title": "Rebalance Plan Watchlist Artifact",
+  "titleZh": "Watchlist 再平衡計畫 Artifact",
+  "titleEn": "Rebalance Plan Watchlist Artifact"
+}

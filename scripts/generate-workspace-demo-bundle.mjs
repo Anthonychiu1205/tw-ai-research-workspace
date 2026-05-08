@@ -15,6 +15,8 @@ const evidenceTimeline = readJson("fixtures/demo/evidence-timeline-2330.json");
 const reportSections = readJson("fixtures/demo/report-sections-2330.json");
 const plannerTrace = readJson("fixtures/demo/planner-trace-2330.json");
 const strategyComparison = readJson("fixtures/demo/strategy-comparison.json");
+const portfolioReview = readJson("fixtures/demo/portfolio-review-2330-watchlist.json");
+const backtestV2Summary = readJson("fixtures/demo/backtest-v2-summary.json");
 
 const bundle = {
   schemaVersion: "workspace-demo-bundle.v0.5",
@@ -44,6 +46,8 @@ const bundle = {
   reportSections,
   plannerTrace,
   strategyComparison,
+  portfolioReview,
+  backtestV2Summary,
   scenariosCompleted: [
     "analyze_2330",
     "generate_2330_report",

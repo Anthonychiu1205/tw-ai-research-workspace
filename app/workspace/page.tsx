@@ -60,6 +60,8 @@ function toolNameToArtifactType(toolName: string): WorkspaceArtifactRecord["type
   if (toolName === "compareStrategies") return "strategy_comparison";
   if (toolName === "evaluateSignals") return "signal_evaluation";
   if (toolName === "getEvidenceTimeline") return "evidence_timeline";
+  if (toolName === "runPortfolioReview") return "portfolio_review";
+  if (toolName === "runBacktestV2") return "backtest_v2_summary";
   return null;
 }
 
@@ -259,6 +261,7 @@ export default function WorkspacePage() {
                   else if (path.includes("trace")) setActiveView("trace");
                   else if (path.includes("strategy")) setActiveView("strategy");
                   else if (path.includes("signal")) setActiveView("signals");
+                  else if (path.includes("portfolio")) setActiveView("portfolio");
                   else setActiveView("chat");
                 },
                 setRuntimeMode: (mode) => applySettings({ mode }),

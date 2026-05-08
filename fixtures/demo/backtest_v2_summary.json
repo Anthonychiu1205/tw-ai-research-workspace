@@ -1,0 +1,13 @@
+{
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  },
+  "artifactType": "backtest_v2_summary",
+  "ref": "fixtures/demo/backtest-v2-summary.json",
+  "title": "Backtest v2 Summary Artifact",
+  "titleZh": "Backtest v2 摘要 Artifact",
+  "titleEn": "Backtest v2 Summary Artifact"
+}

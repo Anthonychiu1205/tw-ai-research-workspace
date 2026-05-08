@@ -2,7 +2,14 @@ import { researchCardSchema, signalMatrixSchema } from "@/lib/schemas/research";
 import { reportSectionSchema } from "@/lib/schemas/reports";
 import { researchPipelineResultSchema } from "@/lib/schemas/traces";
 import { signalEvaluationResultSchema } from "@/lib/schemas/signals";
-import { strategyComparisonSchema } from "@/lib/schemas/strategies";
+import {
+  strategyComparisonSchema,
+  portfolioReviewSchema,
+  rebalancePlanSchema,
+  backtestV2SummarySchema,
+  type PortfolioReview,
+  type BacktestV2Summary,
+} from "@/lib/schemas/strategies";
 import type { FrontendSafeMeta } from "@/lib/api/client";
 
 function mergeMeta(inputMeta: any, frontendMeta?: FrontendSafeMeta) {
@@ -79,6 +86,28 @@ export function adaptSignalEvaluationToExplorer(input: any, frontendMeta?: Front
 
 export function adaptStrategyComparisonToTable(input: any, frontendMeta?: FrontendSafeMeta) {
   return strategyComparisonSchema.parse({
+    ...input,
+    metadata: mergeMeta(input.metadata, frontendMeta),
+  });
+}
+
+export function adaptPortfolioReview(input: any, frontendMeta?: FrontendSafeMeta): PortfolioReview {
+  return portfolioReviewSchema.parse({
+    ...input,
+    metadata: mergeMeta(input.metadata, frontendMeta),
+  });
+}
+
+export function adaptRebalancePlan(input: any, frontendMeta?: FrontendSafeMeta) {
+  const plan = input?.rebalancePlan ?? input;
+  return rebalancePlanSchema.parse({
+    ...plan,
+    _meta: mergeMeta(input?.metadata, frontendMeta),
+  });
+}
+
+export function adaptBacktestV2Summary(input: any, frontendMeta?: FrontendSafeMeta): BacktestV2Summary {
+  return backtestV2SummarySchema.parse({
     ...input,
     metadata: mergeMeta(input.metadata, frontendMeta),
   });

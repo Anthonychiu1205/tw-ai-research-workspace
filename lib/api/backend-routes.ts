@@ -3,6 +3,7 @@ export type BackendCapabilityCategory =
   | "reports"
   | "pipelines"
   | "backtests"
+  | "portfolio"
   | "strategies"
   | "evaluations"
   | "system";
@@ -55,6 +56,14 @@ export const backendRouteDefinitions: BackendRouteDefinition[] = [
     category: "backtests",
     workspaceProxyPath: "/api/backend/backtests",
     backendPath: "/v1/backtests",
+    method: "POST",
+  },
+  {
+    id: "portfolio-review",
+    label: "Portfolio Review",
+    category: "portfolio",
+    workspaceProxyPath: "/api/backend/portfolio",
+    backendPath: "/v1/portfolio/review",
     method: "POST",
   },
   {

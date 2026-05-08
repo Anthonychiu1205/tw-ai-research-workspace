@@ -4,6 +4,8 @@ import {
   runResearch,
   generateReport,
   runPipeline,
+  runPortfolioReview,
+  runBacktestV2,
   compareStrategies,
   evaluateSignals,
 } from "@/lib/api/client";
@@ -11,7 +13,7 @@ import { mockToolData } from "@/lib/tools/mock-tools";
 
 const symbolInputSchema = z.object({ symbol: z.string().default("2330") });
 
-export type ToolCategory = "research" | "report" | "pipeline" | "strategy" | "signal" | "evidence";
+export type ToolCategory = "research" | "report" | "pipeline" | "strategy" | "signal" | "evidence" | "portfolio" | "backtest";
 
 export type ToolDefinition = {
   name: string;
@@ -109,6 +111,26 @@ export const workspaceTools: ToolDefinition[] = [
     outputKind: "strategy_comparison",
     producesArtifacts: true,
     execute: async (input) => toToolResult("compareStrategies", () => compareStrategies(input)),
+  },
+  {
+    name: "runPortfolioReview",
+    label: "Run Portfolio Review",
+    description: "Create synthetic portfolio allocation and rebalance target plan",
+    category: "portfolio",
+    inputSchema: symbolInputSchema,
+    outputKind: "portfolio_review",
+    producesArtifacts: true,
+    execute: async (input) => toToolResult("runPortfolioReview", () => runPortfolioReview(input)),
+  },
+  {
+    name: "runBacktestV2",
+    label: "Run Backtest v2",
+    description: "Run synthetic portfolio-managed backtest summary",
+    category: "backtest",
+    inputSchema: symbolInputSchema,
+    outputKind: "backtest_v2_summary",
+    producesArtifacts: true,
+    execute: async (input) => toToolResult("runBacktestV2", () => runBacktestV2(input)),
   },
   {
     name: "evaluateSignals",

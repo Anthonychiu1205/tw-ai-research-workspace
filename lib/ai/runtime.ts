@@ -24,6 +24,8 @@ export function selectToolsFromPrompt(prompt: string): string[] {
   if (lower.includes("report") || lower.includes("報告")) names.push("generateReport");
   if (lower.includes("pipeline") || lower.includes("trace") || lower.includes("planner") || lower.includes("軌跡")) names.push("runPipeline");
   if (lower.includes("compare") || lower.includes("strategy") || lower.includes("策略")) names.push("compareStrategies");
+  if (lower.includes("portfolio") || lower.includes("組合")) names.push("runPortfolioReview");
+  if (lower.includes("backtest v2") || lower.includes("portfolio backtest")) names.push("runBacktestV2");
   if (lower.includes("signal") || lower.includes("訊號")) names.push("evaluateSignals", "getSignalMatrix");
   if (lower.includes("evidence") || lower.includes("timeline") || lower.includes("證據")) names.push("getEvidenceTimeline");
   if (names.length === 0) names.push("runResearch", "getAgentConsensus");
@@ -52,7 +54,7 @@ export function normalizeToolCallResult(result: WorkspaceToolResult) {
 export async function runAssistantRuntime(input: {
   messages: MockMessage[];
   modelId: string;
-  provider: "mock" | "openai" | "anthropic" | "local";
+  provider: "mock" | "openai" | "anthropic" | "local" | "groq" | "deepseek" | "ollama";
   locale?: Locale;
   runtimeConfig?: Partial<WorkspaceRuntimeConfig>;
 }) {

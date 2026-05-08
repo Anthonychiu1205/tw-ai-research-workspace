@@ -2,6 +2,8 @@ import researchRunFixture from "@/fixtures/mock-api/research-run.json";
 import reportFixture from "@/fixtures/mock-api/report.json";
 import pipelineFixture from "@/fixtures/mock-api/pipeline-result.json";
 import signalEvalFixture from "@/fixtures/mock-api/signal-evaluation.json";
+import portfolioReviewFixture from "@/fixtures/mock-api/portfolio-review.json";
+import backtestV2Fixture from "@/fixtures/mock-api/backtest-v2.json";
 import strategyComparisonFixture from "@/fixtures/demo/strategy-comparison.json";
 import timelineFixture from "@/fixtures/demo/evidence-timeline-2330.json";
 import signalMatrixFixture from "@/fixtures/demo/signal-matrix-watchlist.json";
@@ -14,7 +16,7 @@ type BridgeMode = "mock" | "proxy" | "direct";
 
 export type FrontendSafeMeta = {
   source: "mock" | "api" | "mock_fallback";
-  provider: "mock" | "openai" | "anthropic" | "local" | "api";
+  provider: "mock" | "openai" | "anthropic" | "local" | "groq" | "deepseek" | "ollama" | "api";
   synthetic: boolean;
   fallbackUsed: boolean;
   fallbackReason?: string;
@@ -329,6 +331,54 @@ export async function runBacktest(request: Record<string, unknown>, options?: Cl
   );
 }
 
+export async function runPortfolioReview(request: Record<string, unknown>, options?: ClientOptions) {
+  return withFallback(
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/portfolio" : "/v1/portfolio/review",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify({ ...request, action: "review" }) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
+    portfolioReviewFixture,
+    options,
+  );
+}
+
+export async function getPortfolioAnalysis(analysisId: string, options?: ClientOptions) {
+  return withFallback(
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? `/api/backend/portfolio?analysisId=${encodeURIComponent(analysisId)}` : `/v1/portfolio/${analysisId}`,
+        runtime,
+        transport,
+        undefined,
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
+    {
+      ...portfolioReviewFixture,
+      analysisId,
+    },
+    options,
+  );
+}
+
+export async function runBacktestV2(request: Record<string, unknown>, options?: ClientOptions) {
+  return withFallback(
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/backtests" : "/v1/backtests",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify({ ...request, mode: "portfolio_manager" }) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
+    backtestV2Fixture,
+    options,
+  );
+}
+
 export async function compareStrategies(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
     async (runtime, transport, timeoutMs) =>
@@ -375,6 +425,9 @@ export async function getProviderConformance(options?: ClientOptions) {
         { name: "mock", status: "available" },
         { name: "openai", status: "env-gated" },
         { name: "anthropic", status: "env-gated" },
+        { name: "groq", status: "env-gated" },
+        { name: "deepseek", status: "env-gated" },
+        { name: "ollama", status: "env-gated" },
       ],
     },
     options,

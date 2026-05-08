@@ -9,7 +9,10 @@ function normalizeKind(value: unknown): ArtifactKind {
     value === "strategy_comparison" ||
     value === "signal_evaluation" ||
     value === "evidence_timeline" ||
-    value === "backtest_summary"
+    value === "backtest_summary" ||
+    value === "portfolio_review" ||
+    value === "rebalance_plan" ||
+    value === "backtest_v2_summary"
   ) {
     return value;
   }

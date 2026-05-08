@@ -3,6 +3,8 @@ export type ResearchOperationKind =
   | "generate_report"
   | "run_pipeline"
   | "run_backtest"
+  | "run_portfolio_review"
+  | "run_backtest_v2"
   | "compare_strategies"
   | "evaluate_signals";
 

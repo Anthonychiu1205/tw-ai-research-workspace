@@ -4,6 +4,9 @@ Providers:
 - `mock` (default)
 - `openai` (env-gated)
 - `anthropic` (env-gated)
+- `groq` (env-gated)
+- `deepseek` (env-gated)
+- `ollama` (env-gated)
 - `local` (env-gated placeholder)
 
 `lib/config/models.ts` exposes:

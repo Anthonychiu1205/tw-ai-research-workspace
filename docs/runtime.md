@@ -1,6 +1,7 @@
 # Runtime
 
 v0.5 runtime targets local release-candidate readiness.
+v0.8 extends runtime provider readiness and portfolio/backtest operations while keeping mock default.
 
 ## Modes
 

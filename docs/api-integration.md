@@ -17,6 +17,12 @@ v0.5 keeps API optional and mock-first.
   - `fallbackUsed`
   - `fallbackReason`
 
+## Extended endpoints in workspace v0.8
+
+- `POST /api/backend/portfolio` -> backend portfolio review/rebalance-plan
+- `GET /api/backend/portfolio?analysisId=...` -> backend portfolio analysis lookup
+- `POST /api/backend/backtests` with `mode=portfolio_manager` for backtest v2 summary
+
 ## Troubleshooting
 
 - verify `TW_AI_RESEARCH_API_BASE_URL`

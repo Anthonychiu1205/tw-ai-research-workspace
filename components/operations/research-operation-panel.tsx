@@ -8,6 +8,8 @@ import { RunResearchForm } from "@/components/operations/run-research-form";
 import { GenerateReportForm } from "@/components/operations/generate-report-form";
 import { RunPipelineForm } from "@/components/operations/run-pipeline-form";
 import { RunBacktestForm } from "@/components/operations/run-backtest-form";
+import { RunPortfolioReviewForm } from "@/components/operations/run-portfolio-review-form";
+import { RunBacktestV2Form } from "@/components/operations/run-backtest-v2-form";
 import { CompareStrategiesForm } from "@/components/operations/compare-strategies-form";
 import { EvaluateSignalsForm } from "@/components/operations/evaluate-signals-form";
 import { OperationResultSummary } from "@/components/operations/operation-result-summary";
@@ -72,6 +74,24 @@ export function ResearchOperationPanel({
           onSubmit={async (ticker) => {
             const request = createDefaultOperationRequest("run_backtest");
             request.ticker = ticker;
+            await execute(request);
+          }}
+        />
+        <RunPortfolioReviewForm
+          disabled={running}
+          onSubmit={async (tickers) => {
+            const request = createDefaultOperationRequest("run_portfolio_review");
+            request.tickers = tickers;
+            request.ticker = tickers[0] ?? "2330";
+            await execute(request);
+          }}
+        />
+        <RunBacktestV2Form
+          disabled={running}
+          onSubmit={async (tickers) => {
+            const request = createDefaultOperationRequest("run_backtest_v2");
+            request.tickers = tickers;
+            request.ticker = tickers[0] ?? "2330";
             await execute(request);
           }}
         />
