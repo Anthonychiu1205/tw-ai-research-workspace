@@ -66,13 +66,11 @@ describe("workspace export actions share", () => {
   test("import workspace JSON handles invalid input safely", () => {
     const props = createProps();
     const promptSpy = vi.spyOn(window, "prompt").mockReturnValue("bad-json");
-    const alertSpy = vi.spyOn(window, "alert").mockImplementation(() => {});
     render(<WorkspaceExportActions {...props} />);
 
     fireEvent.click(screen.getByRole("button", { name: /Import workspace JSON/i }));
 
-    expect(alertSpy).toHaveBeenCalled();
+    expect(screen.getByText(/Something went wrong|發生錯誤/i)).toBeInTheDocument();
     promptSpy.mockRestore();
-    alertSpy.mockRestore();
   });
 });

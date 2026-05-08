@@ -77,7 +77,7 @@ export function ToolCallRenderer({ event }: { event: any }) {
           <div className="mb-2 text-xs text-muted-foreground">evidence: {event.evidenceIds.join(", ")}</div>
         ) : null}
         {event.warnings?.length > 0 ? (
-          <div className="mb-2 text-xs text-yellow-400">warnings: {event.warnings.join("; ")}</div>
+          <div className="mb-2 text-xs text-amber-700">warnings: {event.warnings.join("; ")}</div>
         ) : null}
         {renderToolContent(event)}
       </CardContent>

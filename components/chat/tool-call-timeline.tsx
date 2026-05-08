@@ -21,9 +21,9 @@ export function ToolCallTimeline({
   };
 
   return (
-    <div className="space-y-2 rounded-md border border-border/70 bg-card/50 p-2.5" data-testid="tool-call-timeline">
+    <div className="space-y-2 rounded-md border border-border bg-white p-2.5" data-testid="tool-call-timeline">
       {calls.map((call) => (
-        <div key={call.id} className="rounded border border-border/70 bg-background/50 p-2 text-xs">
+        <div key={call.id} className="rounded border border-border bg-slate-50 p-2 text-xs">
           <div className="mb-1 flex flex-wrap items-center gap-2">
             <span>{call.toolName}</span>
             <StatusBadge tone={statusTone(call.status)}>{call.status}</StatusBadge>
@@ -39,10 +39,10 @@ export function ToolCallTimeline({
               ))}
             </div>
           ) : null}
-          {call.error ? <div className="mb-1 text-rose-300">{call.error}</div> : null}
+          {call.error ? <div className="mb-1 text-rose-700">{call.error}</div> : null}
           {call.artifactId ? (
             <Button type="button" size="sm" variant="outline" onClick={() => onOpenArtifact?.(call.artifactId!)}>
-              {t("common.open")}
+              {t("common.openArtifact")}
             </Button>
           ) : null}
         </div>

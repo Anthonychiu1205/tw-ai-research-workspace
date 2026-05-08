@@ -135,7 +135,7 @@ export function RuntimeSettingsPanel({
         {providerUnavailableReason ? <StatusBadge tone="warning">{t("model.unavailable")}: {providerUnavailableReason}</StatusBadge> : null}
       </div>
 
-      <details className="rounded-md border border-border/60 bg-background/20 p-2">
+      <details className="rounded-md border border-border bg-muted/40 p-2">
         <summary className="cursor-pointer text-xs font-medium">{t("runtime.provider")}</summary>
         <div className="mt-2 flex flex-wrap gap-2">
           {providers.map((provider) => (
@@ -160,6 +160,11 @@ export function RuntimeSettingsPanel({
           {t("backend.testConnection")}
         </Button>
       </div>
+      {settings.mode === "api" && fallbackActive ? (
+        <div className="rounded-md border border-amber-200 bg-amber-50 px-2.5 py-2 text-xs text-amber-800">
+          {t("backend.apiFallback")}
+        </div>
+      ) : null}
 
       <BackendLiveModeGuide apiBaseUrl={settings.apiBaseUrl} fallbackActive={Boolean(fallbackActive)} onTestConnection={onCheckBackend} />
     </div>

@@ -24,6 +24,18 @@ v0.8 extends runtime provider readiness and portfolio/backtest operations while 
 
 Settings persist in localStorage only.
 
+## Capability matrix (v0.9)
+
+Workspace evaluates capabilities by runtime mode + backend reachability:
+- `both`: available in mock and api modes
+- `api`: requires reachable backend (or shows fallback-safe disabled reason)
+- `mock`: local-only helper capability
+
+UI uses this matrix to control:
+- enabled/disabled controls
+- unavailable reasons
+- fallback availability notes
+
 ## Boundaries
 
 - not dashboard / not SaaS

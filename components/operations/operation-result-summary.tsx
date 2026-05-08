@@ -1,7 +1,8 @@
 import type { ResearchOperationResult } from "@/lib/operations/operation-types";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/use-i18n";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { InlineFeedback } from "@/components/ui/inline-feedback";
 
 export function OperationResultSummary({
   result,
@@ -19,20 +20,20 @@ export function OperationResultSummary({
   };
 
   return (
-    <div className="rounded-md border p-3 text-xs" data-testid="operation-result-summary">
+    <div className="rounded-md border border-border bg-white p-3 text-xs" data-testid="operation-result-summary">
       <div className="mb-1 flex items-center gap-2">
         <span className="font-medium">{result.kind}</span>
-        <Badge>{result.status}</Badge>
-        <Badge>{result.source}</Badge>
+        <StatusBadge tone={result.status === "succeeded" ? "success" : "danger"}>{result.status}</StatusBadge>
+        <StatusBadge tone={result.source === "api" ? "backend" : result.source === "mock_fallback" ? "warning" : "mock"}>{result.source}</StatusBadge>
       </div>
       <div className="mb-2 text-muted-foreground">{result.summary}</div>
-      {result.error ? <div className="mb-2 text-red-400">{result.error}</div> : null}
-      {result.warnings.length > 0 ? <div className="mb-2 text-yellow-400">{result.warnings.join("; ")}</div> : null}
+      {result.error ? <InlineFeedback tone="danger" message={t("errors.generic")} detail={result.error} /> : null}
+      {result.warnings.length > 0 ? <InlineFeedback tone="warning" message={t("runtime.fallback")} detail={result.warnings.join("; ")} /> : null}
       <div className="flex flex-wrap gap-2">
         {result.artifactIds.map((artifactId) => (
           <div key={artifactId} className="flex gap-2">
             <Button type="button" size="sm" variant="outline" onClick={() => onOpenArtifact?.(artifactId)}>
-              {t("common.open")}
+              {t("common.openArtifact")}
             </Button>
             <Button type="button" size="sm" variant="outline" onClick={() => onPinArtifact?.(artifactId)}>
               {t("artifacts.pin")}

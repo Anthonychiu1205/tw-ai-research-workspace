@@ -15,6 +15,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { Panel } from "@/components/ui/panel";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { EmptyResult } from "@/components/ui/empty-result";
 
 const FALLBACK_AS_OF_DATE = "2026-01-01";
 
@@ -22,9 +23,12 @@ export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifa
   const { t } = useI18n();
   if (!artifact) {
     return (
-      <Panel className="border-dashed text-xs text-muted-foreground" data-testid="workspace-context-empty">
-        {t("emptyStates.noSelection")}
-      </Panel>
+      <div data-testid="workspace-context-empty">
+        <EmptyResult
+          title={t("emptyStates.noSelection")}
+          description={t("emptyStates.selectScenarioPrompt")}
+        />
+      </div>
     );
   }
 

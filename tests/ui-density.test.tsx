@@ -18,7 +18,7 @@ describe("ui density", () => {
       expect(screen.getByTestId("sidebar")).toBeInTheDocument();
       expect(screen.getByText(/快速操作|Quick Actions/i)).toBeInTheDocument();
       expect(screen.getByText(/Session 歷史|Session History/i)).toBeInTheDocument();
-      expect(screen.getByText(/近期 Artifacts|Recent Artifacts/i)).toBeInTheDocument();
+      expect(screen.getByText(/近期研究產物|Recent Outputs|Recent Artifacts/i)).toBeInTheDocument();
     });
   });
 

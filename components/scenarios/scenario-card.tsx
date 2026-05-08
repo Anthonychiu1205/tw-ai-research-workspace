@@ -14,7 +14,7 @@ export function ScenarioCard({
 }) {
   const { t } = useI18n();
   return (
-    <div className="rounded-lg border border-border/70 bg-background/20 p-3 text-xs" data-testid={`scenario-card-${scenario.id}`}>
+    <div className="rounded-lg border border-border bg-white p-3 text-xs" data-testid={`scenario-card-${scenario.id}`}>
       <div className="mb-1 flex items-center justify-between gap-2">
         <div className="line-clamp-2 text-sm font-medium leading-5">{scenario.title}</div>
         <StatusBadge tone={scenario.mockSafe ? "mock" : "backend"}>{scenario.mockSafe ? "mock" : "api"}</StatusBadge>
@@ -30,7 +30,7 @@ export function ScenarioCard({
           disabled={running}
           aria-label={`Run scenario ${scenario.title}`}
         >
-          {t("common.run")}
+          {t("common.runScenario")}
         </Button>
       </div>
     </div>

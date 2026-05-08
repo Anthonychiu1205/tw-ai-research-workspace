@@ -2,6 +2,7 @@
 
 import type { RuntimeSettings, WorkspaceSession } from "@/lib/schemas/workspace";
 import type { WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
+import { useState } from "react";
 import {
   exportWorkspaceShareBundle,
   exportWorkspaceState,
@@ -9,6 +10,8 @@ import {
   importWorkspaceState,
 } from "@/lib/workspace/export-import";
 import { Button } from "@/components/ui/button";
+import { InlineFeedback } from "@/components/ui/inline-feedback";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function WorkspaceExportActions({
   sessions,
@@ -30,6 +33,8 @@ export function WorkspaceExportActions({
   }) => void;
   onReset: () => void;
 }) {
+  const { t } = useI18n();
+  const [feedback, setFeedback] = useState<{ tone: "success" | "warning" | "danger"; message: string; detail?: string } | null>(null);
   const exportJson = () => exportWorkspaceState({ sessions, artifacts, runtimeSettings });
   const exportShare = () =>
     exportWorkspaceShareBundle({
@@ -44,6 +49,7 @@ export function WorkspaceExportActions({
   const copyBackup = async () => {
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
     await navigator.clipboard.writeText(exportJson());
+    setFeedback({ tone: "success", message: t("common.completed"), detail: "Workspace JSON copied" });
   };
 
   const importBackup = () => {
@@ -58,14 +64,16 @@ export function WorkspaceExportActions({
         runtimeSettings: parsed.value.runtimeSettings,
         scenariosCompleted: [],
       });
+      setFeedback({ tone: "success", message: t("common.completed"), detail: "Workspace JSON imported" });
       return;
     }
-    window.alert(parsed.error ?? "Invalid backup");
+    setFeedback({ tone: "danger", message: t("errors.generic"), detail: parsed.error ?? "Invalid backup" });
   };
 
   const copyShareBundle = async () => {
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
     await navigator.clipboard.writeText(exportShare());
+    setFeedback({ tone: "success", message: t("common.completed"), detail: "Share bundle copied" });
   };
 
   const importShareBundle = () => {
@@ -80,9 +88,10 @@ export function WorkspaceExportActions({
         runtimeSettings: parsed.value.runtimeSettings,
         scenariosCompleted: parsed.value.scenariosCompleted,
       });
+      setFeedback({ tone: "success", message: t("common.completed"), detail: "Share bundle imported" });
       return;
     }
-    window.alert(parsed.error ?? "Invalid share bundle");
+    setFeedback({ tone: "danger", message: t("errors.generic"), detail: parsed.error ?? "Invalid share bundle" });
   };
 
   const copyBundleSummary = async () => {
@@ -97,10 +106,16 @@ export function WorkspaceExportActions({
     };
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
     await navigator.clipboard.writeText(JSON.stringify(summary, null, 2));
+    setFeedback({ tone: "success", message: t("common.completed"), detail: "Bundle summary copied" });
   };
 
   return (
     <div className="flex flex-wrap gap-2" data-testid="workspace-export-actions">
+      {feedback ? (
+        <div className="w-full">
+          <InlineFeedback tone={feedback.tone} message={feedback.message} detail={feedback.detail} />
+        </div>
+      ) : null}
       <Button type="button" size="sm" variant="outline" onClick={() => void copyBackup()}>
         Export workspace JSON
       </Button>

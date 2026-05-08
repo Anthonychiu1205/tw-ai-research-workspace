@@ -30,7 +30,7 @@ export function ArtifactDetailPanel({
       <ArtifactMetadataCard artifact={artifact} />
       <ArtifactLineage artifact={artifact} />
       {artifact.evidenceIds.length > 0 ? (
-        <div className="rounded-md bg-background/20 p-3 text-xs">
+        <div className="rounded-md border border-border bg-slate-50 p-3 text-xs">
           <div className="mb-1 font-medium">{t("tools.evidenceRefs")}</div>
           <div className="flex flex-wrap gap-1">
             {artifact.evidenceIds.map((evidenceId) => (
@@ -40,12 +40,12 @@ export function ArtifactDetailPanel({
         </div>
       ) : null}
       {artifact.relatedArtifactIds.length > 0 ? (
-        <div className="rounded-md bg-background/20 p-3 text-xs">
+        <div className="rounded-md border border-border bg-slate-50 p-3 text-xs">
           related artifacts: {artifact.relatedArtifactIds.join(", ")}
         </div>
       ) : null}
       <ArtifactExportActions artifact={artifact} onPinToggle={onPinToggle} />
-      <details className="rounded-md border border-border/60 bg-background/20 p-2">
+      <details className="rounded-md border border-border bg-slate-50 p-2">
         <summary className="cursor-pointer text-xs font-medium">{t("artifacts.exportJson")}</summary>
         <div className="mt-2">
           <ArtifactJsonViewer data={artifact.data ?? artifact} />

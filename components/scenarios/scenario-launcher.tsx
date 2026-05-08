@@ -53,7 +53,7 @@ export function ScenarioLauncher({
         ))}
       </div>
       <ScenarioProgress steps={result?.steps ?? []} />
-      <details className="rounded-lg border border-border/70 bg-background/20 p-3" open={false}>
+      <details className="rounded-lg border border-border bg-muted/40 p-3" open={false}>
         <summary className="cursor-pointer text-sm font-medium">{t("scenarios.steps")}</summary>
         <div className="mt-2">
           <ScenarioStepper steps={result?.steps ?? []} />

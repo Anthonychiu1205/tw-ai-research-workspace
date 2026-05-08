@@ -9,12 +9,12 @@ export type StatusTone =
   | "mock";
 
 export function toneClassName(tone: StatusTone): string {
-  if (tone === "backend") return "border-sky-400/35 bg-sky-500/12 text-sky-200";
-  if (tone === "evidence") return "border-amber-400/35 bg-amber-500/12 text-amber-200";
-  if (tone === "trace") return "border-violet-400/35 bg-violet-500/12 text-violet-200";
-  if (tone === "success") return "border-emerald-400/35 bg-emerald-500/12 text-emerald-200";
-  if (tone === "warning") return "border-orange-400/35 bg-orange-500/12 text-orange-200";
-  if (tone === "danger") return "border-rose-400/35 bg-rose-500/12 text-rose-200";
-  if (tone === "mock") return "border-indigo-400/35 bg-indigo-500/12 text-indigo-200";
-  return "border-border bg-muted/40 text-foreground";
+  if (tone === "backend") return "border-sky-200 bg-sky-50 text-sky-700";
+  if (tone === "evidence") return "border-amber-200 bg-amber-50 text-amber-700";
+  if (tone === "trace") return "border-violet-200 bg-violet-50 text-violet-700";
+  if (tone === "success") return "border-emerald-200 bg-emerald-50 text-emerald-700";
+  if (tone === "warning") return "border-orange-200 bg-orange-50 text-orange-700";
+  if (tone === "danger") return "border-rose-200 bg-rose-50 text-rose-700";
+  if (tone === "mock") return "border-indigo-200 bg-indigo-50 text-indigo-700";
+  return "border-slate-200 bg-slate-50 text-slate-700";
 }

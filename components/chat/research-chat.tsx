@@ -105,7 +105,7 @@ export function ResearchChat({
         ) : null}
       </div>
 
-      {runtimeWarning ? <div className="rounded-md border border-orange-500/35 bg-orange-500/10 p-2 text-xs">{runtimeWarning}</div> : null}
+      {runtimeWarning ? <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">{runtimeWarning}</div> : null}
       {chat.lastError ? (
         <div className="rounded-md border border-rose-500/35 bg-rose-500/10 p-2 text-xs">
           <div className="mb-2">{chat.lastError}</div>

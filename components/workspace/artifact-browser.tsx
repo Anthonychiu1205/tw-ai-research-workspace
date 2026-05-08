@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/use-i18n";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { EmptyResult } from "@/components/ui/empty-result";
 
 const filterKinds: Array<ArtifactKind | "all"> = [
   "all",
@@ -86,7 +87,7 @@ export function ArtifactBrowser({
       </div>
 
       {filtered.length === 0 ? (
-        <div className="rounded-md border border-dashed border-border/60 p-3 text-sm text-muted-foreground">{t("emptyStates.noArtifactSelection")}</div>
+        <EmptyResult title={t("emptyStates.noArtifactSelection")} description={t("emptyStates.selectScenarioPrompt")} />
       ) : null}
 
       <div className="space-y-1.5">
@@ -104,7 +105,7 @@ export function ArtifactBrowser({
                 {artifact.synthetic ? <StatusBadge tone="mock">synthetic</StatusBadge> : null}
               </div>
               <Button type="button" size="sm" variant={selected ? "default" : "outline"} onClick={() => onSelect?.(artifact.id)}>
-                {selected ? t("common.selected") : t("common.open")}
+                {selected ? t("common.selected") : t("common.openArtifact")}
               </Button>
             </div>
           );

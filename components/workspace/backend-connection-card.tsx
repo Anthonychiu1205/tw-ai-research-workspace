@@ -53,12 +53,12 @@ export function BackendConnectionCard({
         {mounted && state.appTitle ? <StatusBadge tone="neutral">{state.appTitle}</StatusBadge> : null}
         {mounted && state.fallbackActive ? <StatusBadge tone="warning">{t("backend.fallback")}</StatusBadge> : null}
       </div>
-      {mounted && state.error ? <div className="rounded-md bg-orange-500/10 px-2.5 py-2 text-xs text-orange-100">{state.error}</div> : null}
+      {mounted && state.error ? <div className="rounded-md border border-amber-200 bg-amber-50 px-2.5 py-2 text-xs text-amber-800">{state.error}</div> : null}
       {state.fallbackReason ? (
-        <div className="rounded-md bg-orange-500/10 px-2.5 py-2 text-xs text-orange-100">{t("runtime.fallback")}: {state.fallbackReason}</div>
+        <div className="rounded-md border border-amber-200 bg-amber-50 px-2.5 py-2 text-xs text-amber-800">{t("runtime.fallback")}: {state.fallbackReason}</div>
       ) : null}
       {mounted && lastLiveIntegration ? (
-        <details className="rounded-md border border-border/60 bg-background/20 p-2 text-xs" data-testid="last-live-integration">
+        <details className="rounded-md border border-border bg-muted/40 p-2 text-xs" data-testid="last-live-integration">
           <summary className="cursor-pointer font-medium">{t("backend.lastLiveCheck")}</summary>
           <div className="mt-2 space-y-1">
             <div>{t("backend.baseUrl")}: {lastLiveIntegration.baseUrl}</div>

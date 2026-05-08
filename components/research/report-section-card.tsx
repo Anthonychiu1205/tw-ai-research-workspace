@@ -24,7 +24,7 @@ export function ReportSectionCard({
         </div>
 
         {evidenceIds.length === 0 ? (
-          <div className="mb-2 rounded border border-orange-500/30 bg-orange-500/10 p-2 text-xs text-orange-200">
+          <div className="mb-2 rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
             No evidence ids linked for this section.
           </div>
         ) : (
@@ -33,7 +33,7 @@ export function ReportSectionCard({
               <button
                 key={evidenceId}
                 type="button"
-                className="rounded border border-amber-500/35 bg-amber-500/10 px-2 py-1 text-[11px] text-amber-200"
+                className="rounded border border-amber-200 bg-amber-50 px-2 py-1 text-[11px] text-amber-800"
                 onClick={() => onEvidenceSelect?.(evidenceId)}
               >
                 {evidenceId}
@@ -43,7 +43,7 @@ export function ReportSectionCard({
         )}
 
         {isDisclaimerSection ? (
-          <div className="rounded border border-indigo-500/30 bg-indigo-500/10 p-2">
+          <div className="rounded border border-indigo-200 bg-indigo-50 p-2">
             <StatusBadge tone="mock">Synthetic output, not financial advice</StatusBadge>
           </div>
         ) : null}

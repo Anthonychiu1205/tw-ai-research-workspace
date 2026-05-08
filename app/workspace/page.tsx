@@ -50,6 +50,10 @@ import { SectionHeading } from "@/components/ui/section-heading";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { Button } from "@/components/ui/button";
 import { workspaceContextColumnClass, workspaceMainColumnClass, workspacePageLayoutClass } from "@/lib/ui/layout";
+import { buildCapabilityMatrix } from "@/lib/availability/capability-matrix";
+import type { WorkspaceCapabilityId } from "@/lib/availability/availability-types";
+import { CapabilityStatusList } from "@/components/workspace/capability-status-list";
+import { InlineFeedback } from "@/components/ui/inline-feedback";
 
 type WorkspaceTab = "operations" | "scenarios" | "artifacts";
 
@@ -120,12 +124,30 @@ export default function WorkspacePage() {
   const [lastLiveIntegration, setLastLiveIntegration] = useState<LiveIntegrationSnapshot | null>(null);
   const [systemEvents, setSystemEvents] = useState<Array<{ id: string; content: string }>>([]);
   const [scenariosCompleted, setScenariosCompleted] = useState<string[]>([]);
+  const [checkingConnection, setCheckingConnection] = useState(false);
+  const [interactionFeedback, setInteractionFeedback] = useState<{ tone: "success" | "warning" | "danger" | "neutral"; message: string; detail?: string } | null>(null);
 
   const refreshSessions = () => setSessions(sessionStore.list());
   const refreshArtifacts = () => setArtifacts(artifactStore.listAll());
 
   const selectedArtifact = artifacts.find((artifact) => artifact.id === selectedArtifactId);
   const modelOptions = getModelOptions();
+  const capabilityMatrix = useMemo(
+    () =>
+      buildCapabilityMatrix({
+        runtime: runtimeSettings,
+        backend: connectionState,
+        artifactCount: artifacts.length,
+      }),
+    [artifacts.length, connectionState, runtimeSettings],
+  );
+  const capabilityMap = useMemo(() => {
+    const map: Partial<Record<WorkspaceCapabilityId, (typeof capabilityMatrix)[number]>> = {};
+    for (const capability of capabilityMatrix) {
+      map[capability.id] = capability;
+    }
+    return map;
+  }, [capabilityMatrix]);
 
   useEffect(() => {
     try {
@@ -161,6 +183,8 @@ export default function WorkspacePage() {
   }, [activeView, selectedArtifactId, selectedSessionId]);
 
   const checkConnection = async () => {
+    setCheckingConnection(true);
+    setInteractionFeedback({ tone: "neutral", message: t("backend.checking") });
     const next = await buildBackendConnectionState(runtimeSettings);
     setConnectionState(next);
     const snapshot: LiveIntegrationSnapshot = {
@@ -173,6 +197,14 @@ export default function WorkspacePage() {
     };
     writeLiveIntegrationSnapshot(snapshot);
     setLastLiveIntegration(snapshot);
+    setCheckingConnection(false);
+    if (next.reachable) {
+      setInteractionFeedback({ tone: "success", message: t("backend.connected") });
+    } else if (next.fallbackActive) {
+      setInteractionFeedback({ tone: "warning", message: t("backend.apiFallback"), detail: next.fallbackReason });
+    } else {
+      setInteractionFeedback({ tone: "danger", message: t("backend.unreachable"), detail: next.error });
+    }
   };
 
   useEffect(() => {
@@ -247,6 +279,13 @@ export default function WorkspacePage() {
     emitSystemEvent(
       `${result.kind} status=${result.status}. artifacts=${result.artifactIds.join(",") || "none"}. ${t("disclaimers.nonAdvice")}`,
     );
+    if (result.status === "failed") {
+      setInteractionFeedback({ tone: "danger", message: t("errors.generic"), detail: result.error });
+    } else if (result.source === "mock_fallback") {
+      setInteractionFeedback({ tone: "warning", message: t("backend.apiFallback"), detail: result.summary });
+    } else {
+      setInteractionFeedback({ tone: "success", message: t("common.completed"), detail: result.summary });
+    }
     return result;
   };
 
@@ -277,6 +316,11 @@ export default function WorkspacePage() {
                 <StatusBadge tone="warning">{t("emptyStates.backendUnavailable")}</StatusBadge>
               ) : null}
             </div>
+            {interactionFeedback ? (
+              <div className="mt-3">
+                <InlineFeedback tone={interactionFeedback.tone} message={interactionFeedback.message} detail={interactionFeedback.detail} />
+              </div>
+            ) : null}
           </Panel>
 
           <ResearchChat
@@ -331,6 +375,7 @@ export default function WorkspacePage() {
             <div className={activeTab === "operations" ? "block" : "hidden"} data-testid="workspace-operations-zone">
               <ResearchOperationPanel
                 artifactStore={artifactStore}
+                capabilityMap={capabilityMap}
                 onOperationCompleted={(result) => {
                   emitSystemEvent(
                     `Ran ${result.kind} operation from panel. status=${result.status}. artifact=${result.artifactIds[0] ?? "none"}.`,
@@ -388,7 +433,7 @@ export default function WorkspacePage() {
             <div className={activeTab === "artifacts" ? "block space-y-3" : "hidden"} data-testid="workspace-artifacts-zone">
                 <ArtifactBrowser artifacts={artifacts} selectedArtifactId={selectedArtifactId} onSelect={setSelectedArtifactId} />
                 {selectedArtifact ? (
-                  <Panel className="border-border/60 bg-background/20">
+                  <Panel className="border-border bg-muted/30">
                     <SectionHeading title={selectedArtifact.title} subtitle={selectedArtifact.summary ?? t("emptyStates.noSelection")} />
                   </Panel>
                 ) : (
@@ -451,7 +496,7 @@ export default function WorkspacePage() {
 
           <WorkspaceContextPanel artifact={selectedArtifact} />
 
-          <details className="rounded-lg border border-border/70 bg-workspace-panel/90 p-3" open={false}>
+          <details className="rounded-lg border border-border bg-white p-3" open={false} data-testid="runtime-settings-collapsible">
             <summary className="cursor-pointer text-sm font-medium">{t("runtime.settingsTitle")}</summary>
             <div className="mt-3">
               <RuntimeSettingsPanel
@@ -466,10 +511,22 @@ export default function WorkspacePage() {
                 }}
                 onCheckBackend={() => void checkConnection()}
               />
+              {checkingConnection ? (
+                <div className="mt-2">
+                  <InlineFeedback tone="neutral" message={t("backend.checking")} />
+                </div>
+              ) : null}
             </div>
           </details>
 
-          <details className="rounded-lg border border-border/70 bg-workspace-panel/90 p-3" open={false}>
+          <details className="rounded-lg border border-border bg-white p-3" open={false} data-testid="capability-status-collapsible">
+            <summary className="cursor-pointer text-sm font-medium">{t("backend.capabilitiesTitle")}</summary>
+            <div className="mt-3">
+              <CapabilityStatusList capabilities={capabilityMatrix} />
+            </div>
+          </details>
+
+          <details className="rounded-lg border border-border bg-white p-3" open={false}>
             <summary className="cursor-pointer text-sm font-medium">{t("common.exportImport")}</summary>
             <div className="mt-3">
               <WorkspaceExportActions
@@ -488,6 +545,10 @@ export default function WorkspacePage() {
                   refreshArtifacts();
                 }}
                 onReset={() => {
+                  if (typeof window !== "undefined") {
+                    const ok = window.confirm("Reset local workspace state?");
+                    if (!ok) return;
+                  }
                   sessionStore.clear();
                   artifactStore.clear();
                   refreshSessions();

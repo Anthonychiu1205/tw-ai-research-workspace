@@ -6,6 +6,8 @@ Core:
 - [api integration](./api-integration.md)
 - [model runtime](./model-runtime.md)
 - [workspace UX](./workspace-ux.md)
+- [ui design system](./ui_design_system.md)
+- [interaction reliability](./interaction_reliability.md)
 
 Portfolio and backtesting:
 - [portfolio workspace](./portfolio_workspace.md)

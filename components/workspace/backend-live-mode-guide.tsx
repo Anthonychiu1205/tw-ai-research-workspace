@@ -21,7 +21,7 @@ export function BackendLiveModeGuide({
         <li>{t("backend.liveStepBridge")}</li>
         <li>{t("backend.liveStepTest")}</li>
       </ol>
-      <div className="rounded border border-orange-500/30 bg-orange-500/10 p-2 text-muted-foreground">
+      <div className="rounded border border-amber-200 bg-amber-50 p-2 text-amber-800">
         {fallbackActive
           ? t("backend.liveFallbackActive")
           : t("backend.liveFallbackReady")}

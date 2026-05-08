@@ -44,7 +44,7 @@ export function Topbar({
   const backendTone = mounted ? backendStatusTone(connection) : "neutral";
 
   return (
-    <header className="flex h-14 items-center justify-between border-b border-border/70 bg-workspace-panel/95 px-4" data-testid="topbar">
+    <header className="flex h-14 items-center justify-between border-b border-border bg-white px-4" data-testid="topbar">
       <div>
         <div className="text-sm font-semibold">{t("app.title")}</div>
         <p className="text-[11px] text-muted-foreground">{t("runtime.mockFirst")} · {t("runtime.localOnly")}</p>

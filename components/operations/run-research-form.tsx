@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { LoadingButton } from "@/components/ui/loading-button";
 import { useI18n } from "@/lib/i18n/use-i18n";
 
-export function RunResearchForm({ onSubmit, disabled }: { onSubmit: (ticker: string, includePhase2Agents: boolean) => Promise<void> | void; disabled?: boolean }) {
+export function RunResearchForm({ onSubmit, disabled, loading }: { onSubmit: (ticker: string, includePhase2Agents: boolean) => Promise<void> | void; disabled?: boolean; loading?: boolean }) {
   const { t } = useI18n();
   const [ticker, setTicker] = useState("2330");
   const [includePhase2Agents, setIncludePhase2Agents] = useState(true);
@@ -26,7 +26,9 @@ export function RunResearchForm({ onSubmit, disabled }: { onSubmit: (ticker: str
         />
         Phase2
       </label>
-      <Button type="submit" size="sm" disabled={disabled}>{t("operations.runResearch")}</Button>
+      <LoadingButton type="submit" size="sm" disabled={disabled} loading={loading} loadingLabel={t("common.loading")}>
+        {t("operations.runResearch")}
+      </LoadingButton>
     </form>
   );
 }

@@ -29,7 +29,7 @@ export function AppShell({
       <Sidebar sessions={sessions} artifacts={artifacts} onQuickAnalyze={onQuickAnalyze} hidden={sidebarHidden} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar mode={mode} modelLabel={modelLabel} connection={connection} />
-        <main className="min-h-0 flex-1 overflow-y-auto px-4 py-4 md:px-5">{children}</main>
+        <main className="min-h-0 flex-1 overflow-y-auto bg-slate-50/70 px-4 py-4 md:px-5">{children}</main>
       </div>
     </div>
   );

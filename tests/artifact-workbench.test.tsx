@@ -84,7 +84,7 @@ describe("artifact workbench", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText(/Open|開啟 artifact/i));
+    fireEvent.click(screen.getByRole("button", { name: /Open research output|開啟研究產物/i }));
     expect(selected).toBe(artifact.id);
   });
 });

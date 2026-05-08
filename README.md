@@ -53,6 +53,15 @@ All bundled demo data is synthetic mock data and non-advice.
 - API client/adapters extended for portfolio and portfolio-managed backtest routes
 - demo/share bundle updated with portfolio and backtest v2 synthetic artifacts
 
+## v0.9 Highlights
+
+- light, clean product theme pass (replacing dark/glass-heavy styling)
+- interaction reliability pass with explicit operation states: `idle/running/succeeded/failed/fallback`
+- inline feedback components for actions, failures, and fallback-safe behavior
+- capability matrix for mock/api availability and disabled reasons
+- clearer operation-to-artifact activation flow (open artifact, context update, result summary)
+- compact right-panel hierarchy (backend/runtime/capabilities/export grouped as collapsed secondary controls)
+
 ## v0.5 Highlights
 
 - guided scenario workflows for demo-ready research journeys
@@ -98,6 +107,12 @@ API mode is optional and fallback-safe.
 - `mock` (mock transport)
 - `proxy` (default in API mode, uses Next.js bridge routes)
 - `direct` (frontend calls backend URL directly)
+
+### Capability clarity
+
+- Mock mode keeps core research operations available without backend
+- API-only actions show disabled reason when backend is unreachable
+- fallback messaging is explicit (`mock_fallback`) to avoid silent no-op behavior
 
 ## Language support
 

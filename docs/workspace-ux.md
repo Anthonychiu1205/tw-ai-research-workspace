@@ -22,6 +22,16 @@ v0.5 is workspace-first, not dashboard-first.
 - artifact context renderers for `portfolio_review`, `rebalance_plan`, `backtest_v2_summary`
 - dedicated `/portfolio` page for research simulation views
 
+## Extended in v0.9
+
+- light theme as default workspace surface (document-product style)
+- reduced visual noise: fewer nested cards/borders and compact status hierarchy
+- clearer layout split:
+  - left: navigation + compact sessions/artifacts
+  - center: chat-first workflow + operations/scenarios/artifacts tabs
+  - right: active context + collapsed runtime/backend details
+- explicit inline feedback for run/complete/failure/fallback states
+
 ## Safety
 
 - synthetic output labeling

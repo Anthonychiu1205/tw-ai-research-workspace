@@ -16,7 +16,7 @@ export function ScenarioResultPanel({
   }
 
   return (
-    <div className="space-y-2 rounded-lg border border-border/70 bg-background/20 p-3 text-xs" data-testid="scenario-result-panel">
+    <div className="space-y-2 rounded-lg border border-border bg-muted/40 p-3 text-xs" data-testid="scenario-result-panel">
       <div className="flex items-center gap-2">
         <span className="font-medium">{t("scenarios.scenarioLabel")}: {result.scenarioId}</span>
         <StatusBadge tone={result.status === "succeeded" ? "success" : "danger"}>{result.status}</StatusBadge>

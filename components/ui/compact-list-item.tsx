@@ -16,8 +16,10 @@ export function CompactListItem({
   return (
     <Wrapper
       className={cn(
-        "w-full rounded-md px-2.5 py-2 text-left text-xs leading-5",
-        active ? "bg-muted text-foreground" : "text-muted-foreground hover:bg-muted/45 hover:text-foreground",
+        "w-full rounded-md border-l-2 border-transparent px-2.5 py-2 text-left text-xs leading-5",
+        active
+          ? "border-l-primary bg-emerald-50/60 text-foreground"
+          : "text-muted-foreground hover:bg-muted hover:text-foreground",
       )}
       onClick={onClick}
       type={onClick ? "button" : undefined}

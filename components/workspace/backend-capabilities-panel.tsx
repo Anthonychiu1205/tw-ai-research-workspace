@@ -16,9 +16,9 @@ export function BackendCapabilitiesPanel({ report }: { report: BackendCapabiliti
       </div>
       <div className="text-xs text-muted-foreground">{t("backend.baseUrl")}: {report.baseUrl}</div>
       <div className="text-xs">{t("backend.reachable")}: {report.reachable ? t("common.yes") : t("common.no")}</div>
-      {report.fallbackActive ? <div className="text-xs text-orange-300">{t("backend.fallbackActive")}</div> : null}
+      {report.fallbackActive ? <div className="text-xs text-amber-700">{t("backend.fallbackActive")}</div> : null}
       {report.mode === "api" && !report.reachable ? (
-        <div className="rounded border border-orange-500/30 bg-orange-500/10 p-2 text-xs">
+        <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
           {t("backend.apiFallback")}
         </div>
       ) : null}
@@ -28,11 +28,11 @@ export function BackendCapabilitiesPanel({ report }: { report: BackendCapabiliti
         ))}
       </div>
       {report.warnings.map((warning) => (
-        <div key={warning} className="rounded border border-orange-500/30 bg-orange-500/10 p-2 text-xs">
+        <div key={warning} className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
           {warning}
         </div>
       ))}
-      <details className="rounded-md border border-border/60 bg-background/20 p-2" data-testid="backend-capabilities-details">
+      <details className="rounded-md border border-border bg-muted/40 p-2" data-testid="backend-capabilities-details">
         <summary className="cursor-pointer text-xs font-medium">
           {t("backend.capabilitiesTitle")} ({report.capabilities.length})
         </summary>
@@ -54,7 +54,7 @@ export function BackendCapabilitiesPanel({ report }: { report: BackendCapabiliti
         </div>
       </details>
       {report.missing.length > 0 ? (
-        <div className="text-xs text-orange-300">{t("common.missing")}: {report.missing.join(", ")}</div>
+        <div className="text-xs text-amber-700">{t("common.missing")}: {report.missing.join(", ")}</div>
       ) : null}
     </Panel>
   );

@@ -30,6 +30,15 @@
 `npm run lint` remains typecheck fallback in this environment.
 Typecheck/test/build are authoritative gates.
 
+## UI reliability checks (v0.9)
+
+Additional frontend QA focuses on:
+- light theme class regressions
+- interaction state feedback (`running/succeeded/failed/fallback`)
+- artifact activation and context update
+- right-panel density and collapsed secondary controls
+- copy safety and non-advice wording boundaries
+
 ## Boundaries
 
 - not dashboard/SaaS
