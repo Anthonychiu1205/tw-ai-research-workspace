@@ -2,6 +2,11 @@
 
 AI-native Taiwan financial research workspace UI layer.
 
+## What is this?
+
+This is the workspace layer for AI-native Taiwan financial research workflows.
+It is not a dashboard, not a backend, and not a trading system.
+
 This repo is a local-first, mock-first workspace that combines:
 - financial-agent-ui style workspace orchestration
 - Dexter-inspired planning/trace UX
@@ -60,6 +65,8 @@ node scripts/check-env.mjs
 node scripts/smoke-test.mjs
 npm run build
 ```
+
+Note: `npm run lint` currently uses a typecheck fallback in this local setup due to an ESLint `@rushstack/eslint-patch` compatibility issue. Typecheck/test/build gates are still enforced.
 
 ## Connect to local tw-ai-investment-research API
 
