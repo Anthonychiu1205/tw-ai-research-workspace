@@ -13,3 +13,7 @@ Typical manual flow:
 2. `git push -u origin main`
 3. `git tag -a v0.1.0 -m "v0.1.0"`
 4. `git push origin v0.1.0`
+
+If `origin` already exists, inspect first:
+- `git remote -v`
+- update/remove old remote manually before `git remote add origin ...`

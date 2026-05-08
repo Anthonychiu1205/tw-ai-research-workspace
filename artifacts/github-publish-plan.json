@@ -1,6 +1,15 @@
 {
-  "generatedAt": "2026-05-08T06:43:17.910Z",
+  "generatedAt": "2026-05-08T06:48:25.945Z",
+  "suggestedRepoName": "tw-ai-research-workspace",
+  "currentBranch": "v0.6-backend-integration-eval-publish-readiness",
+  "latestCommit": "eefa232",
+  "latestCommitMessage": "chore: prepare workspace release candidate with backend harness and final audit",
+  "noPushPerformed": true,
+  "noTagCreated": true,
+  "noRemoteChanged": true,
   "note": "Plan only. No remote mutation, push, or tag execution was performed.",
+  "remoteSnapshot": "",
+  "tagsSnapshot": "",
   "commands": [
     "git remote add origin <USER_REPO_URL>",
     "git push -u origin main",

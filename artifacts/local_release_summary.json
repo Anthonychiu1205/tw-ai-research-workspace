@@ -1,0 +1,29 @@
+{
+  "project": "tw-ai-research-workspace",
+  "current_branch": "v0.6-backend-integration-eval-publish-readiness",
+  "latest_commit": "eefa232",
+  "latest_commit_message": "chore: prepare workspace release candidate with backend harness and final audit",
+  "tests_result": "passed (252/252)",
+  "typecheck_result": "passed",
+  "build_result": "passed",
+  "smoke_result": "passed",
+  "final_audit_result": "passed",
+  "secret_scan_result": "passed",
+  "mock_boundary_result": "passed",
+  "backend_compatibility_result": "passed (non-strict warning mode allowed)",
+  "git_status_clean": true,
+  "no_push": true,
+  "no_tag": true,
+  "no_remote_change": true,
+  "remaining_limitations": [
+    "mock default",
+    "backend optional",
+    "no auth",
+    "no billing",
+    "no broker",
+    "no trading",
+    "no vector DB",
+    "no full RAG",
+    "no production deployment"
+  ]
+}
