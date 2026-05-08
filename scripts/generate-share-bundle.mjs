@@ -155,5 +155,7 @@ const share = {
 };
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
-fs.writeFileSync(outPath, JSON.stringify(share, null, 2));
+const tempPath = `${outPath}.tmp`;
+fs.writeFileSync(tempPath, JSON.stringify(share, null, 2));
+fs.renameSync(tempPath, outPath);
 console.log(`generate-share-bundle: wrote ${outPath}`);

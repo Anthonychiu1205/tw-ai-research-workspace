@@ -1,0 +1,39 @@
+name: Release Check
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release-audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Workspace final audit
+        run: node scripts/workspace-final-audit.mjs
+
+      - name: Check pages
+        run: node scripts/check-pages.mjs
+
+      - name: Check backend contract
+        run: node scripts/check-backend-contract.mjs
+
+      - name: Generate workspace demo bundle
+        run: node scripts/generate-workspace-demo-bundle.mjs
+
+      - name: Generate share bundle
+        run: node scripts/generate-share-bundle.mjs
+
+      - name: Mock boundary check
+        run: node scripts/mock-boundary-check.mjs
