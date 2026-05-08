@@ -15,6 +15,7 @@ import { BackendConnectionCard } from "@/components/workspace/backend-connection
 import { RuntimeSettingsPanel } from "@/components/workspace/runtime-settings-panel";
 import { WorkspaceExportActions } from "@/components/workspace/workspace-export-actions";
 import { BackendCapabilitiesPanel } from "@/components/workspace/backend-capabilities-panel";
+import { DemoWalkthroughPanel } from "@/components/workspace/demo-walkthrough-panel";
 import { ScenarioLauncher } from "@/components/scenarios/scenario-launcher";
 import { WelcomePanel } from "@/components/onboarding/welcome-panel";
 import { DemoJourney } from "@/components/onboarding/demo-journey";
@@ -322,6 +323,7 @@ export default function WorkspacePage() {
                 }}
               />
               <DemoJourney />
+              <DemoWalkthroughPanel />
               <QuickstartChecklist />
               <WorkspaceModeExplainer />
             </div>

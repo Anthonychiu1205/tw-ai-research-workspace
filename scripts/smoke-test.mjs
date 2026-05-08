@@ -40,5 +40,8 @@ execSync("node scripts/check-pages.mjs", { stdio: "inherit" });
 execSync("node scripts/export-routes.mjs", { stdio: "inherit" });
 execSync("node scripts/check-live-backend-integration.mjs", { stdio: "inherit" });
 execSync("node scripts/check-workspace-api-mode.mjs", { stdio: "inherit" });
+execSync("node scripts/local-stack.mjs doctor", { stdio: "inherit" });
+execSync("node scripts/local-stack.mjs summary", { stdio: "inherit" });
+execSync("node scripts/generate-integration-bundle.mjs", { stdio: "inherit" });
 
 console.log("smoke-test: OK");

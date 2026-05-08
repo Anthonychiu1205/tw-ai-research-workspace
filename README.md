@@ -174,6 +174,18 @@ TW_AI_RESEARCH_API_BASE_URL=http://127.0.0.1:8000 node scripts/check-workspace-a
 
 Full walkthrough: [docs/live_backend_integration.md](/Volumes/DEV_USB/Projects/tw-ai-research-workspace/docs/live_backend_integration.md)
 
+## Local Stack Demo
+
+```bash
+node scripts/local-stack.mjs print-commands
+node scripts/local-stack.mjs doctor
+node scripts/local-stack.mjs check-integration
+```
+
+- `print-commands`: show Terminal A/B/C local demo commands
+- `doctor`: validate local repo/runtime prerequisites without requiring backend to run
+- `check-integration`: run live/backend + workspace API-mode checks (non-strict by default)
+
 ## Workspace UX
 
 - `/workspace`: chat-first runtime + operations + artifact workbench
