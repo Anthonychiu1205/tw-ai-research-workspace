@@ -1,0 +1,17 @@
+{
+  "transcriptId": "generate-report-2330",
+  "title": "Generate Report 2330",
+  "userPrompt": "Generate a research report for 2330",
+  "events": [
+    { "type": "message_delta", "payload": { "content": "Generating report sections." } },
+    { "type": "tool_call_result", "payload": { "toolName": "generateReport", "status": "succeeded" } },
+    { "type": "final", "payload": { "disclaimer": "Synthetic workspace output, not financial advice." } }
+  ],
+  "expectedArtifacts": ["report"],
+  "metadata": {
+    "provider": "mock",
+    "synthetic": true,
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

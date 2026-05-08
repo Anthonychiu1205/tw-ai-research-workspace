@@ -1,7 +1,7 @@
 {
   "schemaVersion": "workspace-share-bundle.v0.5",
-  "bundleId": "wsb_mowbc95i",
-  "createdAt": "2026-05-08T02:45:51.318Z",
+  "bundleId": "wsb_mowjtlv0",
+  "createdAt": "2026-05-08T06:43:17.868Z",
   "source": "mock",
   "synthetic": true,
   "notFinancialAdvice": true,
@@ -89,5 +89,5 @@
     "evaluate_phase2_signals",
     "explore_strategy_presets"
   ],
-  "checksum": "bundle_29d030ed"
+  "checksum": "bundle_fcf17ad1"
 }

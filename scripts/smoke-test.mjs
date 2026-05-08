@@ -24,12 +24,19 @@ for (const f of fixtureFiles) {
 }
 
 execSync("npm run typecheck", { stdio: "inherit" });
-execSync("npm run test:run", { stdio: "inherit" });
+if (process.env.SMOKE_SKIP_TESTS !== "1") {
+  execSync("npm run test:run", { stdio: "inherit" });
+}
 execSync(
   "npx tsx -e \"import('./lib/api/client.ts').then((m) => { const api = m.default ?? m; return Promise.all([api.getHealth(), api.getSystemStatus()]); }).then(()=>console.log('api-client-import-ok'))\"",
   { stdio: "inherit" },
 );
+execSync("node scripts/check-backend-contract.mjs", { stdio: "inherit" });
+execSync("node scripts/check-backend-compatibility.mjs", { stdio: "inherit" });
+execSync("node scripts/evaluate-workspace.mjs", { stdio: "inherit" });
 execSync("node scripts/generate-workspace-demo-bundle.mjs", { stdio: "inherit" });
+execSync("node scripts/generate-share-bundle.mjs", { stdio: "inherit" });
 execSync("node scripts/check-pages.mjs", { stdio: "inherit" });
+execSync("node scripts/export-routes.mjs", { stdio: "inherit" });
 
 console.log("smoke-test: OK");

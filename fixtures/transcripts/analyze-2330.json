@@ -1,0 +1,17 @@
+{
+  "transcriptId": "analyze-2330",
+  "title": "Analyze 2330",
+  "userPrompt": "Analyze 2330 with Phase 2 agents",
+  "events": [
+    { "type": "message_delta", "payload": { "content": "Starting synthetic analysis for 2330." } },
+    { "type": "tool_call_result", "payload": { "toolName": "runResearch", "status": "succeeded" } },
+    { "type": "final", "payload": { "disclaimer": "Synthetic workspace output, not financial advice." } }
+  ],
+  "expectedArtifacts": ["research_card"],
+  "metadata": {
+    "provider": "mock",
+    "synthetic": true,
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

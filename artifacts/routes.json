@@ -1,0 +1,100 @@
+{
+  "generatedAt": "2026-05-08T06:43:16.706Z",
+  "routes": [
+    {
+      "type": "api",
+      "file": "api/backend/backtests/route.ts",
+      "route": "/api/backend/backtests"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/conformance/route.ts",
+      "route": "/api/backend/conformance"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/health/route.ts",
+      "route": "/api/backend/health"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/pipelines/route.ts",
+      "route": "/api/backend/pipelines"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/reports/route.ts",
+      "route": "/api/backend/reports"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/research/route.ts",
+      "route": "/api/backend/research"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/signals/route.ts",
+      "route": "/api/backend/signals"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/strategies/route.ts",
+      "route": "/api/backend/strategies"
+    },
+    {
+      "type": "api",
+      "file": "api/backend/system/route.ts",
+      "route": "/api/backend/system"
+    },
+    {
+      "type": "api",
+      "file": "api/chat/route.ts",
+      "route": "/api/chat"
+    },
+    {
+      "type": "api",
+      "file": "api/health/route.ts",
+      "route": "/api/health"
+    },
+    {
+      "type": "api",
+      "file": "api/research/route.ts",
+      "route": "/api/research"
+    },
+    {
+      "type": "api",
+      "file": "api/sessions/route.ts",
+      "route": "/api/sessions"
+    },
+    {
+      "type": "api",
+      "file": "api/tools/route.ts",
+      "route": "/api/tools"
+    },
+    {
+      "type": "api",
+      "file": "page.tsx",
+      "route": "/page.tsx"
+    },
+    {
+      "type": "page",
+      "file": "reports/page.tsx",
+      "route": "/reports"
+    },
+    {
+      "type": "page",
+      "file": "strategies/page.tsx",
+      "route": "/strategies"
+    },
+    {
+      "type": "page",
+      "file": "traces/page.tsx",
+      "route": "/traces"
+    },
+    {
+      "type": "page",
+      "file": "workspace/page.tsx",
+      "route": "/workspace"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "transcriptId": "signal-evaluation-watchlist",
+  "title": "Signal Evaluation Watchlist",
+  "userPrompt": "Evaluate signals for 2330,2317,2454,2308,0050",
+  "events": [
+    { "type": "tool_call_start", "payload": { "toolName": "evaluateSignals" } },
+    { "type": "tool_call_result", "payload": { "toolName": "evaluateSignals", "status": "succeeded" } },
+    { "type": "final", "payload": { "disclaimer": "Synthetic workspace output, not financial advice." } }
+  ],
+  "expectedArtifacts": ["signal_evaluation"],
+  "metadata": {
+    "provider": "mock",
+    "synthetic": true,
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

@@ -32,6 +32,16 @@ All bundled demo data is synthetic mock data and non-advice.
 - no vector DB / full RAG
 - no production deployment stack
 
+## v0.6 Highlights
+
+- backend integration harness with deterministic mock backend server
+- optional live backend smoke script (strict and non-strict modes)
+- backend compatibility report (OpenAPI/routes/demo metadata/adapters)
+- workspace evaluation suite (scenarios, chat stream, artifacts, safety)
+- scenario transcript fixtures and validation helpers
+- publish-readiness scripts (secret scan, boundary check, final audit, publish plan)
+- expanded route/page QA and route inventory export
+
 ## v0.5 Highlights
 
 - guided scenario workflows for demo-ready research journeys
@@ -112,6 +122,10 @@ node scripts/generate-workspace-demo-bundle.mjs
 node scripts/generate-share-bundle.mjs
 node scripts/check-pages.mjs
 node scripts/workspace-final-audit.mjs
+node scripts/check-backend-compatibility.mjs
+node scripts/evaluate-workspace.mjs
+node scripts/final-audit.mjs
+node scripts/prepare-github-publish.mjs
 ```
 
 ## Lint status
@@ -190,3 +204,10 @@ Final responses include non-advice disclaimer metadata.
 - this repo does not provide financial advice
 - this repo has no broker integration and no trading execution
 - app runs in mock mode without API keys or backend by default
+
+## Publish Readiness
+
+- local release candidate status only
+- mock-first and backend-optional
+- no trading, no broker integration, no production deployment
+- manual publish flow only (no push/tag performed by Codex)

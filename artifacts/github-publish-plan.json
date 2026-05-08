@@ -1,0 +1,10 @@
+{
+  "generatedAt": "2026-05-08T06:43:17.910Z",
+  "note": "Plan only. No remote mutation, push, or tag execution was performed.",
+  "commands": [
+    "git remote add origin <USER_REPO_URL>",
+    "git push -u origin main",
+    "git tag -a v0.1.0 -m \"v0.1.0\"",
+    "git push origin v0.1.0"
+  ]
+}

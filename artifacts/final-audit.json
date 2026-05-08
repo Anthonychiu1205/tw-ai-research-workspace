@@ -1,0 +1,46 @@
+{
+  "checkedAt": "2026-05-08T06:43:17.880Z",
+  "passed": true,
+  "checks": [
+    {
+      "command": "node scripts/check-env.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/smoke-test.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/check-backend-contract.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/check-backend-compatibility.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/evaluate-workspace.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/secret-scan.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/mock-boundary-check.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/export-workspace-schema.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/generate-workspace-demo-bundle.mjs",
+      "passed": true
+    },
+    {
+      "command": "node scripts/generate-share-bundle.mjs",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "checkedAt": "2026-05-08T06:43:09.451Z",
+  "baseUrl": "http://127.0.0.1:1",
+  "strict": false,
+  "runResearch": true,
+  "reachable": false,
+  "passed": true,
+  "checks": [],
+  "warnings": [
+    "fetch failed"
+  ],
+  "note": "Live backend smoke is optional and never executes trading."
+}

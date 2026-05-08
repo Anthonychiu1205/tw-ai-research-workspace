@@ -1,4 +1,5 @@
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import { execSync } from "node:child_process";
 import { describe, expect, test } from "vitest";
@@ -29,21 +30,22 @@ describe("backend contract check script", () => {
   });
 
   test("fixture missing required metadata fails helper", () => {
-    const original = fs.readFileSync(localDemoFixture, "utf-8");
-    try {
-      const broken = JSON.parse(original);
-      delete broken.metadata;
-      fs.writeFileSync(localDemoFixture, JSON.stringify(broken, null, 2));
+    const tmpRoot = fs.mkdtempSync(path.join(os.tmpdir(), "backend-contract-"));
+    fs.mkdirSync(path.join(tmpRoot, "fixtures", "demo"), { recursive: true });
+    fs.mkdirSync(path.join(tmpRoot, "fixtures", "mock-api"), { recursive: true });
+    const broken = JSON.parse(fs.readFileSync(localDemoFixture, "utf-8"));
+    delete broken.metadata;
+    fs.writeFileSync(
+      path.join(tmpRoot, "fixtures", "demo", "research-card-2330.json"),
+      JSON.stringify(broken, null, 2),
+    );
 
-      let failed = false;
-      try {
-        execSync("node scripts/check-backend-contract.mjs", { cwd: repo, stdio: "pipe" });
-      } catch {
-        failed = true;
-      }
-      expect(failed).toBe(true);
-    } finally {
-      fs.writeFileSync(localDemoFixture, original);
+    let failed = false;
+    try {
+      execSync(`node ${path.join(repo, "scripts", "check-backend-contract.mjs")}`, { cwd: tmpRoot, stdio: "pipe" });
+    } catch {
+      failed = true;
     }
+    expect(failed).toBe(true);
   });
 });

@@ -1,0 +1,169 @@
+{
+  "checkedAt": "2026-05-08T06:43:17.139Z",
+  "backendArtifactsPresent": true,
+  "passed": false,
+  "warnings": [],
+  "routeParity": {
+    "passed": true,
+    "missing": [],
+    "matched": [
+      "/health",
+      "/v1/research-runs",
+      "/v1/reports/research",
+      "/v1/research-pipelines",
+      "/v1/backtests",
+      "/v1/strategies/compare",
+      "/v1/evaluations/signals",
+      "/v1/system/storage",
+      "/v1/system/provider"
+    ],
+    "openapiRoutes": [
+      "/health",
+      "/v1/agents",
+      "/v1/agents/phase2",
+      "/v1/backtests",
+      "/v1/backtests/{backtest_id}",
+      "/v1/backtests/{backtest_id}/status",
+      "/v1/evaluations/mvp",
+      "/v1/evaluations/regression",
+      "/v1/evaluations/regression/{regression_id}",
+      "/v1/evaluations/signals",
+      "/v1/evaluations/signals/{evaluation_id}",
+      "/v1/integrations/openbb/datasets",
+      "/v1/integrations/openbb/metadata",
+      "/v1/integrations/openbb/query",
+      "/v1/provider/conformance",
+      "/v1/reports/research",
+      "/v1/reports/{report_id}",
+      "/v1/reports/{report_id}/conflicts",
+      "/v1/reports/{report_id}/llm-trace",
+      "/v1/reports/{report_id}/quality",
+      "/v1/research-pipelines",
+      "/v1/research-pipelines/{pipeline_id}",
+      "/v1/research-pipelines/{pipeline_id}/report",
+      "/v1/research-pipelines/{pipeline_id}/trace",
+      "/v1/research-runs",
+      "/v1/research-runs/{run_id}",
+      "/v1/research-runs/{run_id}/reports",
+      "/v1/research-runs/{run_id}/reports/{ticker}",
+      "/v1/research-runs/{run_id}/status",
+      "/v1/stocks/{ticker}/phase2-signals",
+      "/v1/stocks/{ticker}/research",
+      "/v1/strategies",
+      "/v1/strategies/compare",
+      "/v1/system/provider",
+      "/v1/system/storage",
+      "/v1/ui/research-runs/{run_id}/signal-matrix",
+      "/v1/ui/stocks/{ticker}/research-card"
+    ],
+    "routeArtifactRoutes": [
+      "/health",
+      "/v1/agents",
+      "/v1/agents/phase2",
+      "/v1/backtests",
+      "/v1/backtests/{backtest_id}",
+      "/v1/backtests/{backtest_id}/status",
+      "/v1/evaluations/mvp",
+      "/v1/evaluations/regression",
+      "/v1/evaluations/regression/{regression_id}",
+      "/v1/evaluations/signals",
+      "/v1/evaluations/signals/{evaluation_id}",
+      "/v1/integrations/openbb/datasets",
+      "/v1/integrations/openbb/metadata",
+      "/v1/integrations/openbb/query",
+      "/v1/provider/conformance",
+      "/v1/reports/research",
+      "/v1/reports/{report_id}",
+      "/v1/reports/{report_id}/conflicts",
+      "/v1/reports/{report_id}/llm-trace",
+      "/v1/reports/{report_id}/quality",
+      "/v1/research-pipelines",
+      "/v1/research-pipelines/{pipeline_id}",
+      "/v1/research-pipelines/{pipeline_id}/report",
+      "/v1/research-pipelines/{pipeline_id}/trace",
+      "/v1/research-runs",
+      "/v1/research-runs/{run_id}",
+      "/v1/research-runs/{run_id}/reports",
+      "/v1/research-runs/{run_id}/reports/{ticker}",
+      "/v1/research-runs/{run_id}/status",
+      "/v1/stocks/{ticker}/phase2-signals",
+      "/v1/stocks/{ticker}/research",
+      "/v1/strategies",
+      "/v1/strategies/compare",
+      "/v1/system/provider",
+      "/v1/system/storage",
+      "/v1/ui/research-runs/{run_id}/signal-matrix",
+      "/v1/ui/stocks/{ticker}/research-card"
+    ]
+  },
+  "metadataChecks": [
+    {
+      "file": "agent_consensus_panel.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    },
+    {
+      "file": "backtest_summary.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    },
+    {
+      "file": "dashboard_snapshot.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    },
+    {
+      "file": "evidence_timeline_2330.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    },
+    {
+      "file": "report_sections_2330.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    },
+    {
+      "file": "research_card_2330.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    },
+    {
+      "file": "signal_matrix_watchlist.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    },
+    {
+      "file": "strategy_comparison.json",
+      "passed": false,
+      "issues": [
+        "metadata.notFinancialAdvice must be true",
+        "metadata.noTradingExecution must be true"
+      ]
+    }
+  ],
+  "adapterCompatibility": {
+    "passed": true,
+    "issues": []
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "transcriptId": "strategy-watchlist",
+  "title": "Compare Strategy Watchlist",
+  "userPrompt": "Compare strategies for 2330,2317,2454,2308,0050",
+  "events": [
+    { "type": "tool_call_start", "payload": { "toolName": "compareStrategies" } },
+    { "type": "tool_call_result", "payload": { "toolName": "compareStrategies", "status": "succeeded" } },
+    { "type": "final", "payload": { "disclaimer": "Synthetic workspace output, not financial advice." } }
+  ],
+  "expectedArtifacts": ["strategy_comparison"],
+  "metadata": {
+    "provider": "mock",
+    "synthetic": true,
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

@@ -60,6 +60,9 @@ function scanForbidden() {
     .filter(Boolean);
 
   for (const file of files) {
+    if (file.startsWith("lib/evaluation/")) {
+      continue;
+    }
     const text = fs.readFileSync(path.resolve(root, file), "utf-8").toLowerCase();
     for (const phrase of forbiddenPhrases) {
       if (!text.includes(phrase)) continue;

@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-05-08T06:43:05.651Z",
+  "passed": true,
+  "baseUrl": "http://127.0.0.1:59867",
+  "checks": [
+    {
+      "name": "proxy_health",
+      "passed": true,
+      "details": "ok"
+    },
+    {
+      "name": "client_health",
+      "passed": true,
+      "details": "status=ok"
+    },
+    {
+      "name": "client_research",
+      "passed": true,
+      "details": "source=api"
+    },
+    {
+      "name": "client_system_status",
+      "passed": true,
+      "details": "source=api"
+    },
+    {
+      "name": "client_conformance",
+      "passed": true,
+      "details": "source=api"
+    }
+  ],
+  "routeHits": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "timestamp": "2026-05-08T06:43:05.624Z"
+    },
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "timestamp": "2026-05-08T06:43:05.639Z"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/research-runs",
+      "status": 200,
+      "timestamp": "2026-05-08T06:43:05.646Z"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/system/storage",
+      "status": 200,
+      "timestamp": "2026-05-08T06:43:05.648Z"
+    },
+    {
+      "method": "GET",
+      "path": "/v1/provider/conformance",
+      "status": 200,
+      "timestamp": "2026-05-08T06:43:05.650Z"
+    }
+  ],
+  "warnings": []
+}

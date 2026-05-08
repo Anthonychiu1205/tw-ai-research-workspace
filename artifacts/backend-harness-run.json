@@ -1,0 +1,32 @@
+{
+  "checkedAt": "2026-05-08T06:43:06.877Z",
+  "passed": true,
+  "baseUrl": "http://127.0.0.1:59870",
+  "checks": [
+    {
+      "name": "health_endpoint",
+      "passed": true,
+      "details": "status=200"
+    },
+    {
+      "name": "research_endpoint",
+      "passed": true,
+      "details": "status=200"
+    }
+  ],
+  "routeHits": [
+    {
+      "method": "GET",
+      "path": "/health",
+      "status": 200,
+      "timestamp": "2026-05-08T06:43:06.852Z"
+    },
+    {
+      "method": "POST",
+      "path": "/v1/research-runs",
+      "status": 200,
+      "timestamp": "2026-05-08T06:43:06.876Z"
+    }
+  ],
+  "warnings": []
+}

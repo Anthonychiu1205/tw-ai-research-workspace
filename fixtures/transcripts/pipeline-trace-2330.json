@@ -1,0 +1,17 @@
+{
+  "transcriptId": "pipeline-trace-2330",
+  "title": "Pipeline Trace 2330",
+  "userPrompt": "Show planner trace for 2330",
+  "events": [
+    { "type": "trace_update", "payload": { "phase": "planning" } },
+    { "type": "tool_call_result", "payload": { "toolName": "runPipeline", "status": "succeeded" } },
+    { "type": "final", "payload": { "disclaimer": "Synthetic workspace output, not financial advice." } }
+  ],
+  "expectedArtifacts": ["pipeline_trace"],
+  "metadata": {
+    "provider": "mock",
+    "synthetic": true,
+    "notFinancialAdvice": true,
+    "noTradingExecution": true
+  }
+}

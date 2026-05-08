@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-05-08T02:45:51.277Z",
+  "checkedAt": "2026-05-08T06:43:16.659Z",
   "requiredRouteFiles": [
     "app/page.tsx",
     "app/workspace/page.tsx",
@@ -11,5 +11,30 @@
     "app/api/backend/health/route.ts"
   ],
   "missing": [],
-  "buildManifestPresent": true
+  "buildManifestPresent": true,
+  "pageFiles": [
+    "app/page.tsx",
+    "app/reports/page.tsx",
+    "app/strategies/page.tsx",
+    "app/traces/page.tsx",
+    "app/workspace/page.tsx"
+  ],
+  "apiRouteFiles": [
+    "app/api/backend/backtests/route.ts",
+    "app/api/backend/conformance/route.ts",
+    "app/api/backend/health/route.ts",
+    "app/api/backend/pipelines/route.ts",
+    "app/api/backend/reports/route.ts",
+    "app/api/backend/research/route.ts",
+    "app/api/backend/signals/route.ts",
+    "app/api/backend/strategies/route.ts",
+    "app/api/backend/system/route.ts",
+    "app/api/chat/route.ts",
+    "app/api/health/route.ts",
+    "app/api/research/route.ts",
+    "app/api/sessions/route.ts",
+    "app/api/tools/route.ts"
+  ],
+  "pageIssues": [],
+  "apiIssues": []
 }
