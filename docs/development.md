@@ -38,3 +38,11 @@ Typecheck/test/build are authoritative gates.
 - mock-first by default
 - backend optional
 - local-only session/artifact persistence
+
+## i18n
+
+- supported locales: `zh-TW`, `en-US`
+- default locale: `zh-TW`
+- topbar switcher persists locale to localStorage
+- use dictionary lookup via `t("section.key")`
+- keep API paths/schema keys/provider-model ids unchanged

@@ -39,6 +39,7 @@ import { parseWorkspaceUrlState, serializeWorkspaceUrlState, type WorkspaceView 
 import { createId } from "@/lib/utils/ids";
 import type { BackendConnectionState, WorkspaceSession } from "@/lib/schemas/workspace";
 import type { WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 function seedSessions(): WorkspaceSession[] {
   return (sessionDemo.sessions as any[]).map((session) => ({
@@ -76,6 +77,7 @@ function defaultCapabilitiesReport(baseUrl: string): BackendCapabilitiesReport {
 }
 
 export default function WorkspacePage() {
+  const { t, locale } = useI18n();
   const sessionStore = useMemo(() => createSessionStore(seedSessions()), []);
   const artifactStore = useMemo(() => createArtifactStore(), []);
   const [sessions, setSessions] = useState(() => sessionStore.list());
@@ -185,16 +187,16 @@ export default function WorkspacePage() {
   useWorkspaceShortcuts({
     onCommandMenu: () => setCommandMenuOpen((prev) => !prev),
     onNewSession: () => {
-      const session = sessionStore.create("Local Workspace Session");
+      const session = sessionStore.create(t("app.workspace"));
       setSelectedSessionId(session.id);
       refreshSessions();
-      emitSystemEvent(`Created new local session ${session.id}`);
+      emitSystemEvent(`${t("sessions.history")} #${session.id}`);
     },
     onToggleSidebar: () => setSidebarHidden((prev) => !prev),
     onHelp: () => setShortcutsOpen((prev) => !prev),
   });
 
-  const commands = getWorkspaceCommands({ canUseApiMode: connectionState.reachable });
+  const commands = getWorkspaceCommands({ canUseApiMode: connectionState.reachable, locale });
 
   const runOperationAndTrack = async (request: ResearchOperationRequest) => {
     const result = await runResearchOperation(request, artifactStore);
@@ -204,7 +206,7 @@ export default function WorkspacePage() {
     }
     refreshArtifacts();
     emitSystemEvent(
-      `Ran ${result.kind} operation. status=${result.status}. artifacts=${result.artifactIds.join(",") || "none"}. synthetic/non-advice.`,
+      `${result.kind} status=${result.status}. artifacts=${result.artifactIds.join(",") || "none"}. ${t("disclaimers.nonAdvice")}`,
     );
     return result;
   };
@@ -230,7 +232,7 @@ export default function WorkspacePage() {
             sessions={sessions.map((session) => ({ id: session.id, title: session.title }))}
             selectedSessionId={selectedSessionId}
             onCreate={() => {
-              const session = sessionStore.create("Local Workspace Session");
+              const session = sessionStore.create(t("app.workspace"));
               setSelectedSessionId(session.id);
               refreshSessions();
             }}
@@ -306,7 +308,7 @@ export default function WorkspacePage() {
                 sessionId: selectedSessionId ?? undefined,
                 type,
                 title: `${toolName} artifact`,
-                summary: String(payload.summary ?? "Chat tool result"),
+                summary: String(payload.summary ?? t("tools.toolCalls")),
                 source: (payload.source as WorkspaceArtifactRecord["source"]) ?? "mock",
                 synthetic: Boolean(payload.source !== "api"),
                 evidenceIds: Array.isArray(payload.evidenceIds) ? (payload.evidenceIds as string[]) : [],
@@ -333,7 +335,7 @@ export default function WorkspacePage() {
             }}
             onScenarioCompleted={(scenarioId) => {
               setScenariosCompleted((prev) => (prev.includes(scenarioId) ? prev : [...prev, scenarioId]));
-              emitSystemEvent(`Completed scenario ${scenarioId}. Synthetic workflow only, not financial advice.`);
+              emitSystemEvent(`${scenarioId} completed. ${t("disclaimers.nonAdvice")}`);
             }}
           />
 

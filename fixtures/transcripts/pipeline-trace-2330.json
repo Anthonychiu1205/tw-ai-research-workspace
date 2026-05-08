@@ -3,15 +3,37 @@
   "title": "Pipeline Trace 2330",
   "userPrompt": "Show planner trace for 2330",
   "events": [
-    { "type": "trace_update", "payload": { "phase": "planning" } },
-    { "type": "tool_call_result", "payload": { "toolName": "runPipeline", "status": "succeeded" } },
-    { "type": "final", "payload": { "disclaimer": "Synthetic workspace output, not financial advice." } }
+    {
+      "type": "trace_update",
+      "payload": {
+        "phase": "planning"
+      }
+    },
+    {
+      "type": "tool_call_result",
+      "payload": {
+        "toolName": "runPipeline",
+        "status": "succeeded"
+      }
+    },
+    {
+      "type": "final",
+      "payload": {
+        "disclaimer": "Synthetic workspace output, not financial advice."
+      }
+    }
   ],
-  "expectedArtifacts": ["pipeline_trace"],
+  "expectedArtifacts": [
+    "pipeline_trace"
+  ],
   "metadata": {
     "provider": "mock",
     "synthetic": true,
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "titleZh": "檢視 2330 Pipeline 軌跡",
+  "titleEn": "Pipeline Trace 2330",
+  "descriptionZh": "顯示 2330 planner trace。",
+  "descriptionEn": "Show planner trace for 2330."
 }

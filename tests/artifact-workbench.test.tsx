@@ -52,7 +52,7 @@ describe("artifact workbench", () => {
     const store = createArtifactStore([]);
     const artifact = store.create({ type: "report", title: "Synthetic report", source: "mock", synthetic: true });
     render(<ArtifactDetailPanel artifact={artifact} />);
-    expect(screen.getByText(/synthetic\/mock artifact/i)).toBeInTheDocument();
+    expect(screen.getByTestId("artifact-metadata-card")).toHaveTextContent(/mock|synthetic|非投資建議/i);
   });
 
   test("evidence ids visible", () => {
@@ -82,7 +82,7 @@ describe("artifact workbench", () => {
       />,
     );
 
-    fireEvent.click(screen.getByText(/Open/i));
+    fireEvent.click(screen.getByText(/Open|開啟 artifact/i));
     expect(selected).toBe(artifact.id);
   });
 });

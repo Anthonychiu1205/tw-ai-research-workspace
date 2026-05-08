@@ -1,9 +1,9 @@
 {
-  "generatedAt": "2026-05-08T06:48:25.945Z",
+  "generatedAt": "2026-05-08T07:29:18.487Z",
   "suggestedRepoName": "tw-ai-research-workspace",
-  "currentBranch": "v0.6-backend-integration-eval-publish-readiness",
-  "latestCommit": "eefa232",
-  "latestCommitMessage": "chore: prepare workspace release candidate with backend harness and final audit",
+  "currentBranch": "v0.7-i18n-zh-en",
+  "latestCommit": "389f8b3",
+  "latestCommitMessage": "chore: add workspace local release summary",
   "noPushPerformed": true,
   "noTagCreated": true,
   "noRemoteChanged": true,

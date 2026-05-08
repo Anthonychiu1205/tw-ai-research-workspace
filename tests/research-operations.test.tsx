@@ -5,6 +5,19 @@ import { ResearchOperationPanel } from "@/components/operations/research-operati
 import { createArtifactStore } from "@/lib/artifacts/artifact-store";
 import { createDefaultOperationRequest, runResearchOperation } from "@/lib/operations/operation-runner";
 
+function clickSubmitByInputLabel(labelPattern: RegExp) {
+  const input = screen.getByLabelText(labelPattern);
+  const form = input.closest("form");
+  if (!form) {
+    throw new Error("Expected input to be wrapped by form.");
+  }
+  const submit = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+  if (!submit) {
+    throw new Error("Expected form to have submit button.");
+  }
+  fireEvent.click(submit);
+}
+
 describe("research operations", () => {
   beforeEach(() => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "mock";
@@ -21,7 +34,7 @@ describe("research operations", () => {
     const artifactStore = createArtifactStore([]);
     render(<ResearchOperationPanel artifactStore={artifactStore} />);
 
-    fireEvent.click(screen.getByText(/Run research/i));
+    clickSubmitByInputLabel(/^(Run research|執行研究)$/i);
 
     await waitFor(() => {
       expect(screen.getByText(/run_research/i)).toBeInTheDocument();
@@ -34,7 +47,7 @@ describe("research operations", () => {
     const artifactStore = createArtifactStore([]);
     render(<ResearchOperationPanel artifactStore={artifactStore} />);
 
-    fireEvent.click(screen.getByText(/Generate report/i));
+    clickSubmitByInputLabel(/^(Generate report|產生研究報告)$/i);
 
     await waitFor(() => {
       expect(artifactStore.listAll().some((item) => item.type === "report")).toBe(true);
@@ -45,7 +58,7 @@ describe("research operations", () => {
     const artifactStore = createArtifactStore([]);
     render(<ResearchOperationPanel artifactStore={artifactStore} />);
 
-    fireEvent.click(screen.getByText(/Run pipeline/i));
+    clickSubmitByInputLabel(/^(Run pipeline|執行研究流程)$/i);
 
     await waitFor(() => {
       expect(artifactStore.listAll().some((item) => item.type === "pipeline_trace")).toBe(true);
@@ -56,7 +69,7 @@ describe("research operations", () => {
     const artifactStore = createArtifactStore([]);
     render(<ResearchOperationPanel artifactStore={artifactStore} />);
 
-    fireEvent.click(screen.getByText(/Compare strategies/i));
+    clickSubmitByInputLabel(/^(Compare strategies|比較策略)$/i);
 
     await waitFor(() => {
       expect(artifactStore.listAll().some((item) => item.type === "strategy_comparison")).toBe(true);

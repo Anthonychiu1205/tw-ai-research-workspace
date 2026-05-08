@@ -2,6 +2,7 @@
 
 import { getModelOptions } from "@/lib/config/models";
 import { Badge } from "@/components/ui/badge";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ModelSwitcher({
   value,
@@ -12,6 +13,7 @@ export function ModelSwitcher({
   onChange: (next: string) => void;
   onUnavailableSelect?: (reason: string) => void;
 }) {
+  const { t } = useI18n();
   const models = getModelOptions();
   const selected = models.find((model) => model.id === value) ?? models[0];
 
@@ -24,7 +26,7 @@ export function ModelSwitcher({
           const modelId = event.target.value;
           const next = models.find((model) => model.id === modelId);
           if (next && !next.available) {
-            onUnavailableSelect?.(next.reasonUnavailable ?? "provider unavailable");
+            onUnavailableSelect?.(next.reasonUnavailable ?? t("model.unavailable"));
           }
           onChange(modelId);
         }}
@@ -35,7 +37,7 @@ export function ModelSwitcher({
           </option>
         ))}
       </select>
-      {selected && !selected.available ? <Badge>unavailable</Badge> : <Badge>available</Badge>}
+      {selected && !selected.available ? <Badge>{t("model.unavailable")}</Badge> : <Badge>available</Badge>}
     </div>
   );
 }

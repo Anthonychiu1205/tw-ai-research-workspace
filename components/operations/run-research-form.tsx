@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function RunResearchForm({ onSubmit, disabled }: { onSubmit: (ticker: string, includePhase2Agents: boolean) => Promise<void> | void; disabled?: boolean }) {
+  const { t } = useI18n();
   const [ticker, setTicker] = useState("2330");
   const [includePhase2Agents, setIncludePhase2Agents] = useState(true);
 
@@ -15,7 +17,7 @@ export function RunResearchForm({ onSubmit, disabled }: { onSubmit: (ticker: str
         void onSubmit(ticker, includePhase2Agents);
       }}
     >
-      <input aria-label="Research ticker" className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
+      <input aria-label={t("operations.runResearch")} className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
       <label className="inline-flex items-center gap-1 text-xs">
         <input
           type="checkbox"
@@ -24,7 +26,7 @@ export function RunResearchForm({ onSubmit, disabled }: { onSubmit: (ticker: str
         />
         Phase2
       </label>
-      <Button type="submit" size="sm" disabled={disabled}>Run research</Button>
+      <Button type="submit" size="sm" disabled={disabled}>{t("operations.runResearch")}</Button>
     </form>
   );
 }

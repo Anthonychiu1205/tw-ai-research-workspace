@@ -39,5 +39,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "Mock Signal Evaluation",
+  "titleZh": "Mock 訊號評估",
+  "titleEn": "Mock Signal Evaluation",
+  "summaryZh": "Synthetic 訊號評估輸出。",
+  "summaryEn": "Synthetic signal evaluation output."
 }

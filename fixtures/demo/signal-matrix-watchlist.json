@@ -1,6 +1,12 @@
 {
   "id": "signal-matrix-watchlist",
-  "watchlist": ["2330", "2317", "2454", "2308", "0050"],
+  "watchlist": [
+    "2330",
+    "2317",
+    "2454",
+    "2308",
+    "0050"
+  ],
   "signals": [
     {
       "agent": "macro",
@@ -26,5 +32,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "Watchlist Signal Matrix",
+  "titleZh": "Watchlist 訊號矩陣",
+  "titleEn": "Watchlist Signal Matrix",
+  "summaryZh": "Synthetic watchlist 訊號分布。",
+  "summaryEn": "Synthetic watchlist signal distribution."
 }

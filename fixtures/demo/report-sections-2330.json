@@ -6,19 +6,26 @@
       "id": "sec-overview",
       "title": "Research Overview (Synthetic)",
       "content": "This synthetic section summarizes mock findings from a bounded local workspace run.",
-      "evidenceIds": ["ev-1", "ev-2"]
+      "evidenceIds": [
+        "ev-1",
+        "ev-2"
+      ]
     },
     {
       "id": "sec-signals",
       "title": "Signal Synthesis (Synthetic)",
       "content": "Signal stack indicates mixed trend with moderate confidence and explicit caution flags.",
-      "evidenceIds": ["ev-3"]
+      "evidenceIds": [
+        "ev-3"
+      ]
     },
     {
       "id": "sec-risk",
       "title": "Risk Notes (Synthetic)",
       "content": "No trading execution. This workspace does not issue buy/sell recommendations.",
-      "evidenceIds": ["ev-4"]
+      "evidenceIds": [
+        "ev-4"
+      ]
     }
   ],
   "metadata": {
@@ -26,5 +33,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "2330 Report Sections",
+  "titleZh": "2330 報告章節",
+  "titleEn": "2330 Report Sections",
+  "summaryZh": "Synthetic 報告章節與證據引用。",
+  "summaryEn": "Synthetic report sections with evidence references."
 }

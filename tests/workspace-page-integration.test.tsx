@@ -7,7 +7,7 @@ describe("workspace page integration", () => {
   test("workspace page renders", async () => {
     render(<WorkspacePage /> as any);
     await waitFor(() => {
-      expect(screen.getByText(/AI-native Taiwan Research Workspace/i)).toBeInTheDocument();
+      expect(screen.getByText(/台股 AI 研究工作區|Taiwan AI Research Workspace/i)).toBeInTheDocument();
     });
   });
 

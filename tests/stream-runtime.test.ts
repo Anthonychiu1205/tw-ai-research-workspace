@@ -21,7 +21,8 @@ describe("stream runtime", () => {
     });
 
     const final = runtime.events.find((event) => event.type === "final");
-    expect(String(final?.payload?.disclaimer ?? "")).toContain("not financial advice");
+    const disclaimer = String(final?.payload?.disclaimer ?? "").toLowerCase();
+    expect(disclaimer.includes("not financial advice") || disclaimer.includes("非投資建議")).toBe(true);
   });
 
   test("tool call events include tool name/status", async () => {

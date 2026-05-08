@@ -2,6 +2,8 @@
 
 AI-native Taiwan financial research workspace UI layer.
 
+繁中摘要：這是一個以 mock-first 為預設的台灣金融研究工作區，支援繁體中文與英文切換，僅供研究與教育用途，非投資建議，且不提供交易或券商串接。
+
 ## What is this?
 
 `tw-ai-research-workspace` is a local-first workspace layer for conversational Taiwan research workflows.
@@ -87,6 +89,14 @@ API mode is optional and fallback-safe.
 - `mock` (mock transport)
 - `proxy` (default in API mode, uses Next.js bridge routes)
 - `direct` (frontend calls backend URL directly)
+
+## Language support
+
+- UI supports `zh-TW` and `en-US`
+- Default locale is `zh-TW`
+- User can switch language in topbar (`繁體中文` / `English`)
+- Locale choice is persisted in localStorage
+- UI copy is localized; API paths, schema keys, provider/model ids remain unchanged
 
 ## Environment variables
 

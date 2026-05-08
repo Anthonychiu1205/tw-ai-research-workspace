@@ -5,6 +5,7 @@ import type { WorkspaceCommand } from "@/lib/commands/command-types";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function CommandMenu({
   commands,
@@ -17,6 +18,7 @@ export function CommandMenu({
   open?: boolean;
   onClose?: () => void;
 }) {
+  const { t } = useI18n();
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -38,10 +40,10 @@ export function CommandMenu({
       <div className="flex items-center justify-between">
         <div className="text-xs uppercase text-muted-foreground">Command Palette</div>
         <Button type="button" size="sm" variant="ghost" onClick={onClose}>
-          Close
+          {t("common.close")}
         </Button>
       </div>
-      <Input aria-label="Command search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Quick actions" />
+      <Input aria-label="Command search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder={t("nav.quickActions")} />
       <div className="max-h-44 space-y-1 overflow-auto">
         {filtered.map((command) => (
           <div key={command.id} className="rounded border p-2 text-xs">
@@ -63,7 +65,7 @@ export function CommandMenu({
                 onClose?.();
               }}
             >
-              Run
+              {t("common.run")}
             </Button>
           </div>
         ))}

@@ -4,12 +4,12 @@ import path from "node:path";
 const root = process.cwd();
 const outPath = path.resolve(root, "artifacts/mock-boundary-check.json");
 
-const requiredPhrases = [
-  "mock",
-  "synthetic",
-  "not financial advice",
-  "no trading",
-  "backend optional",
+const requiredPhraseGroups = [
+  ["mock", "模擬"],
+  ["synthetic", "synthetic"],
+  ["not financial advice", "非投資建議"],
+  ["no trading", "不提供交易", "不執行交易"],
+  ["backend optional", "backend-optional", "後端可選", "backend 可選"],
 ];
 
 const forbiddenClaims = [
@@ -22,7 +22,9 @@ const forbiddenClaims = [
 const files = ["README.md", "docs/runtime.md", "docs/workspace-ux.md", "fixtures/demo/research-card-2330.json"];
 const textBlob = files.map((file) => fs.readFileSync(path.resolve(root, file), "utf-8").toLowerCase()).join("\n");
 
-const missingRequired = requiredPhrases.filter((phrase) => !textBlob.includes(phrase));
+const missingRequired = requiredPhraseGroups
+  .filter((group) => !group.some((phrase) => textBlob.includes(phrase)))
+  .map((group) => group.join(" | "));
 const forbiddenHits = forbiddenClaims.filter((phrase) => textBlob.includes(phrase));
 
 const passed = missingRequired.length === 0 && forbiddenHits.length === 0;

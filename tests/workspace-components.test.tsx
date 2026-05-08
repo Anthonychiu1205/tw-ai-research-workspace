@@ -10,7 +10,7 @@ describe("workspace components", () => {
   test("workspace page renders", async () => {
     render(<WorkspacePage /> as any);
     await waitFor(() => {
-      expect(screen.getByText(/AI-native Taiwan Research Workspace/i)).toBeInTheDocument();
+      expect(screen.getByText(/台股 AI 研究工作區|Taiwan AI Research Workspace/i)).toBeInTheDocument();
     });
   });
 
@@ -27,7 +27,7 @@ describe("workspace components", () => {
         onRuntimeSettingsChange={() => {}}
       />,
     );
-    expect(await screen.findByText(/backend:/i)).toBeInTheDocument();
+    expect(await screen.findByText(/backend|後端/i)).toBeInTheDocument();
   });
 
   test("prompt examples render", () => {
@@ -39,7 +39,7 @@ describe("workspace components", () => {
       />,
     );
     expect(screen.getByTestId("prompt-examples")).toBeInTheDocument();
-    expect(screen.getByText(/Analyze 2330 with Phase 2 agents/i)).toBeInTheDocument();
+    expect(screen.getByText(/Analyze 2330 with Phase 2 agents|分析 2330，並使用 Phase 2 agents/i)).toBeInTheDocument();
   });
 
   test("no buy/sell recommendation text", () => {

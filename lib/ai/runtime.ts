@@ -5,6 +5,7 @@ import { createTokenUsageSummary, type WorkspaceStreamEvent } from "@/lib/ai/str
 import { getToolByName } from "@/lib/ai/tool-registry";
 import type { WorkspaceToolResult } from "@/lib/schemas/tools";
 import type { WorkspaceRuntimeConfig } from "@/lib/schemas/workspace";
+import type { Locale } from "@/lib/i18n/types";
 
 function nowIso() {
   return new Date().toISOString();
@@ -19,12 +20,12 @@ export function selectToolsFromPrompt(prompt: string): string[] {
   const lower = prompt.toLowerCase();
   const names: string[] = [];
 
-  if (lower.includes("analyze") || lower.includes("2330")) names.push("runResearch");
-  if (lower.includes("report")) names.push("generateReport");
-  if (lower.includes("pipeline") || lower.includes("trace") || lower.includes("planner")) names.push("runPipeline");
-  if (lower.includes("compare") || lower.includes("strategy")) names.push("compareStrategies");
-  if (lower.includes("signal")) names.push("evaluateSignals", "getSignalMatrix");
-  if (lower.includes("evidence") || lower.includes("timeline")) names.push("getEvidenceTimeline");
+  if (lower.includes("analyze") || lower.includes("分析") || lower.includes("2330")) names.push("runResearch");
+  if (lower.includes("report") || lower.includes("報告")) names.push("generateReport");
+  if (lower.includes("pipeline") || lower.includes("trace") || lower.includes("planner") || lower.includes("軌跡")) names.push("runPipeline");
+  if (lower.includes("compare") || lower.includes("strategy") || lower.includes("策略")) names.push("compareStrategies");
+  if (lower.includes("signal") || lower.includes("訊號")) names.push("evaluateSignals", "getSignalMatrix");
+  if (lower.includes("evidence") || lower.includes("timeline") || lower.includes("證據")) names.push("getEvidenceTimeline");
   if (names.length === 0) names.push("runResearch", "getAgentConsensus");
 
   return Array.from(new Set(names));
@@ -52,6 +53,7 @@ export async function runAssistantRuntime(input: {
   messages: MockMessage[];
   modelId: string;
   provider: "mock" | "openai" | "anthropic" | "local";
+  locale?: Locale;
   runtimeConfig?: Partial<WorkspaceRuntimeConfig>;
 }) {
   const config = normalizeRuntimeConfig({
@@ -66,6 +68,10 @@ export async function runAssistantRuntime(input: {
 
   const events: WorkspaceStreamEvent[] = [];
   const messageId = `assistant-${Date.now()}`;
+  const locale = input.locale ?? "zh-TW";
+  const runningText = locale === "zh-TW" ? "執行中" : "Running";
+  const boundedNote =
+    locale === "zh-TW" ? "使用具步數上限的 deterministic 工作流。" : "Deterministic workspace workflow with bounded tool steps.";
 
   if (!providerState.available && input.provider !== "mock") {
     events.push({
@@ -88,7 +94,7 @@ export async function runAssistantRuntime(input: {
       phase: "planning",
       selectedTools,
       boundedSteps: config.maxToolSteps,
-      note: "Deterministic workspace workflow with bounded tool steps.",
+      note: boundedNote,
     },
   });
 
@@ -110,7 +116,7 @@ export async function runAssistantRuntime(input: {
         type: "tool_call_delta",
         id: `${messageId}-${toolName}-delta`,
         timestamp: nowIso(),
-        payload: { toolName, status: "running", summary: `Running ${toolName}` },
+        payload: { toolName, status: "running", summary: `${runningText} ${toolName}` },
       });
 
       const parsedInput = tool.inputSchema.safeParse({ symbol: ticker });
@@ -143,7 +149,7 @@ export async function runAssistantRuntime(input: {
     }
   }
 
-  events.push(...createMockResearchStream({ messageId, messages: input.messages }));
+  events.push(...createMockResearchStream({ messageId, messages: input.messages, locale }));
 
   const usage = mockTokenUsage();
   events.push({
@@ -158,7 +164,10 @@ export async function runAssistantRuntime(input: {
     id: `${messageId}-final`,
     timestamp: nowIso(),
     payload: {
-      disclaimer: "Synthetic workspace output, not financial advice. No trading execution.",
+      disclaimer:
+        locale === "zh-TW"
+          ? "本工作區輸出為 synthetic 資料，非投資建議；不執行任何交易。"
+          : "Synthetic workspace output, not financial advice. No trading execution.",
       maxToolSteps: config.maxToolSteps,
       noFinancialAdvice: true,
       tokenUsage: createTokenUsageSummary(usage),

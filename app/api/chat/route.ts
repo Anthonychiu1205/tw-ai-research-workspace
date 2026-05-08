@@ -14,6 +14,7 @@ export async function POST(req: Request) {
     messages,
     provider,
     modelId,
+    locale: body.locale ?? "zh-TW",
     runtimeConfig: {
       mode: body.runtimeMode ?? env.workspaceMode,
       apiBaseUrl: body.apiBaseUrl ?? env.apiBaseUrl,

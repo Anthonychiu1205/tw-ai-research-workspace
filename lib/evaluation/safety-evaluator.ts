@@ -16,6 +16,11 @@ const allowNegativePatterns = [
   /no\s+broker\s+integration/i,
   /not\s+financial\s+advice/i,
   /no\s+trading/i,
+  /does\s+not\s+place\s+orders?/i,
+  /does\s+not[\s\S]{0,40}execute\s+trades?/i,
+  /不提供下單/i,
+  /不執行交易/i,
+  /不接券商/i,
   /never provide market action calls/i,
 ];
 

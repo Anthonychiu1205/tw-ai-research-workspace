@@ -66,5 +66,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "Workspace Session Demo",
+  "titleZh": "工作區 Session 示範",
+  "titleEn": "Workspace Session Demo",
+  "summaryZh": "本地 synthetic session 與 artifact 範例。",
+  "summaryEn": "Local synthetic session and artifact examples."
 }

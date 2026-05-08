@@ -11,6 +11,7 @@ import { RunBacktestForm } from "@/components/operations/run-backtest-form";
 import { CompareStrategiesForm } from "@/components/operations/compare-strategies-form";
 import { EvaluateSignalsForm } from "@/components/operations/evaluate-signals-form";
 import { OperationResultSummary } from "@/components/operations/operation-result-summary";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ResearchOperationPanel({
   artifactStore,
@@ -21,6 +22,7 @@ export function ResearchOperationPanel({
   onArtifactCreated?: (artifactId: string) => void;
   onOperationCompleted?: (result: ResearchOperationResult) => void;
 }) {
+  const { t } = useI18n();
   const [running, setRunning] = useState(false);
   const [lastResult, setLastResult] = useState<ResearchOperationResult | null>(null);
 
@@ -38,7 +40,7 @@ export function ResearchOperationPanel({
 
   return (
     <div className="space-y-3 rounded-md border p-3" data-testid="research-operation-panel">
-      <div className="text-sm font-medium">Research Operations</div>
+      <div className="text-sm font-medium">{t("operations.runResearch")}</div>
       <div className="space-y-2 text-xs">
         <RunResearchForm
           disabled={running}
@@ -103,7 +105,7 @@ export function ResearchOperationPanel({
           }}
         />
       ) : (
-        <div className="text-xs text-muted-foreground">Run an operation to generate synthetic artifacts (non-advice).</div>
+        <div className="text-xs text-muted-foreground">{t("disclaimers.mockData")}</div>
       )}
     </div>
   );

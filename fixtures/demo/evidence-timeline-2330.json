@@ -23,5 +23,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "2330 Evidence Timeline",
+  "titleZh": "2330 證據時間線",
+  "titleEn": "2330 Evidence Timeline",
+  "summaryZh": "Synthetic 證據節點時間線。",
+  "summaryEn": "Synthetic evidence timeline points."
 }

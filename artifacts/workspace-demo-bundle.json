@@ -5,7 +5,7 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true,
-    "generatedAt": "2026-05-08T06:43:17.835Z"
+    "generatedAt": "2026-05-08T07:29:19.862Z"
   },
   "runtimeSettings": {
     "mode": "mock",
@@ -92,7 +92,12 @@
       "dataType": "synthetic_mock",
       "notFinancialAdvice": true,
       "noTradingExecution": true
-    }
+    },
+    "title": "2330 Research Card",
+    "titleZh": "2330 研究卡片",
+    "titleEn": "2330 Research Card",
+    "summaryZh": "Synthetic 摘要：長週期成長與估值風險訊號並存。",
+    "summaryEn": "Synthetic summary: balanced long-cycle growth and valuation caution signals."
   },
   "signalMatrix": {
     "id": "signal-matrix-watchlist",
@@ -128,7 +133,12 @@
       "dataType": "synthetic_mock",
       "notFinancialAdvice": true,
       "noTradingExecution": true
-    }
+    },
+    "title": "Watchlist Signal Matrix",
+    "titleZh": "Watchlist 訊號矩陣",
+    "titleEn": "Watchlist Signal Matrix",
+    "summaryZh": "Synthetic watchlist 訊號分布。",
+    "summaryEn": "Synthetic watchlist signal distribution."
   },
   "evidenceTimeline": {
     "id": "timeline-2330",
@@ -155,7 +165,12 @@
       "dataType": "synthetic_mock",
       "notFinancialAdvice": true,
       "noTradingExecution": true
-    }
+    },
+    "title": "2330 Evidence Timeline",
+    "titleZh": "2330 證據時間線",
+    "titleEn": "2330 Evidence Timeline",
+    "summaryZh": "Synthetic 證據節點時間線。",
+    "summaryEn": "Synthetic evidence timeline points."
   },
   "reportSections": {
     "id": "report-sections-2330",
@@ -192,7 +207,12 @@
       "dataType": "synthetic_mock",
       "notFinancialAdvice": true,
       "noTradingExecution": true
-    }
+    },
+    "title": "2330 Report Sections",
+    "titleZh": "2330 報告章節",
+    "titleEn": "2330 Report Sections",
+    "summaryZh": "Synthetic 報告章節與證據引用。",
+    "summaryEn": "Synthetic report sections with evidence references."
   },
   "plannerTrace": {
     "pipelineId": "pipeline-2330-demo",
@@ -256,7 +276,12 @@
       "dataType": "synthetic_mock",
       "notFinancialAdvice": true,
       "noTradingExecution": true
-    }
+    },
+    "title": "2330 Planner Trace",
+    "titleZh": "2330 Planner 軌跡",
+    "titleEn": "2330 Planner Trace",
+    "summaryZh": "Synthetic planner/executor/reflection 軌跡。",
+    "summaryEn": "Synthetic planner/executor/reflection trace."
   },
   "strategyComparison": {
     "id": "strategy-compare-2330",
@@ -289,7 +314,12 @@
       "dataType": "synthetic_mock",
       "notFinancialAdvice": true,
       "noTradingExecution": true
-    }
+    },
+    "title": "2330 Strategy Comparison",
+    "titleZh": "2330 策略比較",
+    "titleEn": "2330 Strategy Comparison",
+    "summaryZh": "Synthetic 策略比較結果。",
+    "summaryEn": "Synthetic strategy comparison results."
   },
   "scenariosCompleted": [
     "analyze_2330",

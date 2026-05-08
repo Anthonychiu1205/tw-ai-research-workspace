@@ -36,11 +36,17 @@
         "status": "success"
       }
     ],
-    "notes": ["No autonomous loop", "No web browsing"]
+    "notes": [
+      "No autonomous loop",
+      "No web browsing"
+    ]
   },
   "reflection": {
     "summary": "Synthetic pipeline complete. Output remains non-advice and no-trading.",
-    "cautionFlags": ["synthetic data", "mock provider"],
+    "cautionFlags": [
+      "synthetic data",
+      "mock provider"
+    ],
     "confidence": 0.63
   },
   "metadata": {
@@ -48,5 +54,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "Mock Pipeline Result",
+  "titleZh": "Mock Pipeline 結果",
+  "titleEn": "Mock Pipeline Result",
+  "summaryZh": "Synthetic pipeline 執行結果。",
+  "summaryEn": "Synthetic pipeline execution result."
 }

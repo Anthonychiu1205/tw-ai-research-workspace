@@ -42,11 +42,17 @@
         "status": "success"
       }
     ],
-    "notes": ["Synthetic run", "No market order path"]
+    "notes": [
+      "Synthetic run",
+      "No market order path"
+    ]
   },
   "reflection": {
     "summary": "Synthetic pipeline completed with balanced confidence and explicit non-advice framing.",
-    "cautionFlags": ["mock data", "non-advice"],
+    "cautionFlags": [
+      "mock data",
+      "non-advice"
+    ],
     "confidence": 0.61
   },
   "metadata": {
@@ -54,5 +60,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "2330 Planner Trace",
+  "titleZh": "2330 Planner 軌跡",
+  "titleEn": "2330 Planner Trace",
+  "summaryZh": "Synthetic planner/executor/reflection 軌跡。",
+  "summaryEn": "Synthetic planner/executor/reflection trace."
 }

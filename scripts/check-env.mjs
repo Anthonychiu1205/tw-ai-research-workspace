@@ -5,6 +5,9 @@ const requiredFiles = [
   "package.json",
   "app/workspace/page.tsx",
   "lib/config/env.ts",
+  "lib/i18n/dictionaries/en-us.ts",
+  "lib/i18n/dictionaries/zh-tw.ts",
+  "components/app-shell/language-switcher.tsx",
   ".env.example",
   "fixtures/mock-api/research-run.json",
 ];

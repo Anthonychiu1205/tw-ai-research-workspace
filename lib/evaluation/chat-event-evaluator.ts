@@ -26,7 +26,8 @@ export async function evaluateChatEvents(): Promise<WorkspaceEvaluationCheck[]> 
       (event) => event.type === "tool_call_result" && String(event.payload.toolName ?? "") === prompt.expectTool,
     );
     const final = runtime.events.find((event) => event.type === "final");
-    const hasDisclaimer = String(final?.payload?.disclaimer ?? "").toLowerCase().includes("not financial advice");
+    const disclaimer = String(final?.payload?.disclaimer ?? "").toLowerCase();
+    const hasDisclaimer = disclaimer.includes("not financial advice") || disclaimer.includes("非投資建議");
 
     checks.push({
       name: `chat_${prompt.id}_final_event`,

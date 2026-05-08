@@ -14,5 +14,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "Mock Research Run",
+  "titleZh": "Mock 研究執行",
+  "titleEn": "Mock Research Run",
+  "summaryZh": "Synthetic 研究執行輸出。",
+  "summaryEn": "Synthetic research run output."
 }

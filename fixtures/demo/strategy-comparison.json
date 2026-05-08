@@ -29,5 +29,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "2330 Strategy Comparison",
+  "titleZh": "2330 策略比較",
+  "titleEn": "2330 Strategy Comparison",
+  "summaryZh": "Synthetic 策略比較結果。",
+  "summaryEn": "Synthetic strategy comparison results."
 }

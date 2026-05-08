@@ -1,7 +1,7 @@
 {
-  "checkedAt": "2026-05-08T06:43:05.651Z",
+  "checkedAt": "2026-05-08T07:29:14.329Z",
   "passed": true,
-  "baseUrl": "http://127.0.0.1:59867",
+  "baseUrl": "http://127.0.0.1:60585",
   "checks": [
     {
       "name": "proxy_health",
@@ -34,31 +34,31 @@
       "method": "GET",
       "path": "/health",
       "status": 200,
-      "timestamp": "2026-05-08T06:43:05.624Z"
+      "timestamp": "2026-05-08T07:29:14.314Z"
     },
     {
       "method": "GET",
       "path": "/health",
       "status": 200,
-      "timestamp": "2026-05-08T06:43:05.639Z"
+      "timestamp": "2026-05-08T07:29:14.323Z"
     },
     {
       "method": "POST",
       "path": "/v1/research-runs",
       "status": 200,
-      "timestamp": "2026-05-08T06:43:05.646Z"
+      "timestamp": "2026-05-08T07:29:14.326Z"
     },
     {
       "method": "GET",
       "path": "/v1/system/storage",
       "status": 200,
-      "timestamp": "2026-05-08T06:43:05.648Z"
+      "timestamp": "2026-05-08T07:29:14.328Z"
     },
     {
       "method": "GET",
       "path": "/v1/provider/conformance",
       "status": 200,
-      "timestamp": "2026-05-08T06:43:05.650Z"
+      "timestamp": "2026-05-08T07:29:14.329Z"
     }
   ],
   "warnings": []

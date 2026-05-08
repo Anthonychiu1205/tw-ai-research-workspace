@@ -7,13 +7,18 @@
       "id": "sec1",
       "title": "Synthetic Executive Summary",
       "content": "This synthetic report is generated for workspace UX demonstration only.",
-      "evidenceIds": ["ev-1", "ev-2"]
+      "evidenceIds": [
+        "ev-1",
+        "ev-2"
+      ]
     },
     {
       "id": "sec2",
       "title": "Synthetic Signal Interpretation",
       "content": "Mock signal stack shows mixed direction with medium confidence.",
-      "evidenceIds": ["ev-3"]
+      "evidenceIds": [
+        "ev-3"
+      ]
     }
   ],
   "quality": {
@@ -32,5 +37,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "Mock Report",
+  "titleZh": "Mock 研究報告",
+  "titleEn": "Mock Report",
+  "summaryZh": "Synthetic 研究報告輸出。",
+  "summaryEn": "Synthetic report output."
 }

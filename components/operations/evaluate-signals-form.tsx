@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function EvaluateSignalsForm({
   onSubmit,
@@ -10,6 +11,7 @@ export function EvaluateSignalsForm({
   onSubmit: (tickers: string[]) => Promise<void> | void;
   disabled?: boolean;
 }) {
+  const { t } = useI18n();
   const [tickersText, setTickersText] = useState("2330,2317,2454,2308,0050");
 
   return (
@@ -24,8 +26,8 @@ export function EvaluateSignalsForm({
         void onSubmit(tickers);
       }}
     >
-      <input aria-label="Signal tickers" className="h-8 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
-      <Button type="submit" size="sm" disabled={disabled}>Evaluate signals</Button>
+      <input aria-label={t("operations.evaluateSignals")} className="h-8 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
+      <Button type="submit" size="sm" disabled={disabled}>{t("operations.evaluateSignals")}</Button>
     </form>
   );
 }

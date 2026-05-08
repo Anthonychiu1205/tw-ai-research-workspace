@@ -1,13 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
-const items = [
-  { href: "/workspace", label: "Workspace" },
-  { href: "/reports", label: "Reports" },
-  { href: "/strategies", label: "Strategies" },
-  { href: "/traces", label: "Traces" },
-];
+const items = [{ href: "/workspace", key: "workspace" }, { href: "/reports", key: "reports" }, { href: "/strategies", key: "strategies" }, { href: "/traces", key: "traces" }] as const;
 
 export function Sidebar({
   sessions = [],
@@ -20,37 +18,39 @@ export function Sidebar({
   onQuickAnalyze?: () => void;
   hidden?: boolean;
 }) {
+  const { t } = useI18n();
+
   if (hidden) {
     return null;
   }
 
   return (
     <aside className="w-64 border-r border-border p-3" data-testid="sidebar">
-      <div className="mb-4 text-sm font-semibold">TW AI Research</div>
+      <div className="mb-4 text-sm font-semibold">{t("app.shortTitle")}</div>
       <div className="space-y-2">
         {items.map((item) => (
           <Link key={item.href} href={item.href} className="block rounded-md px-3 py-2 text-sm hover:bg-muted">
-            {item.label}
+            {t(`nav.${item.key}`)}
           </Link>
         ))}
       </div>
 
       <div className="mt-4 flex items-center gap-2">
-        <Badge>mock-first</Badge>
-        <Badge>local-only</Badge>
+        <Badge>{t("runtime.mockFirst")}</Badge>
+        <Badge>{t("runtime.localOnly")}</Badge>
       </div>
 
       <div className="mt-4 space-y-2" id="quick-actions">
-        <div className="text-xs uppercase text-muted-foreground">Quick actions</div>
+        <div className="text-xs uppercase text-muted-foreground">{t("nav.quickActions")}</div>
         <Button type="button" size="sm" variant="outline" onClick={onQuickAnalyze}>
-          Analyze 2330
+          {t("commands.analyze2330")}
         </Button>
       </div>
 
       <div className="mt-4 space-y-2">
-        <div className="text-xs uppercase text-muted-foreground">Sessions</div>
+        <div className="text-xs uppercase text-muted-foreground">{t("sessions.history")}</div>
         {sessions.length === 0 ? (
-          <div className="text-xs text-muted-foreground">No sessions</div>
+          <div className="text-xs text-muted-foreground">{t("sessions.noSessions")}</div>
         ) : (
           sessions.slice(0, 5).map((session) => (
             <div key={session.id} className="rounded-md border p-2 text-xs">
@@ -61,9 +61,9 @@ export function Sidebar({
       </div>
 
       <div className="mt-4 space-y-2" id="artifacts">
-        <div className="text-xs uppercase text-muted-foreground">Artifacts</div>
+        <div className="text-xs uppercase text-muted-foreground">{t("artifacts.title")}</div>
         {artifacts.length === 0 ? (
-          <div className="text-xs text-muted-foreground">No artifacts</div>
+          <div className="text-xs text-muted-foreground">{t("artifacts.noArtifacts")}</div>
         ) : (
           artifacts.slice(0, 5).map((artifact) => (
             <div key={artifact.id} className="rounded-md border p-2 text-xs">

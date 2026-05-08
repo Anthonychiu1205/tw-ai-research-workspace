@@ -13,7 +13,7 @@ describe("command registry", () => {
   });
 
   test("Analyze 2330 command exists", () => {
-    const commands = getWorkspaceCommands({ canUseApiMode: true });
+    const commands = getWorkspaceCommands({ canUseApiMode: true, locale: "en-US" });
     expect(commands.some((command) => command.label.includes("Analyze 2330"))).toBe(true);
   });
 

@@ -1,0 +1,185 @@
+{
+  "checkedAt": "2026-05-08T07:29:19.992Z",
+  "passed": true,
+  "files": [
+    {
+      "file": "lib/i18n/dictionaries/en-us.ts",
+      "exists": true
+    },
+    {
+      "file": "lib/i18n/dictionaries/zh-tw.ts",
+      "exists": true
+    },
+    {
+      "file": "lib/i18n/i18n-context.tsx",
+      "exists": true
+    },
+    {
+      "file": "components/app-shell/language-switcher.tsx",
+      "exists": true
+    },
+    {
+      "file": "docs/i18n.md",
+      "exists": true
+    }
+  ],
+  "sectionChecks": [
+    {
+      "section": "app",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "nav",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "runtime",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "model",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "backend",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "chat",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "tools",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "operations",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "artifacts",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "reports",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "evidence",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "trace",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "sessions",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "scenarios",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "onboarding",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "errors",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "emptyStates",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "disclaimers",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "limitations",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "commands",
+      "en": true,
+      "zh": true
+    },
+    {
+      "section": "common",
+      "en": true,
+      "zh": true
+    }
+  ],
+  "keyChecks": [
+    {
+      "keyPath": "app.title",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "chat.title",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "chat.exampleAnalyze",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "operations.runResearch",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "artifacts.title",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "disclaimers.nonAdvice",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "disclaimers.noTrading",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "common.english",
+      "en": true,
+      "zh": true
+    },
+    {
+      "keyPath": "common.traditionalChinese",
+      "en": true,
+      "zh": true
+    }
+  ],
+  "readmeChecks": {
+    "mentionsLanguageSupport": true,
+    "mentionsZhDefault": true,
+    "mentionsSwitcher": true
+  }
+}

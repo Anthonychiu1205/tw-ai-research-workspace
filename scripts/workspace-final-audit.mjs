@@ -13,6 +13,7 @@ const requiredDocs = [
   "docs/share_bundle.md",
   "docs/backend_live_mode.md",
   "docs/workspace_final_audit.md",
+  "docs/i18n.md",
 ];
 
 const requiredScripts = [

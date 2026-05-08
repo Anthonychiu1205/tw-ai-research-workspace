@@ -21,3 +21,9 @@ v0.5 is workspace-first, not dashboard-first.
 - non-advice messaging
 - no trading / no broker
 - bounded deterministic workflows
+
+## Language
+
+- UI supports `zh-TW` and `en-US`
+- default locale is `zh-TW`
+- locale switch is available in topbar and persisted locally

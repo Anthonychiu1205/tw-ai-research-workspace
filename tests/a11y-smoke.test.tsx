@@ -21,16 +21,16 @@ describe("a11y smoke", () => {
       />,
     );
 
-    expect(screen.getByLabelText(/Runtime mode/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Research prompt/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Runtime mode|執行模式/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Research prompt|研究提問/i)).toBeInTheDocument();
   });
 
   test("ResearchOperationPanel renders", () => {
     const store = createArtifactStore([]);
     render(<ResearchOperationPanel artifactStore={store} />);
     expect(screen.getByTestId("research-operation-panel")).toBeInTheDocument();
-    expect(screen.getByLabelText(/Research ticker/i)).toBeInTheDocument();
-    expect(screen.getByLabelText(/Report ticker/i)).toBeInTheDocument();
+    expect(screen.getAllByLabelText(/^Run Research$|^執行研究$/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByLabelText(/Generate Research Report|產生研究報告/i).length).toBeGreaterThan(0);
   });
 
   test("ArtifactBrowser renders", () => {
@@ -81,6 +81,6 @@ describe("a11y smoke", () => {
         state={{ mode: "mock", apiBaseUrl: "http://localhost:8000", reachable: false, fallbackActive: false }}
       />,
     );
-    expect(screen.getByText(/Mock workspace|API fallback|API connected/i)).toBeInTheDocument();
+    expect(screen.getByText(/Mock workspace|API fallback|API connected|Mock 工作區|API 備援中|API 已連線/i)).toBeInTheDocument();
   });
 });

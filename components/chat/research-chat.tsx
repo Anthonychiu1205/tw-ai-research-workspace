@@ -10,13 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useResearchChat } from "@/lib/ai/use-research-chat";
 import type { BackendConnectionState, RuntimeSettings } from "@/lib/schemas/workspace";
-
-const promptExamples = [
-  "Analyze 2330 with Phase 2 agents",
-  "Generate a research report for 2330",
-  "Compare strategies for 2330, 2317, 2454",
-  "Show planner trace for 2330",
-];
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ResearchChat({
   runtimeSettings,
@@ -33,9 +27,14 @@ export function ResearchChat({
   onOpenArtifact?: (artifactId: string) => void;
   systemEvents?: Array<{ id: string; content: string }>;
 }) {
+  const { t, locale } = useI18n();
   const [runtimeWarning, setRuntimeWarning] = useState<string | null>(null);
   const selectedProvider = useMemo(() => resolveModelProvider(runtimeSettings.selectedModel), [runtimeSettings.selectedModel]);
   const modelAvailability = useMemo(() => getModelAvailability(runtimeSettings.selectedModel), [runtimeSettings.selectedModel]);
+  const promptExamples = useMemo(
+    () => [t("chat.exampleAnalyze"), t("chat.exampleReport"), t("chat.exampleStrategy"), t("chat.exampleTrace"), t("chat.exampleSignals")],
+    [t],
+  );
 
   const chat = useResearchChat({
     runtimeSettings,
@@ -45,8 +44,7 @@ export function ResearchChat({
       {
         id: "m-welcome",
         role: "assistant",
-        content:
-          "Workspace ready in mock mode. You can inspect synthetic reports, signals, and traces. Disclaimer: Synthetic workspace output, not financial advice.",
+        content: t("chat.welcome"),
         createdAt: new Date().toISOString(),
         status: "complete",
         metadata: {
@@ -56,6 +54,7 @@ export function ResearchChat({
         },
       },
     ],
+    locale,
     onToolResult,
   });
 
@@ -74,12 +73,20 @@ export function ResearchChat({
   return (
     <div className="space-y-3" data-testid="research-chat">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <div className="text-sm font-medium">Research Chat</div>
+        <div className="text-sm font-medium">{t("chat.title")}</div>
         <div className="flex items-center gap-2 text-xs">
-          <Badge>mode: {runtimeSettings.mode}</Badge>
-          <Badge>provider: {selectedProvider}</Badge>
-          <Badge>model: {runtimeSettings.selectedModel}</Badge>
-          <Badge>backend: {connectionState.reachable ? "reachable" : "optional"}</Badge>
+          <Badge>
+            {t("runtime.mode")}: {runtimeSettings.mode === "mock" ? t("runtime.mockMode") : t("runtime.apiMode")}
+          </Badge>
+          <Badge>
+            {t("runtime.provider")}: {selectedProvider}
+          </Badge>
+          <Badge>
+            {t("runtime.model")}: {runtimeSettings.selectedModel}
+          </Badge>
+          <Badge>
+            {t("runtime.backend")}: {connectionState.reachable ? t("backend.connected") : t("backend.optional")}
+          </Badge>
         </div>
       </div>
 
@@ -87,18 +94,18 @@ export function ResearchChat({
         <ModelSwitcher
           value={runtimeSettings.selectedModel}
           onChange={(next) => onRuntimeSettingsChange({ selectedModel: next, selectedProvider: resolveModelProvider(next) })}
-          onUnavailableSelect={(reason) => setRuntimeWarning(`Provider unavailable; fallback to mock. ${reason}`)}
+          onUnavailableSelect={(reason) => setRuntimeWarning(`${t("model.unavailable")}；${t("backend.fallback")} ${reason}`)}
         />
         <select
           className="h-9 rounded-md border bg-background px-2 text-xs"
           value={runtimeSettings.mode}
-          aria-label="Runtime mode"
+          aria-label={t("chat.runtimeMode")}
           onChange={(event) => onRuntimeSettingsChange({ mode: event.target.value as "mock" | "api" })}
         >
-          <option value="mock">mock</option>
-          <option value="api">api</option>
+          <option value="mock">{t("runtime.mockMode")}</option>
+          <option value="api">{t("runtime.apiMode")}</option>
         </select>
-        {!modelAvailability.available ? <Badge>fallback: {modelAvailability.reasonUnavailable ?? "provider unavailable"}</Badge> : null}
+        {!modelAvailability.available ? <Badge>{t("runtime.fallback")}: {modelAvailability.reasonUnavailable ?? t("model.unavailable")}</Badge> : null}
       </div>
 
       {runtimeWarning ? <div className="rounded-md border border-yellow-500/40 bg-yellow-500/10 p-2 text-xs">{runtimeWarning}</div> : null}
@@ -108,7 +115,7 @@ export function ResearchChat({
           <div className="flex gap-2">
             <RetryMessageButton onRetry={() => void chat.retryLast()} disabled={chat.isStreaming} />
             <Button type="button" size="sm" variant="outline" onClick={chat.clear}>
-              Clear
+              {t("chat.clear")}
             </Button>
           </div>
         </div>
@@ -132,12 +139,14 @@ export function ResearchChat({
       />
 
       {runtimeSettings.showTokenUsage && chat.tokenUsage ? (
-        <div className="rounded-md border p-2 text-xs text-muted-foreground">token usage: {JSON.stringify(chat.tokenUsage)}</div>
+        <div className="rounded-md border p-2 text-xs text-muted-foreground">
+          {t("chat.tokenUsage")}: {JSON.stringify(chat.tokenUsage)}
+        </div>
       ) : null}
 
       {runtimeSettings.showToolCalls && chat.activeToolCalls.length > 0 ? (
         <div className="rounded-md border p-2 text-xs text-muted-foreground">
-          active tool calls: {chat.activeToolCalls.length}
+          {t("chat.activeToolCalls")}: {chat.activeToolCalls.length}
         </div>
       ) : null}
     </div>

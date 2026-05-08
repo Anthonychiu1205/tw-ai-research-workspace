@@ -64,6 +64,19 @@ function streamResponse(lines: string[]) {
   return new Response(stream, { headers: { "content-type": "text/plain; charset=utf-8" } });
 }
 
+function clickOperationSubmit(labelPattern: RegExp) {
+  const input = screen.getByLabelText(labelPattern);
+  const form = input.closest("form");
+  if (!form) {
+    throw new Error("Expected input to be wrapped by form.");
+  }
+  const submit = form.querySelector('button[type="submit"]') as HTMLButtonElement | null;
+  if (!submit) {
+    throw new Error("Expected form to have submit button.");
+  }
+  fireEvent.click(submit);
+}
+
 describe("operation chat integration", () => {
   beforeEach(() => {
     vi.restoreAllMocks();
@@ -73,7 +86,7 @@ describe("operation chat integration", () => {
   test("running operation creates artifact and chat message", async () => {
     render(<IntegrationHarness />);
 
-    fireEvent.click(screen.getByText(/Run research/i));
+    clickOperationSubmit(/^(Run research|執行研究)$/i);
 
     await waitFor(() => {
       expect(Number(screen.getByTestId("artifact-count").textContent ?? "0")).toBeGreaterThan(0);
@@ -98,7 +111,7 @@ describe("operation chat integration", () => {
 
     render(<IntegrationHarness />);
 
-    fireEvent.click(screen.getByText(/Analyze 2330 with Phase 2 agents/i));
+    fireEvent.click(screen.getByText(/Analyze 2330 with Phase 2 agents|分析 2330，並使用 Phase 2 agents/i));
 
     await waitFor(() => {
       expect(Number(screen.getByTestId("artifact-count").textContent ?? "0")).toBeGreaterThan(0);
@@ -108,7 +121,7 @@ describe("operation chat integration", () => {
   test("active artifact changes context panel", async () => {
     render(<IntegrationHarness />);
 
-    fireEvent.click(screen.getByText(/Run research/i));
+    clickOperationSubmit(/^(Run research|執行研究)$/i);
 
     await waitFor(() => {
       expect(screen.queryByTestId("workspace-context-empty")).not.toBeInTheDocument();
@@ -118,13 +131,13 @@ describe("operation chat integration", () => {
   test("artifact can be pinned", async () => {
     render(<IntegrationHarness />);
 
-    fireEvent.click(screen.getByText(/Run research/i));
+    clickOperationSubmit(/^(Run research|執行研究)$/i);
 
     await waitFor(() => {
-      expect(screen.getByText(/Pin artifact/i)).toBeInTheDocument();
+      expect(screen.getByText(/Pin artifact|釘選/i)).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByText(/Pin artifact/i));
-    expect(screen.getByText(/Pin artifact/i)).toBeInTheDocument();
+    fireEvent.click(screen.getByText(/Pin artifact|釘選/i));
+    expect(screen.getByText(/Pin artifact|釘選/i)).toBeInTheDocument();
   });
 });

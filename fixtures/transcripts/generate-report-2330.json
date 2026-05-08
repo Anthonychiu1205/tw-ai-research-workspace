@@ -3,15 +3,37 @@
   "title": "Generate Report 2330",
   "userPrompt": "Generate a research report for 2330",
   "events": [
-    { "type": "message_delta", "payload": { "content": "Generating report sections." } },
-    { "type": "tool_call_result", "payload": { "toolName": "generateReport", "status": "succeeded" } },
-    { "type": "final", "payload": { "disclaimer": "Synthetic workspace output, not financial advice." } }
+    {
+      "type": "message_delta",
+      "payload": {
+        "content": "Generating report sections."
+      }
+    },
+    {
+      "type": "tool_call_result",
+      "payload": {
+        "toolName": "generateReport",
+        "status": "succeeded"
+      }
+    },
+    {
+      "type": "final",
+      "payload": {
+        "disclaimer": "Synthetic workspace output, not financial advice."
+      }
+    }
   ],
-  "expectedArtifacts": ["report"],
+  "expectedArtifacts": [
+    "report"
+  ],
   "metadata": {
     "provider": "mock",
     "synthetic": true,
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "titleZh": "產生 2330 報告",
+  "titleEn": "Generate Report 2330",
+  "descriptionZh": "為 2330 產生研究報告。",
+  "descriptionEn": "Generate a research report for 2330."
 }

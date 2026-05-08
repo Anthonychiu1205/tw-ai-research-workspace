@@ -1,6 +1,7 @@
 import type { WorkspaceToolCallState } from "@/lib/ai/message-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ToolCallTimeline({
   calls,
@@ -9,6 +10,7 @@ export function ToolCallTimeline({
   calls: WorkspaceToolCallState[];
   onOpenArtifact?: (artifactId: string) => void;
 }) {
+  const { t } = useI18n();
   if (calls.length === 0) return null;
 
   return (
@@ -19,14 +21,14 @@ export function ToolCallTimeline({
             <span>{call.toolName}</span>
             <Badge>{call.status}</Badge>
             {typeof call.latencyMs === "number" ? <Badge>{call.latencyMs}ms</Badge> : null}
-            {call.fallbackUsed ? <Badge>fallback</Badge> : null}
+            {call.fallbackUsed ? <Badge>{t("runtime.fallback")}</Badge> : null}
           </div>
           {call.resultSummary ? <div className="mb-1 text-muted-foreground">{call.resultSummary}</div> : null}
-          {call.evidenceIds.length > 0 ? <div className="mb-1">evidence: {call.evidenceIds.join(", ")}</div> : null}
+          {call.evidenceIds.length > 0 ? <div className="mb-1">{t("tools.evidenceRefs")}: {call.evidenceIds.join(", ")}</div> : null}
           {call.error ? <div className="mb-1 text-red-400">{call.error}</div> : null}
           {call.artifactId ? (
             <Button type="button" size="sm" variant="outline" onClick={() => onOpenArtifact?.(call.artifactId!)}>
-              Open artifact
+              {t("common.open")}
             </Button>
           ) : null}
         </div>

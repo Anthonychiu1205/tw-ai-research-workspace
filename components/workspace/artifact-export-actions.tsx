@@ -2,6 +2,7 @@
 
 import type { WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ArtifactExportActions({
   artifact,
@@ -10,6 +11,7 @@ export function ArtifactExportActions({
   artifact: WorkspaceArtifactRecord;
   onPinToggle?: (artifactId: string, pinned: boolean) => void;
 }) {
+  const { t } = useI18n();
   const copyJson = async () => {
     if (typeof navigator !== "undefined" && navigator.clipboard) {
       await navigator.clipboard.writeText(JSON.stringify(artifact, null, 2));
@@ -30,7 +32,7 @@ export function ArtifactExportActions({
   return (
     <div className="flex flex-wrap gap-2" data-testid="artifact-export-actions">
       <Button type="button" size="sm" variant="outline" onClick={() => void copyJson()}>
-        Copy JSON
+        {t("artifacts.exportJson")}
       </Button>
       <Button type="button" size="sm" variant="outline" onClick={downloadJson}>
         Download JSON
@@ -41,7 +43,7 @@ export function ArtifactExportActions({
         variant="outline"
         onClick={() => onPinToggle?.(artifact.id, !artifact.pinned)}
       >
-        {artifact.pinned ? "Unpin" : "Pin"}
+        {artifact.pinned ? t("artifacts.unpin") : t("artifacts.pin")}
       </Button>
     </div>
   );

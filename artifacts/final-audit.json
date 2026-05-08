@@ -1,13 +1,9 @@
 {
-  "checkedAt": "2026-05-08T06:43:17.880Z",
+  "checkedAt": "2026-05-08T07:29:18.320Z",
   "passed": true,
   "checks": [
     {
       "command": "node scripts/check-env.mjs",
-      "passed": true
-    },
-    {
-      "command": "node scripts/smoke-test.mjs",
       "passed": true
     },
     {

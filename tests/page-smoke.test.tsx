@@ -21,17 +21,17 @@ describe("page smoke", () => {
 
   test("reports page renders", () => {
     render(<ReportsPage /> as any);
-    expect(screen.getByRole("heading", { name: /^Synthetic Report Viewer$/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /Synthetic Report Viewer|Synthetic 報告檢視/i })).toBeInTheDocument();
   });
 
   test("strategies page renders", () => {
     render(<StrategiesPage /> as any);
-    expect(screen.getByText(/Strategy Comparison/i)).toBeInTheDocument();
+    expect(screen.getByText(/Strategy Comparison|策略比較/i)).toBeInTheDocument();
   });
 
   test("traces page renders", () => {
     render(<TracesPage /> as any);
-    expect(screen.getByText(/Planner \/ Executor Trace/i)).toBeInTheDocument();
+    expect(screen.getByText(/Execution Traces|執行軌跡/i)).toBeInTheDocument();
   });
 
   test("page empty states render", async () => {
@@ -45,7 +45,7 @@ describe("page smoke", () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "mock";
     render(<WorkspacePage /> as any);
     await waitFor(() => {
-      expect(screen.getAllByText(/Mock workspace|optional/i).length).toBeGreaterThan(0);
+      expect(screen.getAllByText(/Mock workspace|optional|Mock 工作區|可選/i).length).toBeGreaterThan(0);
     });
   });
 });

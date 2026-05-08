@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function MessageComposer({
   value,
@@ -16,6 +17,8 @@ export function MessageComposer({
   onStop?: () => void;
   disabled?: boolean;
 }) {
+  const { t } = useI18n();
+
   return (
     <form
       className="flex gap-2"
@@ -28,13 +31,13 @@ export function MessageComposer({
       }}
     >
       <label className="sr-only" htmlFor="chat-composer-input">
-        Research prompt
+        {t("chat.promptLabel")}
       </label>
       <Input
         id="chat-composer-input"
         value={value}
         onChange={(event) => onChange(event.target.value)}
-        placeholder="Ask synthetic research question"
+        placeholder={t("chat.promptPlaceholder")}
         disabled={disabled}
         onKeyDown={(event) => {
           if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
@@ -45,13 +48,13 @@ export function MessageComposer({
           }
         }}
       />
-      <Button type="button" variant="ghost" disabled={disabled || value.length === 0} onClick={() => onChange("")}>Clear</Button>
+      <Button type="button" variant="ghost" disabled={disabled || value.length === 0} onClick={() => onChange("")}>{t("chat.clear")}</Button>
       {disabled ? (
         <Button type="button" variant="outline" onClick={onStop}>
-          Stop
+          {t("chat.stop")}
         </Button>
       ) : null}
-      <Button type="submit" disabled={disabled}>{disabled ? "Streaming..." : "Send"}</Button>
+      <Button type="submit" disabled={disabled}>{disabled ? t("chat.streaming") : t("chat.send")}</Button>
     </form>
   );
 }

@@ -6,11 +6,13 @@ import { chatReducer, initialChatState } from "@/lib/ai/message-reducer";
 import type { WorkspaceChatMessage } from "@/lib/ai/message-types";
 import type { RuntimeSettings } from "@/lib/schemas/workspace";
 import type { WorkspaceStreamEvent } from "@/lib/ai/stream-utils";
+import type { Locale } from "@/lib/i18n/types";
 
 type UseResearchChatOptions = {
   runtimeSettings: RuntimeSettings;
   modelId: string;
   provider: "mock" | "openai" | "anthropic" | "local";
+  locale?: Locale;
   initialMessages?: WorkspaceChatMessage[];
   onToolResult?: (payload: Record<string, unknown>) => void;
   onMessagesChange?: (messages: WorkspaceChatMessage[]) => void;
@@ -105,6 +107,7 @@ export function useResearchChat(options: UseResearchChatOptions) {
             streamToolCalls: options.runtimeSettings.showToolCalls,
             fallbackToMock: options.runtimeSettings.fallbackToMock,
             maxToolSteps: options.runtimeSettings.maxToolSteps,
+            locale: options.locale ?? "zh-TW",
           }),
         });
 

@@ -1,6 +1,6 @@
 {
-  "evaluationId": "workspace-eval_rmi7yvx5",
-  "createdAt": "2026-05-08T06:43:17.672Z",
+  "evaluationId": "workspace-eval_4qcgin1j",
+  "createdAt": "2026-05-08T07:29:19.671Z",
   "passed": true,
   "checks": [
     {
@@ -894,6 +894,55 @@
     },
     {
       "name": "safety_docs_github_publish_md_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_docs_i18n_md_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_docs_i18n_md_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_docs_i18n_md_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_docs_i18n_md_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_docs_i18n_md_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_docs_i18n_md_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_docs_i18n_md_sell_recommendation",
       "category": "safety",
       "passed": true,
       "severity": "info",
@@ -2756,6 +2805,55 @@
     },
     {
       "name": "safety_components_app_shell_keyboard_shortcuts_help_tsx_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_components_app_shell_language_switcher_tsx_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_components_app_shell_language_switcher_tsx_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_components_app_shell_language_switcher_tsx_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_components_app_shell_language_switcher_tsx_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_components_app_shell_language_switcher_tsx_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_components_app_shell_language_switcher_tsx_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_components_app_shell_language_switcher_tsx_sell_recommendation",
       "category": "safety",
       "passed": true,
       "severity": "info",
@@ -8005,6 +8103,349 @@
       "details": "no hit: sell recommendation"
     },
     {
+      "name": "safety_lib_i18n_dictionaries_en_us_ts_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_en_us_ts_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_en_us_ts_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "allowed negative context: place order"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_en_us_ts_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "allowed negative context: execute trade"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_en_us_ts_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_en_us_ts_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_en_us_ts_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_zh_tw_ts_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_zh_tw_ts_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_zh_tw_ts_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_zh_tw_ts_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_zh_tw_ts_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_zh_tw_ts_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_dictionaries_zh_tw_ts_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_context_tsx_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_context_tsx_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_context_tsx_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_context_tsx_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_context_tsx_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_context_tsx_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_context_tsx_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_store_ts_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_store_ts_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_store_ts_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_store_ts_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_store_ts_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_store_ts_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_i18n_store_ts_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_index_ts_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_lib_i18n_index_ts_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_lib_i18n_index_ts_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_lib_i18n_index_ts_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_lib_i18n_index_ts_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_lib_i18n_index_ts_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_index_ts_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_types_ts_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_lib_i18n_types_ts_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_lib_i18n_types_ts_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_lib_i18n_types_ts_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_lib_i18n_types_ts_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_lib_i18n_types_ts_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_types_ts_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_use_i18n_ts_guaranteed_returns",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: guaranteed returns"
+    },
+    {
+      "name": "safety_lib_i18n_use_i18n_ts_risk-free",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: risk-free"
+    },
+    {
+      "name": "safety_lib_i18n_use_i18n_ts_place_order",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: place order"
+    },
+    {
+      "name": "safety_lib_i18n_use_i18n_ts_execute_trade",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: execute trade"
+    },
+    {
+      "name": "safety_lib_i18n_use_i18n_ts_broker_integration",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: broker integration"
+    },
+    {
+      "name": "safety_lib_i18n_use_i18n_ts_buy_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: buy recommendation"
+    },
+    {
+      "name": "safety_lib_i18n_use_i18n_ts_sell_recommendation",
+      "category": "safety",
+      "passed": true,
+      "severity": "info",
+      "details": "no hit: sell recommendation"
+    },
+    {
       "name": "safety_lib_keyboard_shortcuts_ts_guaranteed_returns",
       "category": "safety",
       "passed": true,
@@ -9671,6 +10112,6 @@
       "details": "no hit: sell recommendation"
     }
   ],
-  "summary": "checks=1381, errors=0, warnings=0",
+  "summary": "checks=1444, errors=0, warnings=0",
   "warnings": []
 }

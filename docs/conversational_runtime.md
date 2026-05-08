@@ -17,4 +17,10 @@ v0.5 keeps assistant-style local runtime with deterministic mock behavior.
 - retry/clear/error states
 - fallback-safe API mode
 
+## Localization
+
+- prompt examples are locale-aware (`zh-TW` / `en-US`)
+- mock deterministic response/disclaimer follows active locale
+- stream protocol fields remain stable and unlocalized
+
 No live web browsing. No autonomous trading behaviors.

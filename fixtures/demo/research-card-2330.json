@@ -10,5 +10,10 @@
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true
-  }
+  },
+  "title": "2330 Research Card",
+  "titleZh": "2330 研究卡片",
+  "titleEn": "2330 Research Card",
+  "summaryZh": "Synthetic 摘要：長週期成長與估值風險訊號並存。",
+  "summaryEn": "Synthetic summary: balanced long-cycle growth and valuation caution signals."
 }

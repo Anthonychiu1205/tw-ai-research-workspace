@@ -1,6 +1,7 @@
 import type { ResearchOperationResult } from "@/lib/operations/operation-types";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function OperationResultSummary({
   result,
@@ -11,6 +12,7 @@ export function OperationResultSummary({
   onOpenArtifact?: (artifactId: string) => void;
   onPinArtifact?: (artifactId: string) => void;
 }) {
+  const { t } = useI18n();
   const copyJson = async () => {
     if (typeof navigator === "undefined" || !navigator.clipboard) return;
     await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
@@ -30,15 +32,15 @@ export function OperationResultSummary({
         {result.artifactIds.map((artifactId) => (
           <div key={artifactId} className="flex gap-2">
             <Button type="button" size="sm" variant="outline" onClick={() => onOpenArtifact?.(artifactId)}>
-              Open artifact
+              {t("common.open")}
             </Button>
             <Button type="button" size="sm" variant="outline" onClick={() => onPinArtifact?.(artifactId)}>
-              Pin artifact
+              {t("artifacts.pin")}
             </Button>
           </div>
         ))}
         <Button type="button" size="sm" variant="outline" onClick={() => void copyJson()}>
-          Copy JSON
+          {t("artifacts.exportJson")}
         </Button>
       </div>
     </div>

@@ -57,7 +57,8 @@ describe("chat stream protocol", () => {
   test("disclaimer in final", async () => {
     const events = await readEvents("hello workspace");
     const final = events.find((event) => event.type === "final");
-    expect(String(final?.payload?.disclaimer ?? "").toLowerCase()).toContain("not financial advice");
+    const disclaimer = String(final?.payload?.disclaimer ?? "").toLowerCase();
+    expect(disclaimer.includes("not financial advice") || disclaimer.includes("非投資建議")).toBe(true);
   });
 
   test("no trading event exists", async () => {

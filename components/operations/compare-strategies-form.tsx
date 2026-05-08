@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function CompareStrategiesForm({
   onSubmit,
@@ -10,6 +11,7 @@ export function CompareStrategiesForm({
   onSubmit: (tickers: string[]) => Promise<void> | void;
   disabled?: boolean;
 }) {
+  const { t } = useI18n();
   const [tickersText, setTickersText] = useState("2330,2317,2454,2308,0050");
 
   return (
@@ -24,8 +26,8 @@ export function CompareStrategiesForm({
         void onSubmit(tickers);
       }}
     >
-      <input aria-label="Strategy tickers" className="h-8 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
-      <Button type="submit" size="sm" disabled={disabled}>Compare strategies</Button>
+      <input aria-label={t("operations.compareStrategies")} className="h-8 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
+      <Button type="submit" size="sm" disabled={disabled}>{t("operations.compareStrategies")}</Button>
     </form>
   );
 }
