@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 type EvidencePoint = {
   id?: string;
@@ -19,10 +20,11 @@ export function EvidenceTimeline({
   dataset?: string;
   compact?: boolean;
 }) {
+  const { t } = useI18n();
   const filtered = dataset ? points.filter((point) => point.dataset === dataset) : points;
 
   if (filtered.length === 0) {
-    return <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground">No evidence timeline points.</div>;
+    return <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground">{t("common.noData")}</div>;
   }
 
   return (
@@ -37,7 +39,7 @@ export function EvidenceTimeline({
               <span className="text-xs text-muted-foreground">{point.at}</span>
               <Badge>{id}</Badge>
               {point.dataset ? <Badge>{point.dataset}</Badge> : null}
-              {selected ? <Badge>selected</Badge> : null}
+              {selected ? <Badge>{t("common.selected")}</Badge> : null}
             </div>
             <div>{point.label}</div>
             {!compact ? <div className="text-xs text-muted-foreground">{point.note}</div> : null}

@@ -308,10 +308,11 @@ export default function WorkspacePage() {
           <Panel>
             <SectionHeading
               title={t("app.workspace")}
-              subtitle={runtimeSettings.mode === "mock" ? t("disclaimers.mockData") : t("backend.apiConnected")}
+              subtitle={t("app.entryTagline")}
             />
             <div className="mt-2 flex flex-wrap items-center gap-2">
               <StatusBadge tone="mock">{t("disclaimers.syntheticBadge")}</StatusBadge>
+              <StatusBadge tone="neutral">{runtimeSettings.mode === "mock" ? t("runtime.mockMode") : t("runtime.apiMode")}</StatusBadge>
               {!connectionState.reachable && runtimeSettings.mode === "api" ? (
                 <StatusBadge tone="warning">{t("emptyStates.backendUnavailable")}</StatusBadge>
               ) : null}

@@ -18,6 +18,7 @@ const requiredDocs = [
   "docs/backtesting_v2_workspace.md",
   "docs/multi_model_runtime.md",
   "docs/live_backend_integration.md",
+  "docs/public_demo_guide.md",
 ];
 
 const requiredScripts = [
@@ -116,6 +117,10 @@ const readmeHasLiveIntegration = fs
   .readFileSync(path.resolve(root, "README.md"), "utf-8")
   .toLowerCase()
   .includes("live backend integration");
+const readmeHasPublicDemoFlow = fs
+  .readFileSync(path.resolve(root, "README.md"), "utf-8")
+  .toLowerCase()
+  .includes("public demo flow");
 
 const passed =
   docs.every((item) => item.exists) &&
@@ -126,7 +131,8 @@ const passed =
   ensureSessionSchemaVersion() &&
   ensureNoTradingTools() &&
   shareBundleExists &&
-  readmeHasLiveIntegration;
+  readmeHasLiveIntegration &&
+  readmeHasPublicDemoFlow;
 
 const report = {
   checkedAt: new Date().toISOString(),
@@ -140,6 +146,7 @@ const report = {
   noTradingTools: ensureNoTradingTools(),
   shareBundleExists,
   readmeHasLiveIntegration,
+  readmeHasPublicDemoFlow,
 };
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });

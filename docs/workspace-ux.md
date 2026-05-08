@@ -32,6 +32,13 @@ v0.5 is workspace-first, not dashboard-first.
   - right: active context + collapsed runtime/backend details
 - explicit inline feedback for run/complete/failure/fallback states
 
+## v1.0 candidate polish
+
+- product-style landing entry and cleaner first-run onboarding copy
+- scenario cards now surface expected outputs and mock-safe status
+- artifact detail panel prioritizes semantic previews before raw JSON
+- public demo flow is documented for mock-only and optional backend paths
+
 ## Safety
 
 - synthetic output labeling

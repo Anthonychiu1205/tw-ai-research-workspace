@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ReportSectionCard({
   title,
@@ -12,6 +13,7 @@ export function ReportSectionCard({
   evidenceIds?: string[];
   onEvidenceSelect?: (evidenceId: string) => void;
 }) {
+  const { t } = useI18n();
   const isDisclaimerSection = /disclaimer|limitation|risk/i.test(title) || /not financial advice|no trading/i.test(content);
 
   return (
@@ -20,12 +22,12 @@ export function ReportSectionCard({
       <CardContent>
         <p className="mb-2 text-sm text-muted-foreground">{content}</p>
         <div className="mb-2 flex flex-wrap gap-1 text-[11px]">
-          <StatusBadge tone="evidence">evidence {evidenceIds.length}</StatusBadge>
+          <StatusBadge tone="evidence">{t("tools.evidenceRefs")} {evidenceIds.length}</StatusBadge>
         </div>
 
         {evidenceIds.length === 0 ? (
           <div className="mb-2 rounded border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
-            No evidence ids linked for this section.
+            {t("evidence.references")} unavailable for this section.
           </div>
         ) : (
           <div className="mb-2 flex flex-wrap gap-1">
@@ -44,7 +46,7 @@ export function ReportSectionCard({
 
         {isDisclaimerSection ? (
           <div className="rounded border border-indigo-200 bg-indigo-50 p-2">
-            <StatusBadge tone="mock">Synthetic output, not financial advice</StatusBadge>
+            <StatusBadge tone="mock">{t("disclaimers.mockData")}</StatusBadge>
           </div>
         ) : null}
       </CardContent>

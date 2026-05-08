@@ -17,15 +17,34 @@ const plannerTrace = readJson("fixtures/demo/planner-trace-2330.json");
 const strategyComparison = readJson("fixtures/demo/strategy-comparison.json");
 const portfolioReview = readJson("fixtures/demo/portfolio-review-2330-watchlist.json");
 const backtestV2Summary = readJson("fixtures/demo/backtest-v2-summary.json");
+const GENERATED_AT = "2026-05-08T00:00:00.000Z";
 
 const bundle = {
   schemaVersion: "workspace-demo-bundle.v0.5",
   metadata: {
+    appName: "tw-ai-research-workspace",
+    locale: "zh-TW",
     provider: "mock",
     dataType: "synthetic_mock",
     notFinancialAdvice: true,
     noTradingExecution: true,
-    generatedAt: new Date().toISOString(),
+    generatedAt: GENERATED_AT,
+    recommendedDemoFlow: [
+      "analyze_2330",
+      "generate_2330_report",
+      "inspect_planner_trace",
+      "compare_ai_server_watchlist",
+      "evaluate_phase2_signals",
+    ],
+    generatedArtifacts: [
+      "research_card",
+      "report",
+      "pipeline_trace",
+      "strategy_comparison",
+      "signal_evaluation",
+      "portfolio_review",
+      "backtest_v2_summary",
+    ],
   },
   runtimeSettings: {
     mode: "mock",

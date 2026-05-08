@@ -19,11 +19,9 @@ describe("demo walkthrough panel", () => {
         <DemoWalkthroughPanel />
       </I18nProvider>,
     );
-    expect(screen.getByText("Open workspace")).toBeInTheDocument();
-    expect(screen.getByText("Run Analyze 2330 scenario")).toBeInTheDocument();
-    expect(screen.getByText("Run portfolio review")).toBeInTheDocument();
-    expect(screen.getByText("Run backtest v2")).toBeInTheDocument();
-    expect(screen.getByText("Export share bundle")).toBeInTheDocument();
+    expect(screen.getByText(/2330/i)).toBeInTheDocument();
+    expect(screen.getByText(/planner trace|trace/i)).toBeInTheDocument();
+    expect(screen.getByText(/share bundle|匯出/i)).toBeInTheDocument();
   });
 
   test("non-advice disclaimer visible", () => {

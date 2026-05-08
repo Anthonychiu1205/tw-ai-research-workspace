@@ -25,6 +25,7 @@ export type WorkspaceScenario = {
   id: WorkspaceScenarioId;
   title: string;
   description: string;
+  expectedOutput?: string;
   category: "research" | "report" | "trace" | "signals" | "strategy";
   defaultTicker?: string;
   defaultTickers?: string[];

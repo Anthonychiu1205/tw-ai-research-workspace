@@ -16,6 +16,7 @@ Portfolio and backtesting:
 - [live backend integration](./live_backend_integration.md)
 - [local stack demo](./local_stack_demo.md)
 - [demo walkthrough](./demo_walkthrough.md)
+- [public demo guide](./public_demo_guide.md)
 
 Quality and release:
 - [workspace evaluation](./workspace_evaluation.md)

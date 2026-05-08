@@ -12,6 +12,11 @@ Scenario IDs:
 
 All scenarios are mock-safe by default and do not require backend connectivity.
 
+v1.0 candidate polish:
+- each scenario card shows expected output
+- run state and completion state are surfaced in UI
+- result panel provides direct open-artifact actions
+
 Boundaries:
 - no dashboard/SaaS buildout
 - no trading/order execution

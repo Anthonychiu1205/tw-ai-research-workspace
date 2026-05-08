@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-Hant" className="dark">
+    <html lang="zh-Hant">
       <body>
         <I18nProvider>{children}</I18nProvider>
       </body>

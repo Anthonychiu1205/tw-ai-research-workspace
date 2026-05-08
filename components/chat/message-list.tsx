@@ -4,6 +4,7 @@ import { TokenUsagePill } from "@/components/chat/token-usage-pill";
 import { ToolCallTimeline } from "@/components/chat/tool-call-timeline";
 import type { WorkspaceChatMessage } from "@/lib/ai/message-types";
 import { StatusBadge } from "@/components/ui/status-badge";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function MessageList({
   messages,
@@ -12,6 +13,7 @@ export function MessageList({
   messages: WorkspaceChatMessage[];
   onOpenArtifact?: (artifactId: string) => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-2" data-testid="message-list">
       {messages.map((message) => (
@@ -28,7 +30,7 @@ export function MessageList({
             <MessageStatusBadge status={message.status} />
             {message.metadata?.provider ? <span>{message.metadata.provider}</span> : null}
             {message.metadata?.model ? <span>{message.metadata.model}</span> : null}
-            {message.metadata?.fallbackUsed ? <StatusBadge tone="warning">fallback</StatusBadge> : null}
+            {message.metadata?.fallbackUsed ? <StatusBadge tone="warning">{t("runtime.fallback")}</StatusBadge> : null}
             <TokenUsagePill usage={message.metadata?.tokenUsage} />
           </div>
           <StreamingMarkdown content={message.content} />

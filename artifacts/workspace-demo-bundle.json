@@ -1,11 +1,29 @@
 {
   "schemaVersion": "workspace-demo-bundle.v0.5",
   "metadata": {
+    "appName": "tw-ai-research-workspace",
+    "locale": "zh-TW",
     "provider": "mock",
     "dataType": "synthetic_mock",
     "notFinancialAdvice": true,
     "noTradingExecution": true,
-    "generatedAt": "2026-05-08T07:29:19.862Z"
+    "generatedAt": "2026-05-08T00:00:00.000Z",
+    "recommendedDemoFlow": [
+      "analyze_2330",
+      "generate_2330_report",
+      "inspect_planner_trace",
+      "compare_ai_server_watchlist",
+      "evaluate_phase2_signals"
+    ],
+    "generatedArtifacts": [
+      "research_card",
+      "report",
+      "pipeline_trace",
+      "strategy_comparison",
+      "signal_evaluation",
+      "portfolio_review",
+      "backtest_v2_summary"
+    ]
   },
   "runtimeSettings": {
     "mode": "mock",
@@ -309,6 +327,13 @@
         "riskLabel": "low"
       }
     ],
+    "portfolioMetrics": {
+      "finalEquity": 1113800,
+      "totalReturn": 0.1138,
+      "maxDrawdown": 0.097,
+      "turnover": 0.33,
+      "benchmarkReturn": 0.089
+    },
     "metadata": {
       "provider": "mock",
       "dataType": "synthetic_mock",
@@ -320,6 +345,131 @@
     "titleEn": "2330 Strategy Comparison",
     "summaryZh": "Synthetic 策略比較結果。",
     "summaryEn": "Synthetic strategy comparison results."
+  },
+  "portfolioReview": {
+    "analysisId": "portfolio-analysis-2330-watchlist-demo",
+    "asOfDate": "2026-05-06",
+    "tickers": [
+      "2330",
+      "2317",
+      "2454",
+      "2308",
+      "0050"
+    ],
+    "targetWeights": {
+      "2308": 0.12,
+      "2317": 0.16,
+      "2330": 0.2,
+      "2454": 0.14,
+      "0050": 0.18
+    },
+    "cashWeight": 0.2,
+    "rebalancePlan": {
+      "planId": "rebalance-plan-watchlist-demo",
+      "asOfDate": "2026-05-06",
+      "targetWeights": {
+        "2308": 0.12,
+        "2317": 0.16,
+        "2330": 0.2,
+        "2454": 0.14,
+        "0050": 0.18
+      },
+      "cashWeight": 0.2,
+      "turnoverEstimate": 0.24,
+      "riskSummary": {
+        "longOnly": true,
+        "maxPositionWeight": 0.2
+      },
+      "decisions": [
+        {
+          "ticker": "2330",
+          "action": "increase",
+          "fromWeight": 0.12,
+          "toWeight": 0.2,
+          "reason": "synthetic target rebalance",
+          "constraintsApplied": [
+            "max_position_weight"
+          ]
+        }
+      ]
+    },
+    "warnings": [
+      "Synthetic output for workspace demo only."
+    ],
+    "assumptions": [
+      "No broker integration",
+      "No order execution"
+    ],
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    },
+    "title": "Portfolio Review 2330 Watchlist",
+    "titleZh": "2330 Watchlist 投組檢視",
+    "titleEn": "Portfolio Review 2330 Watchlist",
+    "summaryZh": "Synthetic 投組檢視範例。",
+    "summaryEn": "Synthetic portfolio review example."
+  },
+  "backtestV2Summary": {
+    "id": "backtest-v2-summary-demo",
+    "mode": "portfolio_manager",
+    "startDate": "2024-01-01",
+    "endDate": "2024-12-31",
+    "portfolioMetrics": {
+      "finalEquity": 1120500,
+      "totalReturn": 0.1205,
+      "maxDrawdown": 0.101,
+      "turnover": 0.35,
+      "benchmarkReturn": 0.094,
+      "costs": 0.0038
+    },
+    "benchmarkMetrics": {
+      "benchmarkReturn": 0.094,
+      "trackingError": 0.039,
+      "informationRatio": 0.77
+    },
+    "monthlyReturns": [
+      {
+        "month": "2024-01",
+        "return": 0.018
+      },
+      {
+        "month": "2024-02",
+        "return": 0.014
+      }
+    ],
+    "exposure": {
+      "byTicker": {
+        "2308": 0.12,
+        "2317": 0.16,
+        "2330": 0.2,
+        "2454": 0.14,
+        "0050": 0.18
+      },
+      "bySector": {
+        "semiconductor": 0.34,
+        "electronics": 0.28,
+        "etf": 0.18
+      }
+    },
+    "assumptions": [
+      "Hypothetical only",
+      "No trading execution"
+    ],
+    "noLookaheadAudit": "pass",
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    },
+    "title": "Backtest v2 Demo Summary",
+    "titleZh": "Backtest v2 示範摘要",
+    "titleEn": "Backtest v2 Demo Summary",
+    "summaryZh": "Synthetic backtest v2 範例。",
+    "summaryEn": "Synthetic backtest v2 example."
   },
   "scenariosCompleted": [
     "analyze_2330",

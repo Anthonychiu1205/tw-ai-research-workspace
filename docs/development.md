@@ -39,6 +39,13 @@ Additional frontend QA focuses on:
 - right-panel density and collapsed secondary controls
 - copy safety and non-advice wording boundaries
 
+## Public demo readiness (v1.0 candidate)
+
+- run `node scripts/generate-workspace-demo-bundle.mjs`
+- run `node scripts/generate-share-bundle.mjs`
+- review `docs/public_demo_guide.md`
+- use `node scripts/local-stack.mjs print-commands` for local demo orchestration
+
 ## Boundaries
 
 - not dashboard/SaaS

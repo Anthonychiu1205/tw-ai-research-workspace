@@ -62,6 +62,16 @@ All bundled demo data is synthetic mock data and non-advice.
 - clearer operation-to-artifact activation flow (open artifact, context update, result summary)
 - compact right-panel hierarchy (backend/runtime/capabilities/export grouped as collapsed secondary controls)
 
+## v1.0 Candidate Highlights
+
+- product-style landing entry with clear scope, boundaries, and demo CTAs
+- polished onboarding and guided demo flow for first-time external users
+- scenario cards upgraded with expected outputs and mock-safe status
+- artifact detail readability pass (semantic-first summaries + collapsible raw JSON)
+- clearer chat/tool fallback communication and operation feedback
+- backend/API mode clarity pass for connected/fallback/unavailable states
+- refreshed public demo docs and deterministic local demo/share bundle metadata
+
 ## v0.5 Highlights
 
 - guided scenario workflows for demo-ready research journeys
@@ -201,6 +211,21 @@ node scripts/local-stack.mjs check-integration
 - `doctor`: validate local repo/runtime prerequisites without requiring backend to run
 - `check-integration`: run live/backend + workspace API-mode checks (non-strict by default)
 
+## Public Demo Flow
+
+```bash
+npm run dev
+```
+
+1. open `/workspace`
+2. click `開始 2330 demo` / `Start 2330 Demo`
+3. inspect created research artifact and evidence references
+4. inspect planner trace
+5. compare strategies
+6. export share bundle
+
+See [docs/public_demo_guide.md](/Volumes/DEV_USB/Projects/tw-ai-research-workspace/docs/public_demo_guide.md) for both mock-only and optional backend demo paths.
+
 ## Workspace UX
 
 - `/workspace`: chat-first runtime + operations + artifact workbench
@@ -254,6 +279,7 @@ Final responses include non-advice disclaimer metadata.
 - real model providers remain env-gated placeholders
 - no live web browsing by default
 - no autonomous uncontrolled loops
+- still mock-first by default; backend integration remains optional
 
 ## Roadmap
 

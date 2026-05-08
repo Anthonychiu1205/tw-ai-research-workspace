@@ -1,7 +1,10 @@
+import { useI18n } from "@/lib/i18n/use-i18n";
+
 export function WorkspaceModeExplainer() {
+  const { t } = useI18n();
   return (
-    <div className="rounded-md border p-3 text-xs text-muted-foreground" data-testid="workspace-mode-explainer">
-      Workspace mode: use <strong>mock</strong> for deterministic synthetic demo. Use <strong>api</strong> only when local backend is available; fallback to mock remains supported.
+    <div className="rounded-xl border border-border bg-white p-4 text-xs text-muted-foreground" data-testid="workspace-mode-explainer">
+      {t("runtime.mode")}: <strong>mock</strong> / <strong>api</strong>。{t("backend.liveFallbackReady")}
     </div>
   );
 }

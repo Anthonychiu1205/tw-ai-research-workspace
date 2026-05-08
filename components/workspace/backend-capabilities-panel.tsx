@@ -7,6 +7,7 @@ import { SectionHeading } from "@/components/ui/section-heading";
 export function BackendCapabilitiesPanel({ report }: { report: BackendCapabilitiesReport }) {
   const { t } = useI18n();
   const categories = Array.from(new Set(report.capabilities.map((capability) => capability.category)));
+  const availableCount = report.capabilities.filter((capability) => capability.available).length;
 
   return (
     <Panel className="space-y-2" data-testid="backend-capabilities-panel">
@@ -16,6 +17,7 @@ export function BackendCapabilitiesPanel({ report }: { report: BackendCapabiliti
       </div>
       <div className="text-xs text-muted-foreground">{t("backend.baseUrl")}: {report.baseUrl}</div>
       <div className="text-xs">{t("backend.reachable")}: {report.reachable ? t("common.yes") : t("common.no")}</div>
+      <div className="text-xs text-muted-foreground">{t("common.status")}: {availableCount}/{report.capabilities.length} {t("common.available")}</div>
       {report.fallbackActive ? <div className="text-xs text-amber-700">{t("backend.fallbackActive")}</div> : null}
       {report.mode === "api" && !report.reachable ? (
         <div className="rounded-md border border-amber-200 bg-amber-50 p-2 text-xs text-amber-800">
@@ -41,7 +43,7 @@ export function BackendCapabilitiesPanel({ report }: { report: BackendCapabiliti
             <div key={capability.id} className="flex items-center justify-between rounded-md px-2 py-1.5 text-xs hover:bg-muted/35">
               <div>
                 <div>{capability.label}</div>
-                <div className="text-muted-foreground">{capability.method} {capability.endpoint}</div>
+                {capability.error ? <div className="text-amber-700">{capability.error}</div> : null}
               </div>
               <div className="flex items-center gap-2">
                 <StatusBadge tone="backend">{capability.category}</StatusBadge>

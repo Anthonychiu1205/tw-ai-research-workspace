@@ -30,7 +30,7 @@ describe("visual hierarchy", () => {
       expect(screen.getByTestId("artifact-browser")).toBeInTheDocument();
     });
 
-    expect(screen.getAllByText(/研究 Artifacts|Research Artifacts/i).length).toBeGreaterThan(0);
+    expect(screen.getAllByText(/研究產物|Research Outputs/i).length).toBeGreaterThan(0);
   });
 
   test("backend and runtime cards exist", async () => {

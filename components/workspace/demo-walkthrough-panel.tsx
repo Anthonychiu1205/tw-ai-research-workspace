@@ -1,34 +1,29 @@
 import { Badge } from "@/components/ui/badge";
 import { useI18n } from "@/lib/i18n/use-i18n";
 
-const demoSteps = [
-  "Open workspace",
-  "Confirm runtime mode",
-  "Check backend status",
-  "Run Analyze 2330 scenario",
-  "Generate report",
-  "Open evidence timeline",
-  "Open planner trace",
-  "Run portfolio review",
-  "Run backtest v2",
-  "Compare strategies",
-  "Export share bundle",
-  "Explain limitations",
-];
-
 export function DemoWalkthroughPanel() {
   const { t } = useI18n();
+  const demoSteps = [
+    t("onboarding.demoStep1"),
+    t("onboarding.demoStep2"),
+    t("onboarding.demoStep3"),
+    t("onboarding.demoStep4"),
+    t("onboarding.demoStep5"),
+    t("onboarding.demoStep6"),
+    t("onboarding.demoStep7"),
+  ];
+
   return (
-    <div className="space-y-3 rounded-md border p-3" data-testid="demo-walkthrough-panel">
+    <div className="space-y-3 rounded-xl border border-border bg-white p-4" data-testid="demo-walkthrough-panel">
       <div className="flex items-center justify-between">
-        <div className="text-sm font-medium">Local Demo Walkthrough</div>
-        <Badge>checklist</Badge>
+        <div className="text-sm font-semibold">{t("common.viewChecklist")}</div>
+        <Badge>{t("app.publicDemoFlow")}</Badge>
       </div>
-      <ol className="list-decimal space-y-1 pl-4 text-xs text-muted-foreground">
-        {demoSteps.map((step) => (
-          <li key={step} className="flex items-center justify-between gap-2">
-            <span>{step}</span>
-            <Badge>ready</Badge>
+      <ol className="space-y-1.5 text-xs text-muted-foreground">
+        {demoSteps.map((step, index) => (
+          <li key={step} className="flex items-center justify-between gap-2 rounded-md bg-slate-50 px-2.5 py-2">
+            <span>{index + 1}. {step}</span>
+            <Badge>{t("common.run")}</Badge>
           </li>
         ))}
       </ol>

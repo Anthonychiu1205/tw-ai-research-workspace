@@ -58,7 +58,7 @@ describe("message rendering", () => {
       />,
     );
 
-    expect(screen.getByText(/fallback/i)).toBeInTheDocument();
+    expect(screen.getByText(/fallback|備援/i)).toBeInTheDocument();
   });
 
   test("tool timeline", () => {

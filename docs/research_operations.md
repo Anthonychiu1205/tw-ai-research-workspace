@@ -30,3 +30,9 @@ Result behavior:
 - fallback: clearly states backend is unavailable and mock fallback was used
 
 No operation should silently no-op.
+
+## v1.0 demo behavior
+
+- operations are demo-friendly and explicitly show loading/success/failure/fallback
+- successful operations should create at least one artifact and provide an open action
+- fallback outcomes are clearly labeled as mock-based results

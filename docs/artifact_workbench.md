@@ -21,3 +21,8 @@ v0.9 adds UX reliability polish:
 - active artifact selection feedback in browser list
 - context panel consistently updates when artifact is selected
 - metadata remains explicit for `source`, `synthetic`, `notFinancialAdvice`, `noTradingExecution`
+
+v1.0 candidate polish:
+- semantic-first artifact detail readability (report/trace/strategy/portfolio/backtest summaries)
+- `Raw JSON` moved into collapsed secondary section
+- empty-state guidance now points users to run scenarios/operations first

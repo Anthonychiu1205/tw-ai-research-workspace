@@ -20,3 +20,9 @@ Backend is optional. Fallback behavior remains visible and safe.
 - backend capabilities are collapsed by default (expand on demand)
 - runtime settings are collapsed by default to reduce first-screen noise
 - backend unavailability always shows explicit fallback-safe copy
+
+## v1.0 candidate
+
+- backend card focuses on three clear user states: connected, fallback, unavailable
+- capability list remains compact and secondary (collapsible)
+- live backend guide stays available but does not dominate first-screen UX

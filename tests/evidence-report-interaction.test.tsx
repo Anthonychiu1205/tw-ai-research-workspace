@@ -25,7 +25,7 @@ describe("evidence and report interaction", () => {
     );
 
     fireEvent.click(screen.getAllByText("ev-1")[0]);
-    expect(screen.getByText(/selected/i)).toBeInTheDocument();
+    expect(screen.getByText(/selected|已選擇/i)).toBeInTheDocument();
   });
 
   test("missing evidence warning appears", () => {
@@ -36,7 +36,7 @@ describe("evidence and report interaction", () => {
       />,
     );
 
-    expect(screen.getByText(/No evidence ids linked/i)).toBeInTheDocument();
+    expect(screen.getByText(/unavailable for this section/i)).toBeInTheDocument();
   });
 
   test("disclaimer visible", () => {
