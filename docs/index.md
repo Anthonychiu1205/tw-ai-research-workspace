@@ -23,3 +23,7 @@ Quality and release:
 - [final audit](./final_audit.md)
 - [github publish](./github_publish.md)
 - [integration bundle](./integration_bundle.md)
+- [ci guide](./ci.md)
+- [clone and run](./clone_and_run.md)
+- [github repo setup](./github_repo_setup.md)
+- [demo screenshots](./demo_screenshots.md)

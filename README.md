@@ -1,5 +1,7 @@
 # tw-ai-research-workspace
 
+[![CI](https://github.com/Anthonychiu1205/tw-ai-research-workspace/actions/workflows/ci.yml/badge.svg)](https://github.com/Anthonychiu1205/tw-ai-research-workspace/actions/workflows/ci.yml)
+
 AI-native Taiwan financial research workspace UI layer.
 
 繁中摘要：這是一個以 mock-first 為預設的台灣金融研究工作區，支援繁體中文與英文切換，僅供研究與教育用途，非投資建議，且不提供交易或券商串接。
@@ -14,6 +16,14 @@ It is intentionally **not**:
 - a broker/trading execution system
 
 All bundled demo data is synthetic mock data and non-advice.
+
+## Quick status
+
+- Mock-first
+- Bilingual `zh-TW` / `en-US`
+- Next.js + TypeScript
+- Optional backend integration
+- No trading / no broker
 
 ## Relationship to existing repos
 
@@ -149,10 +159,14 @@ Key behavior:
 ## Setup
 
 ```bash
+git clone <YOUR_REPO_URL> tw-ai-research-workspace
+cd tw-ai-research-workspace
 npm install
 cp .env.example .env.local
 npm run dev
 ```
+
+Clone-and-run guide: see [docs/clone_and_run.md](docs/clone_and_run.md).
 
 ## Verification
 
@@ -218,6 +232,12 @@ npm run dev
 ```
 
 1. open `/workspace`
+
+## CI and repository setup
+
+- CI guide: [docs/ci.md](docs/ci.md)
+- GitHub repo setup: [docs/github_repo_setup.md](docs/github_repo_setup.md)
+- Demo screenshot capture guide: [docs/demo_screenshots.md](docs/demo_screenshots.md)
 2. click `開始 2330 demo` / `Start 2330 Demo`
 3. inspect created research artifact and evidence references
 4. inspect planner trace

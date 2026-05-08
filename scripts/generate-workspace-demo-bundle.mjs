@@ -78,5 +78,7 @@ const bundle = {
 };
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
-fs.writeFileSync(outPath, JSON.stringify(bundle, null, 2));
+const tempPath = `${outPath}.tmp`;
+fs.writeFileSync(tempPath, JSON.stringify(bundle, null, 2));
+fs.renameSync(tempPath, outPath);
 console.log(`generate-workspace-demo-bundle: wrote ${outPath}`);
