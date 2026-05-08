@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, test } from "vitest";
 
-const ROOT = "/Volumes/DEV_USB/Projects/tw-ai-research-workspace";
+const ROOT = process.cwd();
 
 const fixtures = [
   "fixtures/demo/research-card-2330.json",

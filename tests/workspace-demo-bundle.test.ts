@@ -1,14 +1,29 @@
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { describe, expect, test } from "vitest";
 
-const root = "/Volumes/DEV_USB/Projects/tw-ai-research-workspace";
+const root = process.cwd();
 const bundlePath = path.resolve(root, "artifacts/workspace-demo-bundle.json");
+
+function runNodeScript(scriptPath: string, args: string[] = []) {
+  return spawnSync(process.execPath, [scriptPath, ...args], {
+    cwd: root,
+    encoding: "utf-8",
+    stdio: "pipe",
+    shell: false,
+    env: {
+      ...process.env,
+      CI: process.env.CI ?? "true",
+    },
+  });
+}
 
 describe("workspace demo bundle", () => {
   test("script runs", () => {
-    execSync("node scripts/generate-workspace-demo-bundle.mjs", { cwd: root, stdio: "pipe" });
+    const result = runNodeScript("scripts/generate-workspace-demo-bundle.mjs");
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(0);
     expect(fs.existsSync(bundlePath)).toBe(true);
   });
 

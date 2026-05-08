@@ -1,15 +1,30 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import { describe, expect, test } from "vitest";
 
-const repo = "/Volumes/DEV_USB/Projects/tw-ai-research-workspace";
+const repo = process.cwd();
 const localDemoFixture = path.resolve(repo, "fixtures/demo/research-card-2330.json");
+
+function runNodeScript(scriptPath: string, args: string[] = [], cwd = repo) {
+  return spawnSync(process.execPath, [scriptPath, ...args], {
+    cwd,
+    encoding: "utf-8",
+    stdio: "pipe",
+    shell: false,
+    env: {
+      ...process.env,
+      CI: process.env.CI ?? "true",
+    },
+  });
+}
 
 describe("backend contract check script", () => {
   test("metadata required and local fixtures pass", () => {
-    execSync("node scripts/check-backend-contract.mjs", { cwd: repo, stdio: "pipe" });
+    const result = runNodeScript("scripts/check-backend-contract.mjs");
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(0);
 
     const outPath = path.resolve(repo, "artifacts/backend-contract-check.json");
     expect(fs.existsSync(outPath)).toBe(true);
@@ -20,13 +35,17 @@ describe("backend contract check script", () => {
   });
 
   test("dry-run sync works", () => {
-    const output = execSync("node scripts/sync-demo-artifacts.mjs", { cwd: repo, stdio: "pipe" }).toString();
-    expect(output).toContain("dry-run=true");
+    const result = runNodeScript("scripts/sync-demo-artifacts.mjs");
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("dry-run=true");
   });
 
   test("missing source repo exits 0", () => {
-    const output = execSync("node scripts/check-backend-contract.mjs", { cwd: repo, stdio: "pipe" }).toString();
-    expect(output.includes("check-backend-contract: OK")).toBe(true);
+    const result = runNodeScript("scripts/check-backend-contract.mjs");
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(0);
+    expect(result.stdout.includes("check-backend-contract: OK")).toBe(true);
   });
 
   test("fixture missing required metadata fails helper", () => {
@@ -41,9 +60,9 @@ describe("backend contract check script", () => {
     );
 
     let failed = false;
-    try {
-      execSync(`node ${path.join(repo, "scripts", "check-backend-contract.mjs")}`, { cwd: tmpRoot, stdio: "pipe" });
-    } catch {
+    const scriptPath = path.join(repo, "scripts", "check-backend-contract.mjs");
+    const result = runNodeScript(scriptPath, [], tmpRoot);
+    if (result.status !== 0) {
       failed = true;
     }
     expect(failed).toBe(true);
