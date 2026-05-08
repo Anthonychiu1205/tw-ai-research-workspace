@@ -1,8 +1,10 @@
 export type WorkspaceMode = "mock" | "api";
+export type ApiBridgeMode = "proxy" | "direct" | "mock";
 
 export type EnvConfig = {
   workspaceMode: WorkspaceMode;
   apiBaseUrl: string;
+  apiBridgeMode: ApiBridgeMode;
   aiProvider: "mock" | "openai" | "anthropic" | "local";
   openaiApiKey?: string;
   anthropicApiKey?: string;
@@ -19,13 +21,23 @@ function readEnv(name: string): string | undefined {
   return value;
 }
 
+function resolveApiBridgeMode(workspaceMode: WorkspaceMode): ApiBridgeMode {
+  const raw = readEnv("NEXT_PUBLIC_API_BRIDGE_MODE");
+  if (raw === "proxy" || raw === "direct" || raw === "mock") {
+    return raw;
+  }
+  return workspaceMode === "api" ? "proxy" : "mock";
+}
+
 export function getEnvConfig(): EnvConfig {
   const workspaceMode = (readEnv("NEXT_PUBLIC_WORKSPACE_MODE") ?? "mock") as WorkspaceMode;
   const aiProvider = (readEnv("AI_PROVIDER") ?? "mock") as EnvConfig["aiProvider"];
+  const resolvedWorkspaceMode = workspaceMode === "api" ? "api" : "mock";
 
   return {
-    workspaceMode: workspaceMode === "api" ? "api" : "mock",
+    workspaceMode: resolvedWorkspaceMode,
     apiBaseUrl: readEnv("TW_AI_RESEARCH_API_BASE_URL") ?? "http://localhost:8000",
+    apiBridgeMode: resolveApiBridgeMode(resolvedWorkspaceMode),
     aiProvider: ["mock", "openai", "anthropic", "local"].includes(aiProvider)
       ? aiProvider
       : "mock",

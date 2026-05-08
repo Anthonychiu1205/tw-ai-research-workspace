@@ -7,8 +7,10 @@ import timelineFixture from "@/fixtures/demo/evidence-timeline-2330.json";
 import signalMatrixFixture from "@/fixtures/demo/signal-matrix-watchlist.json";
 import { getEnvConfig } from "@/lib/config/env";
 import { normalizeRuntimeConfig } from "@/lib/config/runtime";
-import type { WorkspaceRuntimeConfig } from "@/lib/schemas/workspace";
 import { toWorkspaceApiError, WorkspaceApiError } from "@/lib/api/errors";
+import type { WorkspaceRuntimeConfig } from "@/lib/schemas/workspace";
+
+type BridgeMode = "mock" | "proxy" | "direct";
 
 export type FrontendSafeMeta = {
   source: "mock" | "api" | "mock_fallback";
@@ -63,12 +65,30 @@ function createMeta(input: Partial<FrontendSafeMeta> = {}): FrontendSafeMeta {
   };
 }
 
-async function fetchJson<T>(baseUrl: string, path: string, init?: RequestInit, timeoutMs = 5000): Promise<T> {
+function resolveTransport(runtime: WorkspaceRuntimeConfig): BridgeMode {
+  if (runtime.mode === "mock") return "mock";
+  return runtime.apiBridgeMode;
+}
+
+function resolveUrl(path: string, runtime: WorkspaceRuntimeConfig, transport: BridgeMode) {
+  if (transport === "proxy") {
+    return path;
+  }
+  return `${runtime.apiBaseUrl}${path}`;
+}
+
+async function fetchJson<T>(
+  path: string,
+  runtime: WorkspaceRuntimeConfig,
+  transport: BridgeMode,
+  init?: RequestInit,
+  timeoutMs = 5000,
+): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const res = await fetch(`${baseUrl}${path}`, {
+    const res = await fetch(resolveUrl(path, runtime, transport), {
       ...init,
       signal: controller.signal,
       headers: {
@@ -89,8 +109,6 @@ async function fetchJson<T>(baseUrl: string, path: string, init?: RequestInit, t
     } catch {
       throw new WorkspaceApiError(`API ${path} returned invalid JSON`, "INVALID_RESPONSE");
     }
-  } catch (error) {
-    throw toWorkspaceApiError(error);
   } finally {
     clearTimeout(timeout);
   }
@@ -101,6 +119,7 @@ function getRuntimeOptions(options?: ClientOptions) {
   const runtime = normalizeRuntimeConfig({
     mode: env.workspaceMode,
     apiBaseUrl: env.apiBaseUrl,
+    apiBridgeMode: env.apiBridgeMode,
     selectedProvider: env.aiProvider,
     selectedModel: env.defaultModel,
     fallbackToMock: true,
@@ -110,13 +129,14 @@ function getRuntimeOptions(options?: ClientOptions) {
 }
 
 async function withFallback<T>(
-  apiCall: (runtime: WorkspaceRuntimeConfig, timeoutMs: number) => Promise<T>,
+  apiCall: (runtime: WorkspaceRuntimeConfig, transport: BridgeMode, timeoutMs: number) => Promise<T>,
   fallbackData: T,
   options?: ClientOptions,
 ): Promise<SafeResult<T>> {
   const { runtime, timeoutMs } = getRuntimeOptions(options);
+  const transport = resolveTransport(runtime);
 
-  if (runtime.mode === "mock") {
+  if (transport === "mock") {
     return {
       ok: true,
       data: fallbackData,
@@ -125,7 +145,7 @@ async function withFallback<T>(
   }
 
   try {
-    const data = await apiCall(runtime, timeoutMs);
+    const data = await apiCall(runtime, transport, timeoutMs);
     return {
       ok: true,
       data,
@@ -158,8 +178,9 @@ async function withFallback<T>(
 
 export async function checkBackendHealth(options?: ClientOptions): Promise<BackendHealthResult> {
   const { runtime, timeoutMs } = getRuntimeOptions(options);
+  const transport = resolveTransport(runtime);
 
-  if (runtime.mode === "mock") {
+  if (transport === "mock") {
     return {
       reachable: false,
       status: "mock-mode",
@@ -169,11 +190,25 @@ export async function checkBackendHealth(options?: ClientOptions): Promise<Backe
   }
 
   try {
-    const data = await fetchJson<{ status?: string; appTitle?: string }>(runtime.apiBaseUrl, "/health", undefined, timeoutMs);
+    const data = await fetchJson<any>(transport === "proxy" ? "/api/backend/health" : "/health", runtime, transport, undefined, timeoutMs);
+
+    if (transport === "proxy") {
+      const status = String(data?.status ?? "ok");
+      const reachable =
+        typeof data?.reachable === "boolean" ? Boolean(data.reachable) : status !== "unreachable";
+      return {
+        reachable,
+        status,
+        appTitle: String(data?.appTitle ?? "TW AI Research Backend"),
+        error: data?.error ? String(data.error) : undefined,
+        checkedAt: nowIso(),
+      };
+    }
+
     return {
       reachable: true,
-      status: data.status ?? "ok",
-      appTitle: data.appTitle ?? "TW AI Research Backend",
+      status: String(data?.status ?? "ok"),
+      appTitle: String(data?.appTitle ?? "TW AI Research Backend"),
       checkedAt: nowIso(),
     };
   } catch (error) {
@@ -190,8 +225,8 @@ export async function checkBackendHealth(options?: ClientOptions): Promise<Backe
 
 export async function getHealth(options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) =>
-      fetchJson<{ status: string; provider: string }>(runtime.apiBaseUrl, "/health", undefined, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(transport === "proxy" ? "/api/backend/health" : "/health", runtime, transport, undefined, timeoutMs),
     { status: "mock-ok", provider: "mock" },
     options,
   );
@@ -199,8 +234,14 @@ export async function getHealth(options?: ClientOptions) {
 
 export async function runResearch(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) =>
-      fetchJson(runtime.apiBaseUrl, "/research/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/research" : "/v1/research-runs",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify(request) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     researchRunFixture,
     options,
   );
@@ -208,7 +249,14 @@ export async function runResearch(request: Record<string, unknown>, options?: Cl
 
 export async function getResearchRun(runId: string, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, `/research/run/${runId}`, undefined, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/research" : `/v1/research-runs/${runId}`,
+        runtime,
+        transport,
+        transport === "proxy" ? { method: "POST", body: JSON.stringify({ runId }) } : undefined,
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     researchRunFixture,
     options,
   );
@@ -216,8 +264,14 @@ export async function getResearchRun(runId: string, options?: ClientOptions) {
 
 export async function generateReport(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) =>
-      fetchJson(runtime.apiBaseUrl, "/reports/generate", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/reports" : "/v1/reports/research",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify(request) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     reportFixture,
     options,
   );
@@ -225,8 +279,14 @@ export async function generateReport(request: Record<string, unknown>, options?:
 
 export async function runPipeline(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) =>
-      fetchJson(runtime.apiBaseUrl, "/pipeline/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/pipelines" : "/v1/research-pipelines",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify(request) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     pipelineFixture,
     options,
   );
@@ -234,7 +294,14 @@ export async function runPipeline(request: Record<string, unknown>, options?: Cl
 
 export async function getPipeline(pipelineId: string, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, `/pipeline/${pipelineId}`, undefined, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/pipelines" : `/v1/research-pipelines/${pipelineId}`,
+        runtime,
+        transport,
+        transport === "proxy" ? { method: "POST", body: JSON.stringify({ pipelineId }) } : undefined,
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     {
       ...pipelineFixture,
       pipelineId,
@@ -245,8 +312,14 @@ export async function getPipeline(pipelineId: string, options?: ClientOptions) {
 
 export async function runBacktest(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) =>
-      fetchJson(runtime.apiBaseUrl, "/backtesting/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/backtests" : "/v1/backtests",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify(request) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     {
       metadata: researchRunFixture.metadata,
       status: "mock-disabled",
@@ -258,8 +331,14 @@ export async function runBacktest(request: Record<string, unknown>, options?: Cl
 
 export async function compareStrategies(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) =>
-      fetchJson(runtime.apiBaseUrl, "/strategies/compare", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/strategies" : "/v1/strategies/compare",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify(request) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     strategyComparisonFixture,
     options,
   );
@@ -267,8 +346,14 @@ export async function compareStrategies(request: Record<string, unknown>, option
 
 export async function evaluateSignals(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) =>
-      fetchJson(runtime.apiBaseUrl, "/signals/evaluate", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/signals" : "/v1/evaluations/signals",
+        runtime,
+        transport,
+        { method: "POST", body: JSON.stringify(request) },
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     signalEvalFixture,
     options,
   );
@@ -276,7 +361,14 @@ export async function evaluateSignals(request: Record<string, unknown>, options?
 
 export async function getProviderConformance(options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, "/providers/conformance", undefined, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/conformance" : "/v1/provider/conformance",
+        runtime,
+        transport,
+        undefined,
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     {
       metadata: researchRunFixture.metadata,
       providers: [
@@ -291,7 +383,14 @@ export async function getProviderConformance(options?: ClientOptions) {
 
 export async function getSystemStatus(options?: ClientOptions) {
   return withFallback(
-    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, "/system/status", undefined, timeoutMs),
+    async (runtime, transport, timeoutMs) =>
+      fetchJson<any>(
+        transport === "proxy" ? "/api/backend/system" : "/v1/system/storage",
+        runtime,
+        transport,
+        undefined,
+        timeoutMs,
+      ).then((res) => (transport === "proxy" ? (res.data ?? res) : res)),
     {
       metadata: researchRunFixture.metadata,
       backend: "optional",

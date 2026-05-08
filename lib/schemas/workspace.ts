@@ -6,6 +6,7 @@ export const modelProviderSchema = z.enum(["mock", "openai", "anthropic", "local
 export const workspaceRuntimeConfigSchema = z.object({
   mode: workspaceRuntimeModeSchema.default("mock"),
   apiBaseUrl: z.string().default("http://localhost:8000"),
+  apiBridgeMode: z.enum(["mock", "proxy", "direct"]).default("mock"),
   selectedProvider: modelProviderSchema.default("mock"),
   selectedModel: z.string().default("mock-research"),
   fallbackToMock: z.boolean().default(true),
@@ -17,6 +18,7 @@ export const workspaceRuntimeConfigSchema = z.object({
 export const runtimeSettingsSchema = z.object({
   mode: workspaceRuntimeModeSchema.default("mock"),
   apiBaseUrl: z.string().default("http://localhost:8000"),
+  apiBridgeMode: z.enum(["mock", "proxy", "direct"]).default("mock"),
   selectedProvider: modelProviderSchema.default("mock"),
   selectedModel: z.string().default("mock-research"),
   fallbackToMock: z.boolean().default(true),

@@ -14,7 +14,7 @@ export function RunBacktestForm({ onSubmit, disabled }: { onSubmit: (ticker: str
         void onSubmit(ticker);
       }}
     >
-      <input className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
+      <input aria-label="Backtest ticker" className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
       <Button type="submit" size="sm" disabled={disabled}>Run backtest preview</Button>
     </form>
   );

@@ -1,8 +1,8 @@
 # Tool Rendering
 
-The workspace displays tool lifecycle explicitly during chat/runtime streaming.
+v0.4 renders tool lifecycle as first-class chat/runtime state.
 
-## Stream lifecycle events
+## Stream events
 
 - `message_delta`
 - `tool_call_start`
@@ -13,15 +13,13 @@ The workspace displays tool lifecycle explicitly during chat/runtime streaming.
 - `final`
 - `error`
 
-## Tool registry contract
+## Tool timeline UX
 
-Each tool includes:
-- name, label, description
-- category
-- input schema
-- output kind
-- artifact production flag
+Each tool call renders:
+- status (`pending/running/succeeded/failed`)
+- latency
+- fallback badge when used
+- evidence IDs
+- optional artifact open action
 
-Tool result metadata includes status, timings, evidence IDs, warnings, source, and fallback status.
-
-No trading or broker tool exists.
+No trading or broker tools exist.

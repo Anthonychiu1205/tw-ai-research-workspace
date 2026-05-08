@@ -1,13 +1,21 @@
 import type { ResearchOperationResult } from "@/lib/operations/operation-types";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 export function OperationResultSummary({
   result,
   onOpenArtifact,
+  onPinArtifact,
 }: {
   result: ResearchOperationResult;
   onOpenArtifact?: (artifactId: string) => void;
+  onPinArtifact?: (artifactId: string) => void;
 }) {
+  const copyJson = async () => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) return;
+    await navigator.clipboard.writeText(JSON.stringify(result, null, 2));
+  };
+
   return (
     <div className="rounded-md border p-3 text-xs" data-testid="operation-result-summary">
       <div className="mb-1 flex items-center gap-2">
@@ -20,15 +28,18 @@ export function OperationResultSummary({
       {result.warnings.length > 0 ? <div className="mb-2 text-yellow-400">{result.warnings.join("; ")}</div> : null}
       <div className="flex flex-wrap gap-2">
         {result.artifactIds.map((artifactId) => (
-          <button
-            key={artifactId}
-            type="button"
-            className="rounded border px-2 py-1"
-            onClick={() => onOpenArtifact?.(artifactId)}
-          >
-            Open {artifactId}
-          </button>
+          <div key={artifactId} className="flex gap-2">
+            <Button type="button" size="sm" variant="outline" onClick={() => onOpenArtifact?.(artifactId)}>
+              Open artifact
+            </Button>
+            <Button type="button" size="sm" variant="outline" onClick={() => onPinArtifact?.(artifactId)}>
+              Pin artifact
+            </Button>
+          </div>
         ))}
+        <Button type="button" size="sm" variant="outline" onClick={() => void copyJson()}>
+          Copy JSON
+        </Button>
       </div>
     </div>
   );

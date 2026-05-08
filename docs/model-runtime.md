@@ -9,10 +9,10 @@ Providers:
 `lib/config/models.ts` exposes:
 - model list
 - provider
-- availability flag
+- availability
 - unavailable reason
 - tool/stream support flags
 
-When a real provider is unavailable, runtime falls back to mock and surfaces warning metadata.
+If provider/key/base URL is unavailable, runtime falls back to mock safely. No secrets are rendered in UI.
 
-No secrets are shown in UI.
+This workspace remains non-advice and non-trading.

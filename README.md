@@ -32,6 +32,17 @@ All bundled demo data is synthetic mock data and non-advice.
 - no vector DB / full RAG
 - no production deployment stack
 
+## v0.4 Highlights
+
+- live API bridge/proxy routes under `/api/backend/*` for optional `tw-ai-investment-research` integration
+- assistant-style local chat hook (`useResearchChat`) with progressive tool lifecycle state
+- stable JSONL chat stream protocol for deterministic mock and fallback-safe API runtime
+- operation-to-chat integration (tool/operation results become visible chat and artifact state)
+- URL deep-link state (`ticker`, `session`, `artifact`, `view`) for shareable local workspace context
+- keyboard shortcuts (`Cmd/Ctrl+K`, `Cmd/Ctrl+Enter`, `Cmd/Ctrl+N`, `Cmd/Ctrl+B`, `?`)
+- workspace demo bundle generation for deterministic local demos
+- workspace QA and accessibility smoke coverage expanded
+
 ## v0.3 Highlights
 
 - interactive research operations panel (run research/report/pipeline/backtest-preview/strategy compare/signal evaluate)
@@ -53,6 +64,10 @@ Default behavior is **mock-first**:
 - no backend server required
 
 API mode is optional and fallback-safe.
+`NEXT_PUBLIC_API_BRIDGE_MODE` controls API transport:
+- `mock` (mock transport)
+- `proxy` (default in API mode, uses Next.js bridge routes)
+- `direct` (frontend calls backend URL directly)
 
 ## Environment variables
 
@@ -60,6 +75,7 @@ See [`.env.example`](/Volumes/DEV_USB/Projects/tw-ai-research-workspace/.env.exa
 
 Key behavior:
 - `NEXT_PUBLIC_WORKSPACE_MODE`: `mock` (default) or `api`
+- `NEXT_PUBLIC_API_BRIDGE_MODE`: `mock | proxy | direct`
 - `TW_AI_RESEARCH_API_BASE_URL`: optional backend URL
 - `NEXT_PUBLIC_ENABLE_REAL_MODELS`: controls real provider enablement
 - `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`: optional, env-gated only
@@ -83,6 +99,7 @@ node scripts/smoke-test.mjs
 node scripts/export-workspace-schema.mjs
 node scripts/check-backend-contract.mjs
 node scripts/sync-demo-artifacts.mjs
+node scripts/generate-workspace-demo-bundle.mjs
 ```
 
 ## Lint status
@@ -96,6 +113,7 @@ node scripts/sync-demo-artifacts.mjs
 3. keep `fallbackToMock=true` in runtime settings for graceful degradation
 
 If backend is unreachable, workspace falls back to synthetic mock output with explicit fallback metadata.
+No server-side persistence is used; sessions and artifacts remain local-only.
 
 ## Workspace UX
 
@@ -118,6 +136,20 @@ Workspace tools:
 
 No trading tools are included.
 
+## Stream protocol
+
+Chat route uses a local JSONL stream protocol:
+- `message_delta`
+- `tool_call_start`
+- `tool_call_delta`
+- `tool_call_result`
+- `trace_update`
+- `token_usage`
+- `final`
+- `error`
+
+Final responses include non-advice disclaimer metadata.
+
 ## Session and artifact persistence
 
 - localStorage only
@@ -138,3 +170,10 @@ No trading tools are included.
 - deeper OpenAPI contract mapping
 - richer artifact lineage visualizations
 - optional assistant-ui package integration after dependency alignment
+
+## Safety reminders
+
+- this repo is not a dashboard/SaaS product
+- this repo does not provide financial advice
+- this repo has no broker integration and no trading execution
+- app runs in mock mode without API keys or backend by default

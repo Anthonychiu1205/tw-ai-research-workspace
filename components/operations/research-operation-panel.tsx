@@ -15,9 +15,11 @@ import { OperationResultSummary } from "@/components/operations/operation-result
 export function ResearchOperationPanel({
   artifactStore,
   onArtifactCreated,
+  onOperationCompleted,
 }: {
   artifactStore: ArtifactStoreApi;
   onArtifactCreated?: (artifactId: string) => void;
+  onOperationCompleted?: (result: ResearchOperationResult) => void;
 }) {
   const [running, setRunning] = useState(false);
   const [lastResult, setLastResult] = useState<ResearchOperationResult | null>(null);
@@ -26,6 +28,7 @@ export function ResearchOperationPanel({
     setRunning(true);
     const result = await runResearchOperation(request, artifactStore);
     setLastResult(result);
+    onOperationCompleted?.(result);
     if (result.artifactIds[0]) {
       onArtifactCreated?.(result.artifactIds[0]);
     }
@@ -91,7 +94,14 @@ export function ResearchOperationPanel({
       </div>
 
       {lastResult ? (
-        <OperationResultSummary result={lastResult} onOpenArtifact={onArtifactCreated} />
+        <OperationResultSummary
+          result={lastResult}
+          onOpenArtifact={onArtifactCreated}
+          onPinArtifact={(artifactId) => {
+            artifactStore.pin(artifactId);
+            onArtifactCreated?.(artifactId);
+          }}
+        />
       ) : (
         <div className="text-xs text-muted-foreground">Run an operation to generate synthetic artifacts (non-advice).</div>
       )}

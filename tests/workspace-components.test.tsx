@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, test } from "vitest";
 import WorkspacePage from "@/app/workspace/page";
 import { ModelSwitcher } from "@/components/chat/model-switcher";
@@ -7,9 +7,11 @@ import { ResearchChat } from "@/components/chat/research-chat";
 import { getDefaultRuntimeSettings } from "@/lib/config/runtime";
 
 describe("workspace components", () => {
-  test("workspace page renders", () => {
+  test("workspace page renders", async () => {
     render(<WorkspacePage /> as any);
-    expect(screen.getByText(/AI-native Taiwan Research Workspace/i)).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText(/AI-native Taiwan Research Workspace/i)).toBeInTheDocument();
+    });
   });
 
   test("model switcher shows mock available", () => {

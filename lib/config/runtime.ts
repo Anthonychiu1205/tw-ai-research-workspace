@@ -21,6 +21,7 @@ export function getDefaultRuntimeConfig(): WorkspaceRuntimeConfig {
   return workspaceRuntimeConfigSchema.parse({
     mode: env.workspaceMode,
     apiBaseUrl: env.apiBaseUrl,
+    apiBridgeMode: env.apiBridgeMode,
     selectedProvider: env.aiProvider,
     selectedModel: env.defaultModel,
     fallbackToMock: true,
@@ -35,6 +36,7 @@ export function getDefaultRuntimeSettings(): RuntimeSettings {
   return runtimeSettingsSchema.parse({
     mode: config.mode,
     apiBaseUrl: config.apiBaseUrl,
+    apiBridgeMode: config.apiBridgeMode,
     selectedProvider: config.selectedProvider,
     selectedModel: config.selectedModel,
     fallbackToMock: config.fallbackToMock,

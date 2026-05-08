@@ -15,7 +15,7 @@ export function RunResearchForm({ onSubmit, disabled }: { onSubmit: (ticker: str
         void onSubmit(ticker, includePhase2Agents);
       }}
     >
-      <input className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
+      <input aria-label="Research ticker" className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
       <label className="inline-flex items-center gap-1 text-xs">
         <input
           type="checkbox"

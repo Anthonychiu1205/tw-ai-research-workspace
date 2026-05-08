@@ -32,3 +32,12 @@ export function toWorkspaceApiError(error: unknown): WorkspaceApiError {
   }
   return new WorkspaceApiError("Unknown API error", "UNKNOWN");
 }
+
+export function serializeWorkspaceApiError(error: WorkspaceApiError) {
+  return {
+    message: error.message,
+    code: error.code,
+    status: error.status,
+    retriable: error.retriable,
+  };
+}

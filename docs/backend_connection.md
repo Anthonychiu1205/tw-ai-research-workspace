@@ -1,15 +1,18 @@
 # Backend Connection
 
-Backend connection manager lets users switch mode and inspect fallback state.
+Backend connection manager makes runtime state explicit.
 
-## UI elements
+## UI
 
-- Topbar status: `Mock workspace`, `API connected`, `API fallback`
-- Backend connection card: reachable/status/error/checkedAt/fallback reason
-- Runtime settings panel: mode/base URL/provider/model/fallback flags
+- topbar status: `Mock workspace` / `API connected` / `API fallback`
+- backend card: reachable/status/error/checkedAt/fallback reason
+- runtime settings panel: mode/base URL/provider/model/fallback/tool visibility
+- capabilities panel: route category availability
 
 ## Behavior
 
-- in mock mode: backend optional
-- in api mode: health checked via `checkBackendHealth()`
-- on failure: mock fallback remains available and visible
+- mock mode: backend optional
+- api mode: health/capabilities checks run
+- backend failure: mock fallback stays available and visible
+
+No remote mutation, deployment infra, or server persistence is added.

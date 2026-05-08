@@ -24,7 +24,7 @@ export function CompareStrategiesForm({
         void onSubmit(tickers);
       }}
     >
-      <input className="h-8 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
+      <input aria-label="Strategy tickers" className="h-8 w-48 rounded border bg-background px-2 text-xs" value={tickersText} onChange={(event) => setTickersText(event.target.value)} />
       <Button type="submit" size="sm" disabled={disabled}>Compare strategies</Button>
     </form>
   );

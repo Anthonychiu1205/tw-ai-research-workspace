@@ -13,6 +13,7 @@ afterEach(() => {
 describe("api client hardening", () => {
   test("backend health success with mocked fetch", async () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "api";
+    process.env.NEXT_PUBLIC_API_BRIDGE_MODE = "proxy";
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => ({
@@ -28,6 +29,7 @@ describe("api client hardening", () => {
 
   test("backend health failure", async () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "api";
+    process.env.NEXT_PUBLIC_API_BRIDGE_MODE = "proxy";
     vi.stubGlobal("fetch", vi.fn(async () => {
       throw new Error("offline");
     }));
@@ -39,6 +41,7 @@ describe("api client hardening", () => {
 
   test("api fallback to mock", async () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "api";
+    process.env.NEXT_PUBLIC_API_BRIDGE_MODE = "proxy";
     vi.stubGlobal("fetch", vi.fn(async () => {
       throw new Error("api down");
     }));
@@ -54,6 +57,7 @@ describe("api client hardening", () => {
 
   test("typed error for non-2xx", async () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "api";
+    process.env.NEXT_PUBLIC_API_BRIDGE_MODE = "proxy";
     vi.stubGlobal(
       "fetch",
       vi.fn(async () => ({

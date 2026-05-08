@@ -9,9 +9,13 @@ import { Button } from "@/components/ui/button";
 export function CommandMenu({
   commands,
   onRun,
+  open,
+  onClose,
 }: {
   commands: WorkspaceCommand[];
   onRun: (command: WorkspaceCommand) => Promise<void> | void;
+  open?: boolean;
+  onClose?: () => void;
 }) {
   const [query, setQuery] = useState("");
 
@@ -21,9 +25,23 @@ export function CommandMenu({
     return commands.filter((item) => item.label.toLowerCase().includes(q) || item.description.toLowerCase().includes(q));
   }, [commands, query]);
 
+  if (!open) {
+    return (
+      <div className="rounded-md border border-border p-2 text-xs text-muted-foreground" data-testid="command-menu-closed">
+        Press Cmd/Ctrl+K to open command menu.
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-2 rounded-md border border-border p-2" data-testid="command-menu">
-      <Input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Quick actions" />
+    <div className="space-y-2 rounded-md border border-border p-2" data-testid="command-menu" role="dialog" aria-label="Command menu">
+      <div className="flex items-center justify-between">
+        <div className="text-xs uppercase text-muted-foreground">Command Palette</div>
+        <Button type="button" size="sm" variant="ghost" onClick={onClose}>
+          Close
+        </Button>
+      </div>
+      <Input aria-label="Command search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Quick actions" />
       <div className="max-h-44 space-y-1 overflow-auto">
         {filtered.map((command) => (
           <div key={command.id} className="rounded border p-2 text-xs">
@@ -35,7 +53,16 @@ export function CommandMenu({
             {command.unavailableReason ? (
               <div className="mb-2 text-yellow-400">{command.unavailableReason}</div>
             ) : null}
-            <Button type="button" size="sm" variant="outline" disabled={Boolean(command.unavailableReason)} onClick={() => onRun(command)}>
+            <Button
+              type="button"
+              size="sm"
+              variant="outline"
+              disabled={Boolean(command.unavailableReason)}
+              onClick={async () => {
+                await onRun(command);
+                onClose?.();
+              }}
+            >
               Run
             </Button>
           </div>

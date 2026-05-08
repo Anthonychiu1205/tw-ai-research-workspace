@@ -13,6 +13,7 @@ export function AppShell({
   mode = "mock",
   connection,
   onQuickAnalyze,
+  sidebarHidden,
 }: {
   children: React.ReactNode;
   sessions?: Array<{ id: string; title: string }>;
@@ -22,10 +23,11 @@ export function AppShell({
   mode?: "mock" | "api";
   connection?: BackendConnectionState;
   onQuickAnalyze?: () => void;
+  sidebarHidden?: boolean;
 }) {
   return (
     <div className="flex h-screen w-full">
-      <Sidebar sessions={sessions} artifacts={artifacts} onQuickAnalyze={onQuickAnalyze} />
+      <Sidebar sessions={sessions} artifacts={artifacts} onQuickAnalyze={onQuickAnalyze} hidden={sidebarHidden} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar
           mode={mode}

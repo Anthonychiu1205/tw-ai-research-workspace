@@ -14,6 +14,7 @@ describe("backend connection", () => {
     window.localStorage.clear();
     vi.restoreAllMocks();
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "mock";
+    process.env.NEXT_PUBLIC_API_BRIDGE_MODE = "mock";
   });
 
   afterEach(() => {
@@ -28,6 +29,7 @@ describe("backend connection", () => {
 
   test("api health success with fake client", async () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "api";
+    process.env.NEXT_PUBLIC_API_BRIDGE_MODE = "proxy";
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({
@@ -46,6 +48,7 @@ describe("backend connection", () => {
 
   test("api health failure fallback", async () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "api";
+    process.env.NEXT_PUBLIC_API_BRIDGE_MODE = "proxy";
     vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("network down")));
 
     const state = await buildBackendConnectionState(

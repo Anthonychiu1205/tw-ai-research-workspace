@@ -29,5 +29,6 @@ execSync(
   "npx tsx -e \"import('./lib/api/client.ts').then((m) => { const api = m.default ?? m; return Promise.all([api.getHealth(), api.getSystemStatus()]); }).then(()=>console.log('api-client-import-ok'))\"",
   { stdio: "inherit" },
 );
+execSync("node scripts/generate-workspace-demo-bundle.mjs", { stdio: "inherit" });
 
 console.log("smoke-test: OK");

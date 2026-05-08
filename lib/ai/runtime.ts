@@ -19,7 +19,7 @@ export function selectToolsFromPrompt(prompt: string): string[] {
   const lower = prompt.toLowerCase();
   const names: string[] = [];
 
-  if (lower.includes("analyze")) names.push("runResearch");
+  if (lower.includes("analyze") || lower.includes("2330")) names.push("runResearch");
   if (lower.includes("report")) names.push("generateReport");
   if (lower.includes("pipeline") || lower.includes("trace") || lower.includes("planner")) names.push("runPipeline");
   if (lower.includes("compare") || lower.includes("strategy")) names.push("compareStrategies");
@@ -35,11 +35,16 @@ export function normalizeToolCallResult(result: WorkspaceToolResult) {
     toolName: result.toolName,
     status: result.status,
     summary: result.summary,
+    latencyMs: result.latencyMs,
     evidenceIds: result.evidenceIds,
     warnings: result.warnings,
     source: result.source,
     fallbackUsed: result.fallbackUsed,
     data: result.data,
+    dataPreview:
+      result.data && typeof result.data === "object"
+        ? Object.keys(result.data as Record<string, unknown>).slice(0, 4)
+        : [],
   };
 }
 
@@ -98,14 +103,14 @@ export async function runAssistantRuntime(input: {
         type: "tool_call_start",
         id: `${messageId}-${toolName}-start`,
         timestamp: nowIso(),
-        payload: { toolName, category: tool.category, label: tool.label },
+        payload: { toolName, category: tool.category, label: tool.label, args: { symbol: ticker } },
       });
 
       events.push({
         type: "tool_call_delta",
         id: `${messageId}-${toolName}-delta`,
         timestamp: nowIso(),
-        payload: { toolName, status: "running" },
+        payload: { toolName, status: "running", summary: `Running ${toolName}` },
       });
 
       const parsedInput = tool.inputSchema.safeParse({ symbol: ticker });
@@ -129,7 +134,11 @@ export async function runAssistantRuntime(input: {
         type: "tool_call_result",
         id: `${messageId}-${toolName}-result`,
         timestamp: nowIso(),
-        payload: normalizeToolCallResult(result as WorkspaceToolResult),
+        payload: {
+          ...normalizeToolCallResult(result as WorkspaceToolResult),
+          summary: (result as WorkspaceToolResult).summary,
+          status: (result as WorkspaceToolResult).status,
+        },
       });
     }
   }
@@ -149,8 +158,10 @@ export async function runAssistantRuntime(input: {
     id: `${messageId}-final`,
     timestamp: nowIso(),
     payload: {
-      disclaimer: "Synthetic workspace output, not financial advice.",
+      disclaimer: "Synthetic workspace output, not financial advice. No trading execution.",
       maxToolSteps: config.maxToolSteps,
+      noFinancialAdvice: true,
+      tokenUsage: createTokenUsageSummary(usage),
     },
   });
 

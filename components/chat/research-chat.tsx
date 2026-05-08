@@ -1,14 +1,14 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { createId } from "@/lib/utils/ids";
-import { MessageList, type ChatMessage } from "@/components/chat/message-list";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { MessageList } from "@/components/chat/message-list";
 import { MessageComposer } from "@/components/chat/message-composer";
 import { ModelSwitcher } from "@/components/chat/model-switcher";
-import { ToolCallRenderer } from "@/components/chat/tool-call-renderer";
+import { RetryMessageButton } from "@/components/chat/retry-message-button";
 import { resolveModelProvider, getModelAvailability } from "@/lib/config/models";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useResearchChat } from "@/lib/ai/use-research-chat";
 import type { BackendConnectionState, RuntimeSettings } from "@/lib/schemas/workspace";
 
 const promptExamples = [
@@ -18,117 +18,58 @@ const promptExamples = [
   "Show planner trace for 2330",
 ];
 
-const defaultMessages: ChatMessage[] = [
-  {
-    id: "m-welcome",
-    role: "assistant",
-    content:
-      "Workspace ready in mock mode. You can inspect synthetic reports, signals, and traces. Disclaimer: Synthetic workspace output, not financial advice.",
-  },
-];
-
 export function ResearchChat({
   runtimeSettings,
   connectionState,
   onRuntimeSettingsChange,
+  onToolResult,
+  onOpenArtifact,
+  systemEvents,
 }: {
   runtimeSettings: RuntimeSettings;
   connectionState: BackendConnectionState;
   onRuntimeSettingsChange: (patch: Partial<RuntimeSettings>) => void;
+  onToolResult?: (payload: Record<string, unknown>) => void;
+  onOpenArtifact?: (artifactId: string) => void;
+  systemEvents?: Array<{ id: string; content: string }>;
 }) {
-  const [messages, setMessages] = useState<ChatMessage[]>(defaultMessages);
-  const [toolEvents, setToolEvents] = useState<any[]>([]);
-  const [streaming, setStreaming] = useState(false);
   const [runtimeWarning, setRuntimeWarning] = useState<string | null>(null);
-  const [tokenUsage, setTokenUsage] = useState<Record<string, unknown> | null>(null);
-
   const selectedProvider = useMemo(() => resolveModelProvider(runtimeSettings.selectedModel), [runtimeSettings.selectedModel]);
   const modelAvailability = useMemo(() => getModelAvailability(runtimeSettings.selectedModel), [runtimeSettings.selectedModel]);
 
-  const sendMessage = async (text: string) => {
-    const userMessage: ChatMessage = { id: createId("m"), role: "user", content: text };
-    const assistantId = createId("m");
+  const chat = useResearchChat({
+    runtimeSettings,
+    modelId: runtimeSettings.selectedModel,
+    provider: selectedProvider,
+    initialMessages: [
+      {
+        id: "m-welcome",
+        role: "assistant",
+        content:
+          "Workspace ready in mock mode. You can inspect synthetic reports, signals, and traces. Disclaimer: Synthetic workspace output, not financial advice.",
+        createdAt: new Date().toISOString(),
+        status: "complete",
+        metadata: {
+          provider: "mock",
+          model: "mock-research",
+          fallbackUsed: false,
+        },
+      },
+    ],
+    onToolResult,
+  });
 
-    setMessages((prev) => [...prev, userMessage, { id: assistantId, role: "assistant", content: "" }]);
-    setStreaming(true);
-    setRuntimeWarning(null);
+  const seenSystemEventsRef = useRef<Set<string>>(new Set());
 
-    const response = await fetch("/api/chat", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        messages: [...messages, userMessage],
-        modelId: runtimeSettings.selectedModel,
-        provider: selectedProvider,
-        runtimeMode: runtimeSettings.mode,
-        streamToolCalls: runtimeSettings.showToolCalls,
-        fallbackToMock: runtimeSettings.fallbackToMock,
-        maxToolSteps: runtimeSettings.maxToolSteps,
-      }),
-    });
-
-    const reader = response.body?.getReader();
-    if (!reader) {
-      setStreaming(false);
-      return;
-    }
-
-    const decoder = new TextDecoder();
-    let buffer = "";
-
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-
-      buffer += decoder.decode(value, { stream: true });
-      const parts = buffer.split("\n\n");
-      buffer = parts.pop() ?? "";
-
-      for (const part of parts) {
-        if (!part.startsWith("data: ")) continue;
-        const event = JSON.parse(part.slice(6));
-
-        if (event.type === "message_delta") {
-          setMessages((prev) =>
-            prev.map((message) =>
-              message.id === assistantId
-                ? { ...message, content: `${message.content}${String(event.payload?.content ?? "")}` }
-                : message,
-            ),
-          );
-        }
-
-        if (event.type === "tool_call_result") {
-          setToolEvents((prev) => [...prev, event.payload]);
-        }
-
-        if (event.type === "trace_update" && event.payload?.warning) {
-          setRuntimeWarning(String(event.payload.warning));
-        }
-
-        if (event.type === "token_usage") {
-          setTokenUsage(event.payload ?? null);
-        }
-
-        if (event.type === "final") {
-          setMessages((prev) =>
-            prev.map((message) =>
-              message.id === assistantId
-                ? {
-                    ...message,
-                    content: message.content.includes("not financial advice")
-                      ? message.content
-                      : `${message.content}\n\nDisclaimer: Synthetic workspace output, not financial advice.`,
-                  }
-                : message,
-            ),
-          );
-        }
+  useEffect(() => {
+    for (const event of systemEvents ?? []) {
+      if (seenSystemEventsRef.current.has(event.id)) {
+        continue;
       }
+      seenSystemEventsRef.current.add(event.id);
+      chat.injectSystemMessage(event.content);
     }
-
-    setStreaming(false);
-  };
+  }, [chat, systemEvents]);
 
   return (
     <div className="space-y-3" data-testid="research-chat">
@@ -151,6 +92,7 @@ export function ResearchChat({
         <select
           className="h-9 rounded-md border bg-background px-2 text-xs"
           value={runtimeSettings.mode}
+          aria-label="Runtime mode"
           onChange={(event) => onRuntimeSettingsChange({ mode: event.target.value as "mock" | "api" })}
         >
           <option value="mock">mock</option>
@@ -160,27 +102,42 @@ export function ResearchChat({
       </div>
 
       {runtimeWarning ? <div className="rounded-md border border-yellow-500/40 bg-yellow-500/10 p-2 text-xs">{runtimeWarning}</div> : null}
+      {chat.lastError ? (
+        <div className="rounded-md border border-red-500/40 bg-red-500/10 p-2 text-xs">
+          <div className="mb-2">{chat.lastError}</div>
+          <div className="flex gap-2">
+            <RetryMessageButton onRetry={() => void chat.retryLast()} disabled={chat.isStreaming} />
+            <Button type="button" size="sm" variant="outline" onClick={chat.clear}>
+              Clear
+            </Button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="flex flex-wrap gap-2" data-testid="prompt-examples">
         {promptExamples.map((example) => (
-          <Button key={example} type="button" size="sm" variant="outline" onClick={() => void sendMessage(example)} disabled={streaming}>
+          <Button key={example} type="button" size="sm" variant="outline" onClick={() => void chat.sendMessage(example)} disabled={chat.isStreaming}>
             {example}
           </Button>
         ))}
       </div>
 
-      <MessageList messages={messages} />
-      <MessageComposer onSubmit={(text) => void sendMessage(text)} disabled={streaming} />
+      <MessageList messages={chat.messages} onOpenArtifact={onOpenArtifact} />
+      <MessageComposer
+        value={chat.input}
+        onChange={chat.setInput}
+        onSubmit={() => void chat.sendMessage()}
+        onStop={chat.stop}
+        disabled={chat.isStreaming}
+      />
 
-      {runtimeSettings.showTokenUsage && tokenUsage ? (
-        <div className="rounded-md border p-2 text-xs text-muted-foreground">token usage: {JSON.stringify(tokenUsage)}</div>
+      {runtimeSettings.showTokenUsage && chat.tokenUsage ? (
+        <div className="rounded-md border p-2 text-xs text-muted-foreground">token usage: {JSON.stringify(chat.tokenUsage)}</div>
       ) : null}
 
-      {runtimeSettings.showToolCalls ? (
-        <div className="space-y-2">
-          {toolEvents.map((event, index) => (
-            <ToolCallRenderer key={`${event.toolName}-${index}`} event={event} />
-          ))}
+      {runtimeSettings.showToolCalls && chat.activeToolCalls.length > 0 ? (
+        <div className="rounded-md border p-2 text-xs text-muted-foreground">
+          active tool calls: {chat.activeToolCalls.length}
         </div>
       ) : null}
     </div>

@@ -14,7 +14,7 @@ export function GenerateReportForm({ onSubmit, disabled }: { onSubmit: (ticker: 
         void onSubmit(ticker);
       }}
     >
-      <input className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
+      <input aria-label="Report ticker" className="h-8 w-24 rounded border bg-background px-2 text-xs" value={ticker} onChange={(event) => setTicker(event.target.value)} />
       <Button type="submit" size="sm" disabled={disabled}>Generate report</Button>
     </form>
   );

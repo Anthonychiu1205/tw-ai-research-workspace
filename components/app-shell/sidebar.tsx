@@ -13,11 +13,17 @@ export function Sidebar({
   sessions = [],
   artifacts = [],
   onQuickAnalyze,
+  hidden,
 }: {
   sessions?: Array<{ id: string; title: string }>;
   artifacts?: Array<{ id: string; title: string }>;
   onQuickAnalyze?: () => void;
+  hidden?: boolean;
 }) {
+  if (hidden) {
+    return null;
+  }
+
   return (
     <aside className="w-64 border-r border-border p-3" data-testid="sidebar">
       <div className="mb-4 text-sm font-semibold">TW AI Research</div>

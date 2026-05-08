@@ -29,6 +29,11 @@ if (!envExample.includes("NEXT_PUBLIC_WORKSPACE_MODE=mock")) {
   process.exit(1);
 }
 
+if (!envExample.includes("NEXT_PUBLIC_API_BRIDGE_MODE=mock")) {
+  console.error(".env.example must include mock API bridge default");
+  process.exit(1);
+}
+
 if (envExample.includes("OPENAI_API_KEY=required") || envExample.includes("ANTHROPIC_API_KEY=required")) {
   console.error("API keys must not be required by default");
   process.exit(1);

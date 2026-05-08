@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import sessionDemo from "@/fixtures/demo/session-demo.json";
 import { AppShell } from "@/components/app-shell/app-shell";
 import { CommandMenu } from "@/components/app-shell/command-menu";
+import { KeyboardShortcutsHelp } from "@/components/app-shell/keyboard-shortcuts-help";
 import { ResearchChat } from "@/components/chat/research-chat";
 import { SessionHistory } from "@/components/workspace/session-history";
 import { ArtifactBrowser } from "@/components/workspace/artifact-browser";
@@ -13,6 +14,7 @@ import { ResearchOperationPanel } from "@/components/operations/research-operati
 import { BackendConnectionCard } from "@/components/workspace/backend-connection-card";
 import { RuntimeSettingsPanel } from "@/components/workspace/runtime-settings-panel";
 import { WorkspaceExportActions } from "@/components/workspace/workspace-export-actions";
+import { BackendCapabilitiesPanel } from "@/components/workspace/backend-capabilities-panel";
 import { createSessionStore } from "@/lib/sessions/session-store";
 import { createArtifactStore } from "@/lib/artifacts/artifact-store";
 import { getModelOptions, getProviderUnavailableReason } from "@/lib/config/models";
@@ -25,7 +27,13 @@ import {
 } from "@/lib/config/runtime";
 import { getWorkspaceCommands } from "@/lib/commands/command-registry";
 import { createDefaultOperationRequest, runResearchOperation } from "@/lib/operations/operation-runner";
+import type { ResearchOperationRequest } from "@/lib/operations/operation-types";
+import { discoverBackendCapabilities, type BackendCapabilitiesReport } from "@/lib/api/capabilities";
+import { useWorkspaceShortcuts } from "@/lib/keyboard/shortcuts";
+import { parseWorkspaceUrlState, serializeWorkspaceUrlState, type WorkspaceView } from "@/lib/utils/url-state";
+import { createId } from "@/lib/utils/ids";
 import type { BackendConnectionState, WorkspaceSession } from "@/lib/schemas/workspace";
+import type { WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
 
 function seedSessions(): WorkspaceSession[] {
   return (sessionDemo.sessions as any[]).map((session) => ({
@@ -39,6 +47,29 @@ function seedSessions(): WorkspaceSession[] {
   }));
 }
 
+function toolNameToArtifactType(toolName: string): WorkspaceArtifactRecord["type"] | null {
+  if (toolName === "runResearch") return "research_card";
+  if (toolName === "generateReport") return "report";
+  if (toolName === "runPipeline") return "pipeline_trace";
+  if (toolName === "compareStrategies") return "strategy_comparison";
+  if (toolName === "evaluateSignals") return "signal_evaluation";
+  if (toolName === "getEvidenceTimeline") return "evidence_timeline";
+  return null;
+}
+
+function defaultCapabilitiesReport(baseUrl: string): BackendCapabilitiesReport {
+  return {
+    reachable: false,
+    baseUrl,
+    checkedAt: new Date().toISOString(),
+    capabilities: [],
+    missing: [],
+    warnings: ["Capabilities not checked yet."],
+    mode: "mock",
+    fallbackActive: false,
+  };
+}
+
 export default function WorkspacePage() {
   const sessionStore = useMemo(() => createSessionStore(seedSessions()), []);
   const artifactStore = useMemo(() => createArtifactStore(), []);
@@ -46,6 +77,10 @@ export default function WorkspacePage() {
   const [artifacts, setArtifacts] = useState(() => artifactStore.listAll());
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(sessions[0]?.id ?? null);
   const [selectedArtifactId, setSelectedArtifactId] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<WorkspaceView>("chat");
+  const [commandMenuOpen, setCommandMenuOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [runtimeSettings, setRuntimeSettings] = useState(() => {
     try {
       return restoreRuntimeSettings();
@@ -63,6 +98,10 @@ export default function WorkspacePage() {
     fallbackActive: runtimeSettings.mode === "api",
     fallbackReason: runtimeSettings.mode === "api" ? "Backend not checked yet" : undefined,
   });
+  const [capabilitiesReport, setCapabilitiesReport] = useState<BackendCapabilitiesReport>(
+    defaultCapabilitiesReport(runtimeSettings.apiBaseUrl),
+  );
+  const [systemEvents, setSystemEvents] = useState<Array<{ id: string; content: string }>>([]);
 
   const refreshSessions = () => setSessions(sessionStore.list());
   const refreshArtifacts = () => setArtifacts(artifactStore.listAll());
@@ -70,21 +109,99 @@ export default function WorkspacePage() {
   const selectedArtifact = artifacts.find((artifact) => artifact.id === selectedArtifactId);
   const modelOptions = getModelOptions();
 
+  useEffect(() => {
+    const urlState = parseWorkspaceUrlState(window.location.search);
+    if (urlState.session) {
+      setSelectedSessionId(urlState.session);
+    }
+    if (urlState.artifact) {
+      setSelectedArtifactId(urlState.artifact);
+    }
+    if (urlState.view) {
+      setActiveView(urlState.view);
+    }
+  }, []);
+
+  useEffect(() => {
+    const next = serializeWorkspaceUrlState({
+      session: selectedSessionId ?? undefined,
+      artifact: selectedArtifactId ?? undefined,
+      view: activeView,
+    });
+    if (typeof window !== "undefined") {
+      const url = `${window.location.pathname}${next}`;
+      window.history.replaceState(null, "", url);
+    }
+  }, [activeView, selectedArtifactId, selectedSessionId]);
+
   const checkConnection = async () => {
     const next = await buildBackendConnectionState(runtimeSettings);
     setConnectionState(next);
   };
 
   useEffect(() => {
-    void checkConnection();
-  }, [runtimeSettings.mode, runtimeSettings.apiBaseUrl]);
+    let cancelled = false;
+    void (async () => {
+      const next = await buildBackendConnectionState(runtimeSettings);
+      if (!cancelled) {
+        setConnectionState(next);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [runtimeSettings.mode, runtimeSettings.apiBaseUrl, runtimeSettings.apiBridgeMode, runtimeSettings.fallbackToMock]);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      const report = await discoverBackendCapabilities(runtimeSettings);
+      if (!cancelled) {
+        setCapabilitiesReport(report);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [runtimeSettings]);
 
   const applySettings = (patch: Partial<typeof runtimeSettings>) => {
     const next = persistRuntimeSettings({ ...runtimeSettings, ...patch });
     setRuntimeSettings(next);
   };
 
+  const emitSystemEvent = (content: string) => {
+    setSystemEvents((prev) => [...prev, { id: createId("system-event"), content }]);
+  };
+
+  useWorkspaceShortcuts({
+    onCommandMenu: () => setCommandMenuOpen((prev) => !prev),
+    onNewSession: () => {
+      const session = sessionStore.create("Local Workspace Session");
+      setSelectedSessionId(session.id);
+      refreshSessions();
+      emitSystemEvent(`Created new local session ${session.id}`);
+    },
+    onToggleSidebar: () => setSidebarHidden((prev) => !prev),
+    onHelp: () => setShortcutsOpen((prev) => !prev),
+  });
+
   const commands = getWorkspaceCommands({ canUseApiMode: connectionState.reachable });
+
+  const runOperationAndTrack = async (request: ResearchOperationRequest) => {
+    const result = await runResearchOperation(request, artifactStore);
+    if (result.artifactIds[0]) {
+      setSelectedArtifactId(result.artifactIds[0]);
+      setActiveView("chat");
+    }
+    refreshArtifacts();
+    emitSystemEvent(
+      `Ran ${result.kind} operation. status=${result.status}. artifacts=${result.artifactIds.join(",") || "none"}. synthetic/non-advice.`,
+    );
+    return result;
+  };
 
   return (
     <AppShell
@@ -94,10 +211,9 @@ export default function WorkspacePage() {
       mode={runtimeSettings.mode}
       modelLabel={runtimeSettings.selectedModel}
       connection={connectionState}
+      sidebarHidden={sidebarHidden}
       onQuickAnalyze={async () => {
-        const result = await runResearchOperation(createDefaultOperationRequest("run_research"), artifactStore);
-        if (result.artifactIds[0]) setSelectedArtifactId(result.artifactIds[0]);
-        refreshArtifacts();
+        await runOperationAndTrack(createDefaultOperationRequest("run_research"));
       }}
     >
       <div className="grid h-full grid-cols-12 gap-4" data-testid="workspace-page-grid">
@@ -122,33 +238,71 @@ export default function WorkspacePage() {
 
           <CommandMenu
             commands={commands}
+            open={commandMenuOpen}
+            onClose={() => setCommandMenuOpen(false)}
             onRun={async (command) => {
               await command.run({
                 canUseApiMode: connectionState.reachable,
-                enqueueOperation: async (request) => {
-                  const result = await runResearchOperation(request, artifactStore);
-                  if (result.artifactIds[0]) setSelectedArtifactId(result.artifactIds[0]);
-                  refreshArtifacts();
-                  return result;
-                },
+                enqueueOperation: async (request) => runOperationAndTrack(request),
                 navigate: (path) => {
-                  if (typeof window !== "undefined") {
-                    window.location.hash = path.replace("#", "");
-                  }
+                  if (path.includes("report")) setActiveView("report");
+                  else if (path.includes("trace")) setActiveView("trace");
+                  else if (path.includes("strategy")) setActiveView("strategy");
+                  else if (path.includes("signal")) setActiveView("signals");
+                  else setActiveView("chat");
                 },
                 setRuntimeMode: (mode) => applySettings({ mode }),
                 checkBackendHealth: checkConnection,
               });
             }}
           />
+
+          {shortcutsOpen ? <KeyboardShortcutsHelp /> : null}
         </aside>
 
         <section className="col-span-6 min-h-0 space-y-3 overflow-auto">
-          <ResearchChat runtimeSettings={runtimeSettings} connectionState={connectionState} onRuntimeSettingsChange={applySettings} />
+          <ResearchChat
+            runtimeSettings={runtimeSettings}
+            connectionState={connectionState}
+            onRuntimeSettingsChange={applySettings}
+            systemEvents={systemEvents}
+            onToolResult={(payload) => {
+              const toolName = String(payload.toolName ?? "");
+              const type = toolNameToArtifactType(toolName);
+              if (!type) return;
+
+              const artifact = artifactStore.create({
+                sessionId: selectedSessionId ?? undefined,
+                type,
+                title: `${toolName} artifact`,
+                summary: String(payload.summary ?? "Chat tool result"),
+                source: (payload.source as WorkspaceArtifactRecord["source"]) ?? "mock",
+                synthetic: Boolean(payload.source !== "api"),
+                evidenceIds: Array.isArray(payload.evidenceIds) ? (payload.evidenceIds as string[]) : [],
+                data: payload.data,
+                lineage: {
+                  toolCallId: String(payload.id ?? createId("tool")),
+                },
+              });
+
+              setSelectedArtifactId(artifact.id);
+              refreshArtifacts();
+            }}
+            onOpenArtifact={(artifactId) => {
+              setSelectedArtifactId(artifactId);
+            }}
+          />
+
           <ResearchOperationPanel
             artifactStore={artifactStore}
+            onOperationCompleted={(result) => {
+              emitSystemEvent(
+                `Ran ${result.kind} operation from panel. status=${result.status}. artifact=${result.artifactIds[0] ?? "none"}.`,
+              );
+            }}
             onArtifactCreated={(id) => {
               setSelectedArtifactId(id);
+              setActiveView("chat");
               refreshArtifacts();
             }}
           />
@@ -156,6 +310,7 @@ export default function WorkspacePage() {
 
         <aside className="col-span-3 min-h-0 space-y-3 overflow-auto">
           <BackendConnectionCard state={connectionState} onRefresh={() => void checkConnection()} />
+
           <RuntimeSettingsPanel
             settings={runtimeSettings}
             models={modelOptions}
@@ -167,6 +322,8 @@ export default function WorkspacePage() {
             }}
             onCheckBackend={() => void checkConnection()}
           />
+
+          <BackendCapabilitiesPanel report={capabilitiesReport} />
 
           <WorkspaceExportActions
             sessions={sessions}

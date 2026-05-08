@@ -31,6 +31,7 @@ export function RuntimeSettingsPanel({
         <label className="space-y-1">
           <div>Mode</div>
           <select
+            aria-label="Workspace mode"
             className="h-9 w-full rounded-md border bg-background px-2"
             value={settings.mode}
             onChange={(event) => onChange({ mode: event.target.value as "mock" | "api" })}
@@ -43,6 +44,7 @@ export function RuntimeSettingsPanel({
         <label className="space-y-1">
           <div>Model</div>
           <select
+            aria-label="Model selection"
             className="h-9 w-full rounded-md border bg-background px-2"
             value={settings.selectedModel}
             onChange={(event) => {
@@ -62,7 +64,21 @@ export function RuntimeSettingsPanel({
 
       <label className="space-y-1 text-xs">
         <div>API Base URL</div>
-        <Input value={settings.apiBaseUrl} onChange={(event) => onChange({ apiBaseUrl: event.target.value })} />
+        <Input aria-label="API base URL" value={settings.apiBaseUrl} onChange={(event) => onChange({ apiBaseUrl: event.target.value })} />
+      </label>
+
+      <label className="space-y-1 text-xs">
+        <div>API Bridge Mode</div>
+        <select
+          aria-label="API bridge mode"
+          className="h-9 w-full rounded-md border bg-background px-2"
+          value={settings.apiBridgeMode}
+          onChange={(event) => onChange({ apiBridgeMode: event.target.value as "mock" | "proxy" | "direct" })}
+        >
+          <option value="mock">mock</option>
+          <option value="proxy">proxy</option>
+          <option value="direct">direct</option>
+        </select>
       </label>
 
       <div className="grid grid-cols-2 gap-2 text-xs">

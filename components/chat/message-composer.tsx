@@ -1,40 +1,56 @@
 "use client";
 
-import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export function MessageComposer({ onSubmit, disabled }: { onSubmit: (text: string) => void; disabled?: boolean }) {
-  const [text, setText] = useState("");
-
+export function MessageComposer({
+  value,
+  onChange,
+  onSubmit,
+  onStop,
+  disabled,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  onSubmit: () => void;
+  onStop?: () => void;
+  disabled?: boolean;
+}) {
   return (
     <form
       className="flex gap-2"
       onSubmit={(event) => {
         event.preventDefault();
-        if (!text.trim() || disabled) {
+        if (!value.trim() || disabled) {
           return;
         }
-        onSubmit(text.trim());
-        setText("");
+        onSubmit();
       }}
     >
+      <label className="sr-only" htmlFor="chat-composer-input">
+        Research prompt
+      </label>
       <Input
-        value={text}
-        onChange={(event) => setText(event.target.value)}
+        id="chat-composer-input"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
         placeholder="Ask synthetic research question"
         disabled={disabled}
         onKeyDown={(event) => {
           if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
             event.preventDefault();
-            if (text.trim() && !disabled) {
-              onSubmit(text.trim());
-              setText("");
+            if (value.trim() && !disabled) {
+              onSubmit();
             }
           }
         }}
       />
-      <Button type="button" variant="ghost" disabled={disabled || text.length === 0} onClick={() => setText("")}>Clear</Button>
+      <Button type="button" variant="ghost" disabled={disabled || value.length === 0} onClick={() => onChange("")}>Clear</Button>
+      {disabled ? (
+        <Button type="button" variant="outline" onClick={onStop}>
+          Stop
+        </Button>
+      ) : null}
       <Button type="submit" disabled={disabled}>{disabled ? "Streaming..." : "Send"}</Button>
     </form>
   );

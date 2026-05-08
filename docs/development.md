@@ -12,14 +12,23 @@
    - `node scripts/smoke-test.mjs`
    - `node scripts/export-workspace-schema.mjs`
    - `node scripts/check-backend-contract.mjs`
+   - `node scripts/sync-demo-artifacts.mjs`
+   - `node scripts/generate-workspace-demo-bundle.mjs`
 
-## Optional fixture sync
+## Fixture sync
 
 - dry-run (default): `node scripts/sync-demo-artifacts.mjs`
-- copy non-existing files: `node scripts/sync-demo-artifacts.mjs --force`
+- copy missing files only: `node scripts/sync-demo-artifacts.mjs --force`
 
-Source repo (optional): `../tw-ai-investment-research/artifacts/demo`
+Optional source: `../tw-ai-investment-research/artifacts/demo`
 
 ## Lint note
 
-`npm run lint` currently acts as a typecheck fallback in this environment. Typecheck/test/build remain the authoritative gates.
+`npm run lint` is intentionally a typecheck fallback in this environment.
+Typecheck/test/build are the authoritative gates.
+
+## Safety boundaries
+
+- not a dashboard/SaaS buildout
+- no broker/trading execution
+- no financial advice intent

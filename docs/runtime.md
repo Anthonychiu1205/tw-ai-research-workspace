@@ -1,6 +1,6 @@
 # Runtime
 
-v0.3 runtime focuses on interactive workspace operations with explicit fallback visibility.
+v0.4 runtime focuses on a mock-first assistant workspace with optional live backend bridge.
 
 ## Modes
 
@@ -9,7 +9,7 @@ v0.3 runtime focuses on interactive workspace operations with explicit fallback 
   - no API key required
   - no backend required
 - `api`
-  - attempts backend calls
+  - uses bridge/direct backend transport
   - graceful fallback to mock when enabled
 
 ## Runtime settings
@@ -17,6 +17,7 @@ v0.3 runtime focuses on interactive workspace operations with explicit fallback 
 `RuntimeSettings`:
 - mode
 - apiBaseUrl
+- apiBridgeMode (`mock | proxy | direct`)
 - selectedProvider
 - selectedModel
 - fallbackToMock
@@ -24,14 +25,21 @@ v0.3 runtime focuses on interactive workspace operations with explicit fallback 
 - showTokenUsage
 - maxToolSteps (bounded 1..8)
 
-Settings are persisted to localStorage and can be reset to mock defaults.
+Settings are localStorage-only and can be reset to mock defaults.
 
 ## Runtime status
 
-`BackendConnectionState` shows:
-- reachable/unreachable backend
+`BackendConnectionState` and capabilities panel show:
+- backend reachable/unreachable
 - check timestamp
-- fallback active state
-- fallback reason
+- fallback active state/reason
+- available endpoint capabilities
 
-Topbar mirrors: `Mock workspace`, `API connected`, or `API fallback`.
+Top status remains explicit: `Mock workspace`, `API connected`, or `API fallback`.
+
+## Boundaries
+
+- not a dashboard/SaaS buildout
+- no broker/trading execution
+- no server-side persistence
+- no financial advice output intent

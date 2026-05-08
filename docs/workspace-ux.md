@@ -1,27 +1,29 @@
 # Workspace UX
 
-v0.3 keeps the app chat-first and operation-first (not dashboard-first).
+v0.4 keeps the app workspace/chat-first, not dashboard-first.
 
 ## Layout
 
-- left: sessions, artifacts, command palette
-- center: research chat + research operations panel
-- right: backend/runtime controls + artifact detail + context panel
+- left: sessions, artifacts, command menu
+- center: chat + operations
+- right: backend/runtime controls + capabilities + artifact/context detail
 
-## Interaction patterns
+## Interaction
 
-- command palette quick actions for common operations
-- operation results generate artifacts directly
-- artifact workbench supports filter/detail/export/pin
-- report sections can select evidence IDs and highlight timeline items
-- planner trace tabs split plan/execution/reflection
+- command palette and keyboard shortcuts for fast actions
+- operation results become artifacts and chat system events
+- tool-call timeline renders status/latency/evidence/fallback
+- report evidence IDs can drive evidence timeline focus
+- URL deep links: `ticker`, `session`, `artifact`, `view`
 
-Design references:
+## Design references
+
 - financial-agent-ui inspired generative workflow
-- assistant-ui-inspired component patterns
-- Dexter-inspired trace visualization
+- assistant-ui-inspired component patterns (local implementation)
+- Dexter-inspired trace visualization (bounded, deterministic)
 
-Safety:
-- bounded deterministic workflow
+## Safety
+
 - no uncontrolled autonomous loops
-- synthetic/non-advice labeling throughout
+- no broker or trading flows
+- no financial advice phrasing

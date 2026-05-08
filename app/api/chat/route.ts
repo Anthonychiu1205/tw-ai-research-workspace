@@ -1,5 +1,5 @@
 import { runAssistantRuntime } from "@/lib/ai/runtime";
-import { toSseChunks } from "@/lib/ai/stream-utils";
+import { toJsonlStream } from "@/lib/ai/stream-utils";
 import { getEnvConfig } from "@/lib/config/env";
 
 export async function POST(req: Request) {
@@ -25,13 +25,12 @@ export async function POST(req: Request) {
     },
   });
 
-  const stream = toSseChunks(runtime.events);
+  const stream = toJsonlStream(runtime.events);
 
   return new Response(stream, {
     headers: {
-      "content-type": "text/event-stream; charset=utf-8",
+      "content-type": "text/plain; charset=utf-8",
       "cache-control": "no-cache, no-transform",
-      connection: "keep-alive",
     },
   });
 }

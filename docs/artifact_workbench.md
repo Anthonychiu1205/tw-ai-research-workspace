@@ -1,15 +1,13 @@
 # Artifact Workbench
 
-Artifact workbench is the core v0.3 inspection surface.
+Artifact workbench is the primary inspection surface.
 
 ## Features
 
-- artifact browser with type filters
-- detail panel with metadata and lineage
-- evidence IDs and related artifact links
-- JSON viewer
-- pin/unpin
-- copy/download JSON
-- import/export via store and workspace backup
+- artifact browser with filters
+- detail panel with metadata, lineage, evidence IDs
+- JSON viewer and copy/export actions
+- pin/unpin and related artifacts
+- synthetic/non-advice labels
 
-Artifacts are local-only and always marked synthetic/non-advice/no-trading.
+Artifacts remain local-only and non-trading.

@@ -1,0 +1,293 @@
+{
+  "metadata": {
+    "provider": "mock",
+    "dataType": "synthetic_mock",
+    "notFinancialAdvice": true,
+    "noTradingExecution": true,
+    "generatedAt": "2026-05-08T02:28:46.533Z"
+  },
+  "runtimeSettings": {
+    "mode": "mock",
+    "apiBridgeMode": "mock",
+    "apiBaseUrl": "http://localhost:8000",
+    "selectedProvider": "mock",
+    "selectedModel": "mock-research",
+    "fallbackToMock": true,
+    "showToolCalls": true,
+    "showTokenUsage": true,
+    "maxToolSteps": 3
+  },
+  "sessions": [
+    {
+      "id": "session-1",
+      "title": "2330 Synthetic Workspace",
+      "runtimeMode": "mock",
+      "modelId": "mock-research",
+      "provider": "mock",
+      "messages": [
+        {
+          "id": "msg-1",
+          "role": "assistant",
+          "content": "Synthetic workspace initialized. Not financial advice.",
+          "createdAt": "2026-05-08T10:00:00+08:00"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact-1",
+          "kind": "research_card",
+          "title": "2330 research card",
+          "createdAt": "2026-05-08T10:00:10+08:00"
+        },
+        {
+          "id": "artifact-2",
+          "kind": "report",
+          "title": "2330 synthetic report",
+          "createdAt": "2026-05-08T10:00:20+08:00"
+        }
+      ],
+      "updatedAt": "2026-05-08T10:02:00+08:00"
+    },
+    {
+      "id": "session-2",
+      "title": "Watchlist synthetic scan",
+      "runtimeMode": "mock",
+      "modelId": "mock-research",
+      "provider": "mock",
+      "messages": [],
+      "artifacts": [],
+      "updatedAt": "2026-05-08T10:03:00+08:00"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact-1",
+      "kind": "research_card",
+      "title": "2330 research card",
+      "createdAt": "2026-05-08T10:00:10+08:00"
+    },
+    {
+      "id": "artifact-2",
+      "kind": "report",
+      "title": "2330 synthetic report",
+      "createdAt": "2026-05-08T10:00:20+08:00"
+    },
+    {
+      "id": "artifact-3",
+      "kind": "pipeline_trace",
+      "title": "2330 planner trace",
+      "createdAt": "2026-05-08T10:00:30+08:00"
+    }
+  ],
+  "researchCard": {
+    "id": "card-2330",
+    "symbol": "2330",
+    "name": "台積電",
+    "summary": "Synthetic summary: found balanced long-cycle growth and valuation caution signals.",
+    "score": 0.64,
+    "updatedAt": "2026-05-08T10:00:00+08:00",
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    }
+  },
+  "signalMatrix": {
+    "id": "signal-matrix-watchlist",
+    "watchlist": [
+      "2330",
+      "2317",
+      "2454",
+      "2308",
+      "0050"
+    ],
+    "signals": [
+      {
+        "agent": "macro",
+        "direction": "neutral",
+        "confidence": 0.58,
+        "rationale": "Synthetic macro regime uncertainty"
+      },
+      {
+        "agent": "valuation",
+        "direction": "positive",
+        "confidence": 0.66,
+        "rationale": "Synthetic valuation spread support"
+      },
+      {
+        "agent": "risk",
+        "direction": "negative",
+        "confidence": 0.52,
+        "rationale": "Synthetic event risk from supply-chain variability"
+      }
+    ],
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    }
+  },
+  "evidenceTimeline": {
+    "id": "timeline-2330",
+    "symbol": "2330",
+    "points": [
+      {
+        "at": "2026-05-01",
+        "label": "Synthetic earnings context",
+        "note": "Mock quarterly headline digest"
+      },
+      {
+        "at": "2026-05-03",
+        "label": "Synthetic supply chain indicator",
+        "note": "Mock channel checks"
+      },
+      {
+        "at": "2026-05-06",
+        "label": "Synthetic risk adjustment",
+        "note": "Mock volatility normalization"
+      }
+    ],
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    }
+  },
+  "reportSections": {
+    "id": "report-sections-2330",
+    "symbol": "2330",
+    "sections": [
+      {
+        "id": "sec-overview",
+        "title": "Research Overview (Synthetic)",
+        "content": "This synthetic section summarizes mock findings from a bounded local workspace run.",
+        "evidenceIds": [
+          "ev-1",
+          "ev-2"
+        ]
+      },
+      {
+        "id": "sec-signals",
+        "title": "Signal Synthesis (Synthetic)",
+        "content": "Signal stack indicates mixed trend with moderate confidence and explicit caution flags.",
+        "evidenceIds": [
+          "ev-3"
+        ]
+      },
+      {
+        "id": "sec-risk",
+        "title": "Risk Notes (Synthetic)",
+        "content": "No trading execution. This workspace does not issue buy/sell recommendations.",
+        "evidenceIds": [
+          "ev-4"
+        ]
+      }
+    ],
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    }
+  },
+  "plannerTrace": {
+    "pipelineId": "pipeline-2330-demo",
+    "plan": {
+      "id": "plan-2330",
+      "objective": "Synthesize mock research for 2330 台積電",
+      "steps": [
+        {
+          "id": "step-1",
+          "title": "Collect synthetic evidence",
+          "status": "completed",
+          "detail": "Loaded synthetic timeline and watchlist signals"
+        },
+        {
+          "id": "step-2",
+          "title": "Evaluate synthetic factors",
+          "status": "completed",
+          "detail": "Computed mock signal distribution"
+        },
+        {
+          "id": "step-3",
+          "title": "Draft bounded summary",
+          "status": "completed",
+          "detail": "Generated synthetic report sections with caution notes"
+        }
+      ]
+    },
+    "execution": {
+      "planId": "plan-2330",
+      "toolCalls": [
+        {
+          "toolName": "runResearch",
+          "startedAt": "2026-05-08T10:01:00+08:00",
+          "completedAt": "2026-05-08T10:01:01+08:00",
+          "latencyMs": 820,
+          "status": "success"
+        },
+        {
+          "toolName": "evaluateSignals",
+          "startedAt": "2026-05-08T10:01:02+08:00",
+          "completedAt": "2026-05-08T10:01:03+08:00",
+          "latencyMs": 650,
+          "status": "success"
+        }
+      ],
+      "notes": [
+        "Synthetic run",
+        "No market order path"
+      ]
+    },
+    "reflection": {
+      "summary": "Synthetic pipeline completed with balanced confidence and explicit non-advice framing.",
+      "cautionFlags": [
+        "mock data",
+        "non-advice"
+      ],
+      "confidence": 0.61
+    },
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    }
+  },
+  "strategyComparison": {
+    "id": "strategy-compare-2330",
+    "symbol": "2330",
+    "strategies": [
+      {
+        "id": "strat-a",
+        "name": "Synthetic Quality Momentum",
+        "syntheticReturn": 0.124,
+        "syntheticDrawdown": 0.081,
+        "riskLabel": "medium"
+      },
+      {
+        "id": "strat-b",
+        "name": "Synthetic Mean Reversion",
+        "syntheticReturn": 0.087,
+        "syntheticDrawdown": 0.062,
+        "riskLabel": "medium-low"
+      },
+      {
+        "id": "strat-c",
+        "name": "Synthetic Defensive Blend",
+        "syntheticReturn": 0.069,
+        "syntheticDrawdown": 0.041,
+        "riskLabel": "low"
+      }
+    ],
+    "metadata": {
+      "provider": "mock",
+      "dataType": "synthetic_mock",
+      "notFinancialAdvice": true,
+      "noTradingExecution": true
+    }
+  }
+}

@@ -1,17 +1,18 @@
 # Research Operations
 
-The operations panel provides explicit user-triggered workflows.
+Operations are explicit user-triggered workflows.
 
 Supported operations:
 - run research
 - generate report
 - run planner pipeline
-- run backtest preview (mock summary only)
+- run backtest preview (mock summary)
 - compare strategies
 - evaluate signals
 
 Each operation:
-- uses API client or mock fallback
-- creates workspace artifact output
-- returns safe status/summary/warnings
+- uses API client (mock/proxy/direct)
+- can fallback to mock safely
+- creates workspace artifacts
+- surfaces typed status/warnings/errors
 - never executes trading
