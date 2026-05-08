@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const toolStatusSchema = z.enum(["success", "warning", "error"]);
+export const toolStatusSchema = z.enum(["pending", "running", "succeeded", "failed"]);
 
 export const workspaceToolCallSchema = z.object({
   toolName: z.string(),
@@ -17,6 +17,8 @@ export const workspaceToolResultSchema = z.object({
   data: z.any(),
   evidenceIds: z.array(z.string()),
   warnings: z.array(z.string()),
+  source: z.enum(["mock", "api", "mock_fallback"]),
+  fallbackUsed: z.boolean(),
 });
 
 export type ToolStatus = z.infer<typeof toolStatusSchema>;

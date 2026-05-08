@@ -5,7 +5,11 @@ export async function GET() {
   return NextResponse.json(
     workspaceTools.map((tool) => ({
       name: tool.name,
+      label: tool.label,
       description: tool.description,
+      category: tool.category,
+      outputKind: tool.outputKind,
+      producesArtifacts: tool.producesArtifacts,
     })),
   );
 }

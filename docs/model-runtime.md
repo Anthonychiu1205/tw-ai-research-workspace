@@ -4,7 +4,8 @@ Model providers:
 - mock
 - openai (env-gated)
 - anthropic (env-gated)
-- local (placeholder)
+- local (env-gated placeholder)
 
-`lib/config/models.ts` exposes switcher metadata with availability/reason fields.
-`lib/ai/runtime.ts` defaults to mock output unless a real provider is explicitly enabled.
+`lib/config/models.ts` exposes provider availability and reason-unavailable metadata.
+
+`lib/ai/runtime.ts` normalizes provider/runtime config, emits stream lifecycle events, executes local tool registry, and falls back to mock safely when providers are unavailable.

@@ -30,6 +30,10 @@ export function getProviderAvailability(): ProviderReady[] {
   ];
 }
 
+export function getProviderAvailabilityByName(name: ProviderReady["name"]) {
+  return getProviderAvailability().find((provider) => provider.name === name) ?? { name, available: false, reason: "unknown" };
+}
+
 export function getOpenAIClient() {
   const env = getEnvConfig();
   if (!env.openaiApiKey) {

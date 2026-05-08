@@ -1,8 +1,15 @@
 import { z } from "zod";
 
-export const mockMetaSchema = z.object({
-  provider: z.literal("mock"),
-  dataType: z.literal("synthetic_mock"),
-  notFinancialAdvice: z.literal(true),
-  noTradingExecution: z.literal(true),
+export const workspaceMetaSchema = z.object({
+  provider: z.enum(["mock", "openai", "anthropic", "local", "api"]),
+  dataType: z.enum(["synthetic_mock", "api_result", "hybrid_result"]).default("synthetic_mock"),
+  source: z.enum(["mock", "api", "mock_fallback"]).default("mock"),
+  fallbackUsed: z.boolean().default(false),
+  fallbackReason: z.string().optional(),
+  synthetic: z.boolean().default(true),
+  notFinancialAdvice: z.literal(true).default(true),
+  noTradingExecution: z.literal(true).default(true),
 });
+
+// Backward-compatible alias for existing imports.
+export const mockMetaSchema = workspaceMetaSchema;

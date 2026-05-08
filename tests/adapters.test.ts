@@ -17,10 +17,20 @@ import {
 
 describe("adapters", () => {
   test("adapts research card and matrix", () => {
-    const card = adaptResearchRunToResearchCard(researchRun);
+    const card = adaptResearchRunToResearchCard(researchRun, {
+      source: "mock_fallback",
+      provider: "mock",
+      synthetic: true,
+      fallbackUsed: true,
+      fallbackReason: "api down",
+      notFinancialAdvice: true,
+      noTradingExecution: true,
+    });
     const matrix = adaptResearchRunToSignalMatrix(researchRun);
     expect(card.symbol).toBe("2330");
     expect(matrix.watchlist.length).toBeGreaterThan(0);
+    expect(card.metadata.source).toBe("mock_fallback");
+    expect(card.metadata.fallbackUsed).toBe(true);
   });
 
   test("adapts report and trace", () => {

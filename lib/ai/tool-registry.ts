@@ -1,106 +1,137 @@
 import { z } from "zod";
 import { workspaceToolResultSchema, type WorkspaceToolResult } from "@/lib/schemas/tools";
-import { runResearch, generateReport, runPipeline, compareStrategies, evaluateSignals } from "@/lib/api/client";
+import {
+  runResearch,
+  generateReport,
+  runPipeline,
+  compareStrategies,
+  evaluateSignals,
+} from "@/lib/api/client";
 import { mockToolData } from "@/lib/tools/mock-tools";
-import { nowIso } from "@/lib/utils/dates";
 
 const symbolInputSchema = z.object({ symbol: z.string().default("2330") });
 
-type ToolDefinition = {
+export type ToolCategory = "research" | "report" | "pipeline" | "strategy" | "signal" | "evidence";
+
+export type ToolDefinition = {
   name: string;
+  label: string;
   description: string;
+  category: ToolCategory;
   inputSchema: z.ZodTypeAny;
+  outputKind: string;
+  producesArtifacts: boolean;
   execute: (input: any) => Promise<WorkspaceToolResult>;
 };
 
+function nowIso() {
+  return new Date().toISOString();
+}
+
 async function toToolResult(
   toolName: string,
-  startedAt: string,
-  operation: () => Promise<{ ok: boolean; data?: any; fallbackData?: any; error?: Error }>,
+  operation: () => Promise<{ ok: boolean; data?: any; fallbackData?: any; error?: Error; meta?: any }>,
 ): Promise<WorkspaceToolResult> {
-  const start = Date.now();
-  const base = {
-    toolName,
-    startedAt,
-    completedAt: nowIso(),
-    latencyMs: Date.now() - start,
-    evidenceIds: [] as string[],
-    warnings: [] as string[],
-  };
-
+  const startedAt = nowIso();
+  const startMs = Date.now();
   const result = await operation();
+  const completedAt = nowIso();
+  const latencyMs = Date.now() - startMs;
+
   if (result.ok) {
     return workspaceToolResultSchema.parse({
-      ...base,
-      status: "success",
-      summary: `${toolName} completed with mock-safe output`,
+      toolName,
+      status: "succeeded",
+      startedAt,
+      completedAt,
+      latencyMs,
+      summary: `${toolName} completed`,
       data: result.data,
+      evidenceIds: [],
+      warnings: [],
+      source: result.meta?.source ?? "mock",
+      fallbackUsed: result.meta?.fallbackUsed ?? false,
     });
   }
 
   return workspaceToolResultSchema.parse({
-    ...base,
-    status: "warning",
-    summary: `${toolName} failed API call and used fallback`,
+    toolName,
+    status: "failed",
+    startedAt,
+    completedAt,
+    latencyMs,
+    summary: `${toolName} API failed, fallback used`,
     data: result.fallbackData ?? null,
+    evidenceIds: [],
     warnings: [result.error?.message ?? "fallback to mock"],
+    source: result.meta?.source ?? "mock_fallback",
+    fallbackUsed: true,
   });
 }
 
 export const workspaceTools: ToolDefinition[] = [
   {
     name: "runResearch",
+    label: "Run Research",
     description: "Run research pipeline summary for Taiwan symbol",
+    category: "research",
     inputSchema: symbolInputSchema,
-    execute: async (input) => {
-      const startedAt = nowIso();
-      return toToolResult("runResearch", startedAt, () => runResearch(input));
-    },
+    outputKind: "research_card",
+    producesArtifacts: true,
+    execute: async (input) => toToolResult("runResearch", () => runResearch(input)),
   },
   {
     name: "generateReport",
+    label: "Generate Report",
     description: "Generate synthetic report sections",
+    category: "report",
     inputSchema: symbolInputSchema,
-    execute: async (input) => {
-      const startedAt = nowIso();
-      return toToolResult("generateReport", startedAt, () => generateReport(input));
-    },
+    outputKind: "report",
+    producesArtifacts: true,
+    execute: async (input) => toToolResult("generateReport", () => generateReport(input)),
   },
   {
     name: "runPipeline",
+    label: "Run Pipeline",
     description: "Run planner/executor/reflection synthetic pipeline",
+    category: "pipeline",
     inputSchema: symbolInputSchema,
-    execute: async (input) => {
-      const startedAt = nowIso();
-      return toToolResult("runPipeline", startedAt, () => runPipeline(input));
-    },
+    outputKind: "pipeline_trace",
+    producesArtifacts: true,
+    execute: async (input) => toToolResult("runPipeline", () => runPipeline(input)),
   },
   {
     name: "compareStrategies",
+    label: "Compare Strategies",
     description: "Compare synthetic strategies with no trading execution",
+    category: "strategy",
     inputSchema: symbolInputSchema,
-    execute: async (input) => {
-      const startedAt = nowIso();
-      return toToolResult("compareStrategies", startedAt, () => compareStrategies(input));
-    },
+    outputKind: "strategy_comparison",
+    producesArtifacts: true,
+    execute: async (input) => toToolResult("compareStrategies", () => compareStrategies(input)),
   },
   {
     name: "evaluateSignals",
+    label: "Evaluate Signals",
     description: "Evaluate agent signal distribution",
+    category: "signal",
     inputSchema: symbolInputSchema,
-    execute: async (input) => {
-      const startedAt = nowIso();
-      return toToolResult("evaluateSignals", startedAt, () => evaluateSignals(input));
-    },
+    outputKind: "signal_evaluation",
+    producesArtifacts: true,
+    execute: async (input) => toToolResult("evaluateSignals", () => evaluateSignals(input)),
   },
   {
     name: "getEvidenceTimeline",
+    label: "Evidence Timeline",
     description: "Get synthetic evidence timeline",
+    category: "evidence",
     inputSchema: symbolInputSchema,
+    outputKind: "evidence_timeline",
+    producesArtifacts: true,
     execute: async () =>
       workspaceToolResultSchema.parse({
         toolName: "getEvidenceTimeline",
-        status: "success",
+        status: "succeeded",
         startedAt: nowIso(),
         completedAt: nowIso(),
         latencyMs: 15,
@@ -108,16 +139,22 @@ export const workspaceTools: ToolDefinition[] = [
         data: mockToolData.getEvidenceTimeline,
         evidenceIds: ["ev-1", "ev-2"],
         warnings: [],
+        source: "mock",
+        fallbackUsed: false,
       }),
   },
   {
     name: "getSignalMatrix",
+    label: "Signal Matrix",
     description: "Get synthetic signal matrix",
+    category: "signal",
     inputSchema: symbolInputSchema,
+    outputKind: "signal_matrix",
+    producesArtifacts: false,
     execute: async () =>
       workspaceToolResultSchema.parse({
         toolName: "getSignalMatrix",
-        status: "success",
+        status: "succeeded",
         startedAt: nowIso(),
         completedAt: nowIso(),
         latencyMs: 15,
@@ -125,16 +162,22 @@ export const workspaceTools: ToolDefinition[] = [
         data: mockToolData.getSignalMatrix,
         evidenceIds: [],
         warnings: [],
+        source: "mock",
+        fallbackUsed: false,
       }),
   },
   {
     name: "getAgentConsensus",
+    label: "Agent Consensus",
     description: "Get synthetic multi-agent consensus",
+    category: "research",
     inputSchema: symbolInputSchema,
+    outputKind: "agent_consensus",
+    producesArtifacts: false,
     execute: async () =>
       workspaceToolResultSchema.parse({
         toolName: "getAgentConsensus",
-        status: "success",
+        status: "succeeded",
         startedAt: nowIso(),
         completedAt: nowIso(),
         latencyMs: 15,
@@ -142,6 +185,8 @@ export const workspaceTools: ToolDefinition[] = [
         data: mockToolData.getAgentConsensus,
         evidenceIds: [],
         warnings: [],
+        source: "mock",
+        fallbackUsed: false,
       }),
   },
 ];

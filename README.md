@@ -10,7 +10,7 @@ It is not a dashboard, not a backend, and not a trading system.
 This repo is a local-first, mock-first workspace that combines:
 - financial-agent-ui style workspace orchestration
 - Dexter-inspired planning/trace UX
-- Vercel AI SDK streaming/tool architecture patterns
+- Vercel AI SDK inspired streaming/tool architecture
 - assistant-ui-inspired chat/workspace interaction patterns
 - `tw-ai-investment-research` API consumption (optional backend)
 
@@ -29,6 +29,15 @@ This repo is a local-first, mock-first workspace that combines:
 - Not financial advice
 
 All demo artifacts are synthetic mock data.
+
+## v0.2 Highlights
+
+- conversational runtime hardening
+- streaming lifecycle events (`message_delta`, `tool_call_*`, `token_usage`, `final`)
+- visible tool rendering lifecycle
+- API mode fallback and typed error hardening
+- session/artifact persistence improvements
+- backend contract check script for local fixtures
 
 ## Mock-first runtime
 
@@ -63,6 +72,8 @@ npm run lint
 npm run test:run
 node scripts/check-env.mjs
 node scripts/smoke-test.mjs
+node scripts/check-backend-contract.mjs
+node scripts/export-workspace-schema.mjs
 npm run build
 ```
 
@@ -76,7 +87,7 @@ Note: `npm run lint` currently uses a typecheck fallback in this local setup due
 
 ## Workspace UX
 
-- `/workspace`: chat + artifacts + signal explorer + planner trace
+- `/workspace`: chat-first workspace with streaming conversation, tool results, session/artifact panel
 - `/reports`: synthetic report viewer
 - `/strategies`: synthetic strategy comparison
 - `/traces`: planner/executor/reflection visualization
@@ -108,18 +119,21 @@ No trading tools are provided.
 ## Session persistence
 
 Client-only localStorage persistence:
-- create/update/list/delete session
-- persists messages/artifacts/model/runtime mode
+- create/rename/update/delete session
+- duplicate/clear session
+- import/export session JSON
+- artifact pin/unpin and import/export
 - no auth and no backend DB
 
 ## Limitations
 
 - assistant-ui package integration is planned; current build uses assistant-ui-inspired local components
-- real LLM provider path is minimal and env-gated
-- no live web browsing, no autonomous loops
+- real LLM provider path remains env-gated and fallback-safe
+- no live web browsing, no autonomous uncontrolled loops
+- no broker integration or real trading execution
 
 ## Roadmap
 
 - optional assistant-ui package integration after dependency alignment
-- richer trace event rendering
-- stronger OpenAPI-driven adapter generation
+- richer trace event timeline rendering
+- stronger OpenAPI contract-driven adapters

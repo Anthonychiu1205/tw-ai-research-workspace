@@ -1,11 +1,15 @@
 # Runtime
 
 Modes:
-- `mock` (default): fixtures and deterministic streaming
-- `api`: calls `tw-ai-investment-research` API with graceful fallback to mock
+- `mock` (default): fixtures, deterministic stream events, no API keys required
+- `api`: attempts backend calls, returns mock fallback safely when unavailable
 
-Fallback:
-- API errors are converted into typed safe results
-- UI never receives raw fetch stack traces
+`WorkspaceRuntimeConfig` fields:
+- mode / apiBaseUrl
+- selectedProvider / selectedModel
+- fallbackToMock
+- streamToolCalls
+- showTokenUsage
+- maxToolSteps (bounded)
 
-No API key is required for local demo.
+`WorkspaceRuntimeStatus` exposes backend/provider reachability and fallback state.

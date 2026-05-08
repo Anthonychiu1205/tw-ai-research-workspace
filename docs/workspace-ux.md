@@ -1,12 +1,13 @@
 # Workspace UX
 
 Design intent:
-- financial-agent-ui inspired interaction flow
+- financial-agent-ui inspired conversational research workflow
 - Dexter-inspired plan/executor/reflection visibility
-- compact dark layout (not a full dashboard)
+- compact dark workspace (not a full dashboard)
 
-Screens:
-- Workspace chat and right-side context panels
-- Reports page for section rendering
-- Strategies page for comparison tables
-- Traces page for plan and execution states
+Workspace page:
+- chat-first layout
+- runtime/provider/backend badges
+- prompt examples for common Taiwan research tasks
+- right context panel with signals/evidence/trace/report summaries
+- session and artifact navigation in sidebar/context

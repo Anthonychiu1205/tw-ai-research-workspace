@@ -3,6 +3,37 @@ import { z } from "zod";
 export const workspaceRuntimeModeSchema = z.enum(["mock", "api"]);
 export const modelProviderSchema = z.enum(["mock", "openai", "anthropic", "local"]);
 
+export const workspaceRuntimeConfigSchema = z.object({
+  mode: workspaceRuntimeModeSchema.default("mock"),
+  apiBaseUrl: z.string().default("http://localhost:8000"),
+  selectedProvider: modelProviderSchema.default("mock"),
+  selectedModel: z.string().default("mock-research"),
+  fallbackToMock: z.boolean().default(true),
+  streamToolCalls: z.boolean().default(true),
+  showTokenUsage: z.boolean().default(true),
+  maxToolSteps: z.number().int().min(1).max(8).default(3),
+});
+
+export const workspaceRuntimeStatusSchema = z.object({
+  mode: workspaceRuntimeModeSchema,
+  backendReachable: z.boolean(),
+  providerAvailable: z.boolean(),
+  providerUnavailableReason: z.string().optional(),
+  lastCheckedAt: z.string().optional(),
+  fallbackActive: z.boolean(),
+});
+
+export const workspaceContextStateSchema = z.object({
+  selectedTicker: z.string().default("2330"),
+  watchlist: z.array(z.string()).default(["2330", "2317", "2454", "2308", "0050"]),
+  activeSessionId: z.string().nullable().default(null),
+  activeArtifactId: z.string().nullable().default(null),
+  activeReportId: z.string().nullable().default(null),
+  activePipelineId: z.string().nullable().default(null),
+  activeTraceId: z.string().nullable().default(null),
+  activeStrategyComparisonId: z.string().nullable().default(null),
+});
+
 export const workspaceMessageSchema = z.object({
   id: z.string(),
   role: z.enum(["user", "assistant", "tool", "system"]),
@@ -21,12 +52,18 @@ export const workspaceArtifactSchema = z.object({
     "evidence_timeline",
   ]),
   title: z.string(),
+  sessionId: z.string().optional(),
+  pinned: z.boolean().default(false),
+  synthetic: z.boolean().default(true),
+  notFinancialAdvice: z.literal(true).default(true),
+  noTradingExecution: z.literal(true).default(true),
   createdAt: z.string(),
 });
 
 export const workspaceSessionSchema = z.object({
   id: z.string(),
   title: z.string(),
+  schemaVersion: z.literal("workspace-session.v0.2").default("workspace-session.v0.2"),
   runtimeMode: workspaceRuntimeModeSchema,
   modelId: z.string(),
   provider: modelProviderSchema,
@@ -37,6 +74,9 @@ export const workspaceSessionSchema = z.object({
 
 export type WorkspaceRuntimeMode = z.infer<typeof workspaceRuntimeModeSchema>;
 export type ModelProvider = z.infer<typeof modelProviderSchema>;
+export type WorkspaceRuntimeConfig = z.infer<typeof workspaceRuntimeConfigSchema>;
+export type WorkspaceRuntimeStatus = z.infer<typeof workspaceRuntimeStatusSchema>;
+export type WorkspaceContextState = z.infer<typeof workspaceContextStateSchema>;
 export type WorkspaceMessage = z.infer<typeof workspaceMessageSchema>;
 export type WorkspaceArtifact = z.infer<typeof workspaceArtifactSchema>;
 export type WorkspaceSession = z.infer<typeof workspaceSessionSchema>;

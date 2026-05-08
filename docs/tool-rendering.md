@@ -1,14 +1,21 @@
 # Tool Rendering
 
-Tool registry maps named tools to zod input schemas and execute functions.
+Tool registry metadata per tool:
+- name / label / description
+- category (research/report/pipeline/strategy/signal/evidence)
+- input schema
+- output kind
+- artifact production flag
 
-Rendered result contract:
+Tool result contract:
 - toolName
-- status
-- startedAt/completedAt/latency
+- status (`pending`/`running`/`succeeded`/`failed`)
+- startedAt/completedAt/latencyMs
 - summary
 - data
 - evidenceIds
 - warnings
+- source
+- fallbackUsed
 
 No trading, broker, or execution tools are exposed.

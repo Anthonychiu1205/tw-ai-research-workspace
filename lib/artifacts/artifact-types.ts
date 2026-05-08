@@ -8,7 +8,12 @@ export type ArtifactKind =
 
 export type WorkspaceArtifactRecord = {
   id: string;
+  sessionId: string;
   kind: ArtifactKind;
   title: string;
+  pinned: boolean;
+  synthetic: boolean;
+  notFinancialAdvice: true;
+  noTradingExecution: true;
   createdAt: string;
 };

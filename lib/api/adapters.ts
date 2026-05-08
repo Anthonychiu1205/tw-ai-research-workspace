@@ -3,8 +3,22 @@ import { reportSectionSchema } from "@/lib/schemas/reports";
 import { researchPipelineResultSchema } from "@/lib/schemas/traces";
 import { signalEvaluationResultSchema } from "@/lib/schemas/signals";
 import { strategyComparisonSchema } from "@/lib/schemas/strategies";
+import type { FrontendSafeMeta } from "@/lib/api/client";
 
-export function adaptResearchRunToResearchCard(input: any) {
+function mergeMeta(inputMeta: any, frontendMeta?: FrontendSafeMeta) {
+  return {
+    provider: frontendMeta?.provider ?? inputMeta?.provider ?? "mock",
+    dataType: frontendMeta?.synthetic ? "synthetic_mock" : "api_result",
+    source: frontendMeta?.source ?? inputMeta?.source ?? "mock",
+    fallbackUsed: frontendMeta?.fallbackUsed ?? false,
+    fallbackReason: frontendMeta?.fallbackReason,
+    synthetic: frontendMeta?.synthetic ?? true,
+    notFinancialAdvice: true,
+    noTradingExecution: true,
+  };
+}
+
+export function adaptResearchRunToResearchCard(input: any, frontendMeta?: FrontendSafeMeta) {
   return researchCardSchema.parse({
     id: input.runId ?? "run-mock",
     symbol: input.symbol,
@@ -12,11 +26,11 @@ export function adaptResearchRunToResearchCard(input: any) {
     summary: input.findings?.[0] ?? "Synthetic research summary",
     score: input.score ?? 0,
     updatedAt: input.generatedAt,
-    metadata: input.metadata,
+    metadata: mergeMeta(input.metadata, frontendMeta),
   });
 }
 
-export function adaptResearchRunToSignalMatrix(input: any) {
+export function adaptResearchRunToSignalMatrix(input: any, frontendMeta?: FrontendSafeMeta) {
   return signalMatrixSchema.parse({
     id: input.runId ?? "matrix-mock",
     watchlist: ["2330", "2317", "2454", "2308", "0050"],
@@ -34,7 +48,7 @@ export function adaptResearchRunToSignalMatrix(input: any) {
         rationale: "Synthetic risk control",
       },
     ],
-    metadata: input.metadata,
+    metadata: mergeMeta(input.metadata, frontendMeta),
   });
 }
 
@@ -49,23 +63,32 @@ export function adaptReportToSections(input: any) {
   );
 }
 
-export function adaptPipelineToPlannerTrace(input: any) {
-  return researchPipelineResultSchema.parse(input);
+export function adaptPipelineToPlannerTrace(input: any, frontendMeta?: FrontendSafeMeta) {
+  return researchPipelineResultSchema.parse({
+    ...input,
+    metadata: mergeMeta(input.metadata, frontendMeta),
+  });
 }
 
-export function adaptSignalEvaluationToExplorer(input: any) {
-  return signalEvaluationResultSchema.parse(input);
+export function adaptSignalEvaluationToExplorer(input: any, frontendMeta?: FrontendSafeMeta) {
+  return signalEvaluationResultSchema.parse({
+    ...input,
+    metadata: mergeMeta(input.metadata, frontendMeta),
+  });
 }
 
-export function adaptStrategyComparisonToTable(input: any) {
-  return strategyComparisonSchema.parse(input);
+export function adaptStrategyComparisonToTable(input: any, frontendMeta?: FrontendSafeMeta) {
+  return strategyComparisonSchema.parse({
+    ...input,
+    metadata: mergeMeta(input.metadata, frontendMeta),
+  });
 }
 
-export function adaptEvidenceTimeline(input: any) {
+export function adaptEvidenceTimeline(input: any, frontendMeta?: FrontendSafeMeta) {
   return {
     id: input.id,
     symbol: input.symbol,
     points: input.points ?? [],
-    metadata: input.metadata,
+    metadata: mergeMeta(input.metadata, frontendMeta),
   };
 }

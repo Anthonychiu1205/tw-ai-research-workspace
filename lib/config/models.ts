@@ -1,6 +1,5 @@
 import { getEnvConfig } from "@/lib/config/env";
-
-export type ModelProvider = "mock" | "openai" | "anthropic" | "local";
+import type { ModelProvider } from "@/lib/schemas/workspace";
 
 export type ModelOption = {
   id: string;
@@ -33,7 +32,7 @@ export function getModelOptions(): ModelOption[] {
       label: "OpenAI Placeholder",
       provider: "openai",
       available: openaiAvailable,
-      reasonUnavailable: openaiAvailable ? undefined : "OpenAI key or real models disabled",
+      reasonUnavailable: openaiAvailable ? undefined : "OpenAI key missing or real models disabled",
       supportsTools: true,
       supportsStreaming: true,
     },
@@ -42,7 +41,7 @@ export function getModelOptions(): ModelOption[] {
       label: "Anthropic Placeholder",
       provider: "anthropic",
       available: anthropicAvailable,
-      reasonUnavailable: anthropicAvailable ? undefined : "Anthropic key or real models disabled",
+      reasonUnavailable: anthropicAvailable ? undefined : "Anthropic key missing or real models disabled",
       supportsTools: true,
       supportsStreaming: true,
     },
@@ -51,9 +50,25 @@ export function getModelOptions(): ModelOption[] {
       label: "Local Model Placeholder",
       provider: "local",
       available: localAvailable,
-      reasonUnavailable: localAvailable ? undefined : "Local model base URL missing",
+      reasonUnavailable: localAvailable ? undefined : "Local model base URL missing or real models disabled",
       supportsTools: false,
       supportsStreaming: false,
     },
   ];
+}
+
+export function resolveModelProvider(modelId: string): ModelProvider {
+  const found = getModelOptions().find((option) => option.id === modelId);
+  return found?.provider ?? "mock";
+}
+
+export function getModelAvailability(modelId: string): {
+  available: boolean;
+  reasonUnavailable?: string;
+} {
+  const found = getModelOptions().find((option) => option.id === modelId);
+  if (!found) {
+    return { available: false, reasonUnavailable: "Unknown model" };
+  }
+  return { available: found.available, reasonUnavailable: found.reasonUnavailable };
 }

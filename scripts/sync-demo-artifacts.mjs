@@ -12,19 +12,39 @@ if (!fs.existsSync(src)) {
   process.exit(0);
 }
 
-const files = fs.readdirSync(src).filter((name) => name.endsWith(".json"));
-let copied = 0;
-let skipped = 0;
+const srcFiles = fs.readdirSync(src).filter((name) => name.endsWith(".json")).sort();
+const report = {
+  source: src,
+  destination: dest,
+  force,
+  available: srcFiles,
+  wouldCopy: [],
+  copied: [],
+  skipped: [],
+};
 
-for (const file of files) {
+for (const file of srcFiles) {
   const from = path.join(src, file);
   const to = path.join(dest, file);
-  if (fs.existsSync(to) && !force) {
-    skipped += 1;
+
+  if (!force) {
+    if (!fs.existsSync(to)) {
+      report.wouldCopy.push(file);
+    } else {
+      report.skipped.push(file);
+    }
     continue;
   }
+
   fs.copyFileSync(from, to);
-  copied += 1;
+  report.copied.push(file);
 }
 
-console.log(`sync-demo-artifacts: copied=${copied}, skipped=${skipped}, force=${force}`);
+if (!force) {
+  console.log(`sync-demo-artifacts: dry-run, wouldCopy=${report.wouldCopy.length}, skipped=${report.skipped.length}`);
+  if (report.wouldCopy.length > 0) {
+    console.log(`sync-demo-artifacts: use --force to copy -> ${report.wouldCopy.join(", ")}`);
+  }
+} else {
+  console.log(`sync-demo-artifacts: copied=${report.copied.length}, skipped=${report.skipped.length}, force=true`);
+}

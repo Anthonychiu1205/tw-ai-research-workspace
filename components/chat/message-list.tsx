@@ -9,7 +9,7 @@ export type ChatMessage = {
 
 export function MessageList({ messages }: { messages: ChatMessage[] }) {
   return (
-    <ScrollArea className="h-[460px] space-y-2 rounded-md border p-3">
+    <ScrollArea className="h-[460px] space-y-2 rounded-md border p-3" data-testid="message-list">
       <div className="space-y-2">
         {messages.map((message) => (
           <div

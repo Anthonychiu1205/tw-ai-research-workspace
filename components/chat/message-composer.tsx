@@ -19,10 +19,23 @@ export function MessageComposer({ onSubmit, disabled }: { onSubmit: (text: strin
         setText("");
       }}
     >
-      <Input value={text} onChange={(event) => setText(event.target.value)} placeholder="Ask synthetic research question" />
-      <Button type="submit" disabled={disabled}>
-        Send
-      </Button>
+      <Input
+        value={text}
+        onChange={(event) => setText(event.target.value)}
+        placeholder="Ask synthetic research question"
+        disabled={disabled}
+        onKeyDown={(event) => {
+          if (event.key === "Enter" && (event.metaKey || event.ctrlKey)) {
+            event.preventDefault();
+            if (text.trim() && !disabled) {
+              onSubmit(text.trim());
+              setText("");
+            }
+          }
+        }}
+      />
+      <Button type="button" variant="ghost" disabled={disabled || text.length === 0} onClick={() => setText("")}>Clear</Button>
+      <Button type="submit" disabled={disabled}>{disabled ? "Streaming..." : "Send"}</Button>
     </form>
   );
 }

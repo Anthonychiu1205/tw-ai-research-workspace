@@ -10,6 +10,7 @@
     "test": "vitest",
     "test:run": "vitest run",
     "smoke": "node scripts/smoke-test.mjs",
+    "check:backend-contract": "node scripts/check-backend-contract.mjs",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

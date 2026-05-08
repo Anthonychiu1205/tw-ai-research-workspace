@@ -17,7 +17,7 @@ describe("tool registry", () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "mock";
     const tool = getToolByName("generateReport");
     const result = await tool?.execute({ symbol: "2330" });
-    expect(result?.status).toBe("success");
+    expect(result?.status).toBe("succeeded");
   });
 
   test("unknown tool handled", () => {

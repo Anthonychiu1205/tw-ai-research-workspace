@@ -10,7 +10,16 @@ const schemaSummary = {
     strategies: ["StrategyComparison", "StrategyResult"],
     signals: ["SignalEvaluationResult", "SignalDistribution", "FactorCoverage", "AgentContribution"],
     tools: ["WorkspaceToolCall", "WorkspaceToolResult", "ToolStatus"],
-    workspace: ["WorkspaceSession", "WorkspaceArtifact", "WorkspaceRuntimeMode", "ModelProvider", "WorkspaceMessage"]
+    workspace: [
+      "WorkspaceSession",
+      "WorkspaceArtifact",
+      "WorkspaceRuntimeMode",
+      "ModelProvider",
+      "WorkspaceMessage",
+      "WorkspaceRuntimeConfig",
+      "WorkspaceRuntimeStatus",
+      "WorkspaceContextState"
+    ]
   }
 };
 

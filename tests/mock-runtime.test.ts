@@ -3,7 +3,7 @@ import { runAssistantRuntime } from "@/lib/ai/runtime";
 import { getModelOptions } from "@/lib/config/models";
 
 describe("mock runtime", () => {
-  test("returns deterministic chunks", async () => {
+  test("returns deterministic events", async () => {
     process.env.NEXT_PUBLIC_WORKSPACE_MODE = "mock";
     const output = await runAssistantRuntime({
       messages: [{ role: "user", content: "summarize 2330" }],
@@ -11,9 +11,8 @@ describe("mock runtime", () => {
       provider: "mock",
     });
 
-    expect(output.mode).toBe("mock");
-    expect(output.chunks.join(" ")).toContain("Synthetic research workspace response");
-    expect(output.chunks.join(" ")).toContain("not financial advice");
+    expect(output.events.some((event) => event.type === "message_delta")).toBe(true);
+    expect(output.events.some((event) => event.type === "final")).toBe(true);
   });
 
   test("model availability is env-gated", () => {
