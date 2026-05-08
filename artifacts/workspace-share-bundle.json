@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "workspace-share-bundle.v0.5",
+  "bundleId": "wsb_mowbc95i",
+  "createdAt": "2026-05-08T02:45:51.318Z",
+  "source": "mock",
+  "synthetic": true,
+  "notFinancialAdvice": true,
+  "noTradingExecution": true,
+  "sessions": [
+    {
+      "schemaVersion": "workspace-session.v0.2",
+      "runtimeMode": "mock",
+      "modelId": "mock-research",
+      "provider": "mock",
+      "messages": [
+        {
+          "id": "msg-1",
+          "role": "assistant",
+          "content": "Synthetic workspace initialized. Not financial advice.",
+          "createdAt": "2026-05-08T10:00:00+08:00"
+        }
+      ],
+      "artifacts": [
+        {
+          "id": "artifact-1",
+          "kind": "research_card",
+          "title": "2330 research card",
+          "createdAt": "2026-05-08T10:00:10+08:00"
+        },
+        {
+          "id": "artifact-2",
+          "kind": "report",
+          "title": "2330 synthetic report",
+          "createdAt": "2026-05-08T10:00:20+08:00"
+        }
+      ],
+      "id": "session-1",
+      "title": "2330 Synthetic Workspace",
+      "updatedAt": "2026-05-08T10:02:00+08:00"
+    },
+    {
+      "schemaVersion": "workspace-session.v0.2",
+      "runtimeMode": "mock",
+      "modelId": "mock-research",
+      "provider": "mock",
+      "messages": [],
+      "artifacts": [],
+      "id": "session-2",
+      "title": "Watchlist synthetic scan",
+      "updatedAt": "2026-05-08T10:03:00+08:00"
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "artifact-1",
+      "kind": "research_card",
+      "title": "2330 research card",
+      "createdAt": "2026-05-08T10:00:10+08:00"
+    },
+    {
+      "id": "artifact-2",
+      "kind": "report",
+      "title": "2330 synthetic report",
+      "createdAt": "2026-05-08T10:00:20+08:00"
+    },
+    {
+      "id": "artifact-3",
+      "kind": "pipeline_trace",
+      "title": "2330 planner trace",
+      "createdAt": "2026-05-08T10:00:30+08:00"
+    }
+  ],
+  "runtimeSettings": {
+    "mode": "mock",
+    "apiBaseUrl": "http://localhost:8000",
+    "apiBridgeMode": "mock",
+    "selectedProvider": "mock",
+    "selectedModel": "mock-research",
+    "fallbackToMock": true,
+    "showToolCalls": true,
+    "showTokenUsage": true,
+    "maxToolSteps": 3
+  },
+  "scenariosCompleted": [
+    "analyze_2330",
+    "generate_2330_report",
+    "compare_ai_server_watchlist",
+    "inspect_planner_trace",
+    "evaluate_phase2_signals",
+    "explore_strategy_presets"
+  ],
+  "checksum": "bundle_29d030ed"
+}

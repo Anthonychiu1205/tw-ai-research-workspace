@@ -1,22 +1,14 @@
 # Backend Contracts
 
-`node scripts/check-backend-contract.mjs` validates local fixtures and optional backend demo artifacts.
+Contract checks run via:
+- `node scripts/check-backend-contract.mjs`
 
-## Required metadata
+Validates:
+- mock/synthetic/non-advice metadata
+- required fixture shapes (report/trace/signal/strategy)
+- allowed artifact types
 
-- `provider: mock`
-- `dataType: synthetic_mock`
-- `notFinancialAdvice: true`
-- `noTradingExecution: true`
+Output:
+- `artifacts/backend-contract-check.json`
 
-## Required shape checks
-
-- report fixtures include `sections`
-- pipeline/trace fixtures include `plan/execution/reflection`
-- signal matrix fixtures include `watchlist/signals`
-- strategy comparison fixtures include `strategies`
-- session fixtures contain allowed artifact types only
-
-Output: `artifacts/backend-contract-check.json`
-
-If `../tw-ai-investment-research/artifacts/demo` is missing, script warns and exits 0.
+If external backend demo artifacts are missing, check warns and exits 0.

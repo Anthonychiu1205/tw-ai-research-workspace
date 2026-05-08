@@ -1,18 +1,14 @@
 # Research Operations
 
-Operations are explicit user-triggered workflows.
+Operations remain explicit user-triggered workflows.
 
-Supported operations:
+Kinds:
 - run research
 - generate report
-- run planner pipeline
-- run backtest preview (mock summary)
+- run pipeline
+- run backtest preview
 - compare strategies
 - evaluate signals
 
-Each operation:
-- uses API client (mock/proxy/direct)
-- can fallback to mock safely
-- creates workspace artifacts
-- surfaces typed status/warnings/errors
-- never executes trading
+Each operation can run in mock mode without backend and creates local artifacts.
+No trading execution is performed.

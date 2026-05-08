@@ -5,6 +5,7 @@ import type { ModelOption } from "@/lib/config/models";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { BackendLiveModeGuide } from "@/components/workspace/backend-live-mode-guide";
 
 export function RuntimeSettingsPanel({
   settings,
@@ -13,6 +14,7 @@ export function RuntimeSettingsPanel({
   onChange,
   onReset,
   onCheckBackend,
+  fallbackActive,
 }: {
   settings: RuntimeSettings;
   models: ModelOption[];
@@ -20,6 +22,7 @@ export function RuntimeSettingsPanel({
   onChange: (patch: Partial<RuntimeSettings>) => void;
   onReset: () => void;
   onCheckBackend: () => void;
+  fallbackActive?: boolean;
 }) {
   const providers: ModelProvider[] = ["mock", "openai", "anthropic", "local"];
 
@@ -147,6 +150,8 @@ export function RuntimeSettingsPanel({
           Test backend connection
         </Button>
       </div>
+
+      <BackendLiveModeGuide apiBaseUrl={settings.apiBaseUrl} fallbackActive={Boolean(fallbackActive)} onTestConnection={onCheckBackend} />
     </div>
   );
 }

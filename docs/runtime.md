@@ -1,45 +1,33 @@
 # Runtime
 
-v0.4 runtime focuses on a mock-first assistant workspace with optional live backend bridge.
+v0.5 runtime targets local release-candidate readiness.
 
 ## Modes
 
 - `mock` (default)
-  - deterministic synthetic responses
-  - no API key required
-  - no backend required
+  - deterministic synthetic demo
+  - no backend/API keys required
 - `api`
-  - uses bridge/direct backend transport
-  - graceful fallback to mock when enabled
+  - optional backend bridge/direct transport
+  - fallback to mock when unavailable
 
 ## Runtime settings
 
-`RuntimeSettings`:
 - mode
 - apiBaseUrl
 - apiBridgeMode (`mock | proxy | direct`)
-- selectedProvider
-- selectedModel
+- selectedProvider/model
 - fallbackToMock
-- showToolCalls
-- showTokenUsage
-- maxToolSteps (bounded 1..8)
+- tool/token visibility
+- bounded `maxToolSteps`
 
-Settings are localStorage-only and can be reset to mock defaults.
-
-## Runtime status
-
-`BackendConnectionState` and capabilities panel show:
-- backend reachable/unreachable
-- check timestamp
-- fallback active state/reason
-- available endpoint capabilities
-
-Top status remains explicit: `Mock workspace`, `API connected`, or `API fallback`.
+Settings persist in localStorage only.
 
 ## Boundaries
 
-- not a dashboard/SaaS buildout
-- no broker/trading execution
-- no server-side persistence
-- no financial advice output intent
+- not dashboard / not SaaS
+- no trading / no broker
+- no financial advice
+- backend optional
+- local-only session/artifact persistence
+- real providers env-gated

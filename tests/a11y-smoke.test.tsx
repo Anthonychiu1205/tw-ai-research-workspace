@@ -5,6 +5,7 @@ import { ResearchChat } from "@/components/chat/research-chat";
 import { ResearchOperationPanel } from "@/components/operations/research-operation-panel";
 import { ArtifactBrowser } from "@/components/workspace/artifact-browser";
 import { RuntimeSettingsPanel } from "@/components/workspace/runtime-settings-panel";
+import { BackendConnectionCard } from "@/components/workspace/backend-connection-card";
 import { CommandMenu } from "@/components/app-shell/command-menu";
 import { createArtifactStore } from "@/lib/artifacts/artifact-store";
 import { getDefaultRuntimeSettings } from "@/lib/config/runtime";
@@ -28,12 +29,15 @@ describe("a11y smoke", () => {
     const store = createArtifactStore([]);
     render(<ResearchOperationPanel artifactStore={store} />);
     expect(screen.getByTestId("research-operation-panel")).toBeInTheDocument();
+    expect(screen.getByLabelText(/Research ticker/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Report ticker/i)).toBeInTheDocument();
   });
 
   test("ArtifactBrowser renders", () => {
     const store = createArtifactStore([]);
     render(<ArtifactBrowser artifacts={store.listAll()} />);
     expect(screen.getByTestId("artifact-browser")).toBeInTheDocument();
+    expect(screen.getByLabelText(/Artifact type filter/i)).toBeInTheDocument();
   });
 
   test("RuntimeSettingsPanel renders labels", () => {
@@ -69,5 +73,14 @@ describe("a11y smoke", () => {
     );
 
     expect(screen.getByLabelText(/Command search/i)).toBeInTheDocument();
+  });
+
+  test("BackendConnectionCard status has text", () => {
+    render(
+      <BackendConnectionCard
+        state={{ mode: "mock", apiBaseUrl: "http://localhost:8000", reachable: false, fallbackActive: false }}
+      />,
+    );
+    expect(screen.getByText(/Mock workspace|API fallback|API connected/i)).toBeInTheDocument();
   });
 });

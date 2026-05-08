@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "workspace-session.v0.2",
+  "id": "session_mock_demo",
+  "title": "Mock Demo Session",
+  "runtimeMode": "mock",
+  "modelId": "mock-research",
+  "provider": "mock",
+  "messages": [
+    {
+      "id": "m1",
+      "role": "assistant",
+      "content": "Synthetic demo session ready. Not financial advice.",
+      "createdAt": "2026-05-08T00:00:00.000Z"
+    }
+  ],
+  "artifacts": [],
+  "updatedAt": "2026-05-08T00:00:00.000Z"
+}

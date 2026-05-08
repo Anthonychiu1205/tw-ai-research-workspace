@@ -1,6 +1,7 @@
 import type { ArtifactKind, WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
 import { getDemoArtifacts } from "@/lib/artifacts/demo-artifacts";
 import { readArtifactsFromLocalStorage, writeArtifactsToLocalStorage } from "@/lib/sessions/local-storage";
+import { workspaceArtifactSchema } from "@/lib/schemas/workspace";
 import { createId } from "@/lib/utils/ids";
 import { nowIso } from "@/lib/utils/dates";
 
@@ -190,6 +191,11 @@ export function createArtifactStore(seed: WorkspaceArtifactRecord[] = []): Artif
           }
 
           const normalized = normalizeArtifact({ ...candidate, id: candidate.id, title: candidate.title });
+          const schemaResult = workspaceArtifactSchema.safeParse(normalized);
+          if (!schemaResult.success) {
+            skipped += 1;
+            continue;
+          }
           const existingIndex = artifacts.findIndex((artifact) => artifact.id === normalized.id);
           if (existingIndex >= 0) {
             artifacts[existingIndex] = normalized;

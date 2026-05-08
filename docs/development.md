@@ -1,6 +1,6 @@
 # Development
 
-## Local workflow
+## Core flow
 
 1. `npm install`
 2. `npm run dev`
@@ -10,25 +10,21 @@
    - `npm run build`
    - `node scripts/check-env.mjs`
    - `node scripts/smoke-test.mjs`
-   - `node scripts/export-workspace-schema.mjs`
+   - `node scripts/check-pages.mjs`
    - `node scripts/check-backend-contract.mjs`
-   - `node scripts/sync-demo-artifacts.mjs`
    - `node scripts/generate-workspace-demo-bundle.mjs`
+   - `node scripts/generate-share-bundle.mjs`
+   - `node scripts/workspace-final-audit.mjs`
 
-## Fixture sync
+## Lint
 
-- dry-run (default): `node scripts/sync-demo-artifacts.mjs`
-- copy missing files only: `node scripts/sync-demo-artifacts.mjs --force`
-
-Optional source: `../tw-ai-investment-research/artifacts/demo`
-
-## Lint note
-
-`npm run lint` is intentionally a typecheck fallback in this environment.
+`npm run lint` remains typecheck fallback in this environment.
 Typecheck/test/build are the authoritative gates.
 
-## Safety boundaries
+## Boundaries
 
-- not a dashboard/SaaS buildout
-- no broker/trading execution
-- no financial advice intent
+- not dashboard/SaaS
+- no financial advice
+- no trading or broker integration
+- local-only persistence
+- real providers env-gated

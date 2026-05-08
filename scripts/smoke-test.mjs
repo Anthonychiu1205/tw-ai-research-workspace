@@ -30,5 +30,6 @@ execSync(
   { stdio: "inherit" },
 );
 execSync("node scripts/generate-workspace-demo-bundle.mjs", { stdio: "inherit" });
+execSync("node scripts/check-pages.mjs", { stdio: "inherit" });
 
 console.log("smoke-test: OK");

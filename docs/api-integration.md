@@ -1,38 +1,27 @@
 # API Integration
 
-v0.4 adds a Next.js API bridge for `tw-ai-investment-research` while keeping mock-first fallback behavior.
+v0.5 keeps API optional and mock-first.
 
-## Bridge routes
+## Transport modes
 
-`/api/backend/*` routes:
-- `GET /api/backend/health`
-- `POST /api/backend/research`
-- `POST /api/backend/reports`
-- `POST /api/backend/pipelines`
-- `POST /api/backend/backtests`
-- `POST /api/backend/strategies`
-- `POST /api/backend/signals`
-- `GET /api/backend/system`
-- `GET /api/backend/conformance`
+- `mock`: local fixtures
+- `proxy`: Next.js bridge routes (`/api/backend/*`)
+- `direct`: calls backend base URL directly
 
-## Client behavior
+## Health and fallback
 
-`lib/api/client.ts` supports:
-- `mock` transport
-- `proxy` transport (default when mode=`api`)
-- `direct` transport
+- backend health via bridge route
+- non-2xx/timeout/invalid-json -> typed safe errors
+- API mode can fallback to mock with metadata:
+  - `source`
+  - `fallbackUsed`
+  - `fallbackReason`
 
-All paths normalize timeout/non-2xx/invalid JSON into typed frontend-safe errors.
+## Troubleshooting
 
-## Metadata contract
+- verify `TW_AI_RESEARCH_API_BASE_URL`
+- prefer `NEXT_PUBLIC_API_BRIDGE_MODE=proxy`
+- use runtime panel test button
+- if unavailable, keep mock mode for demos
 
-Frontend-safe metadata includes:
-- `source`: `mock | api | mock_fallback`
-- `provider`
-- `synthetic`
-- `fallbackUsed`
-- `fallbackReason`
-- `notFinancialAdvice: true`
-- `noTradingExecution: true`
-
-Components consume adapter outputs instead of raw backend payloads.
+No backend required by default. No trading/broker execution paths.

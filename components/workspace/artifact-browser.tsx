@@ -37,6 +37,7 @@ export function ArtifactBrowser({
       <div className="flex items-center justify-between">
         <div className="text-xs uppercase text-muted-foreground">Artifacts</div>
         <select
+          aria-label="Artifact type filter"
           className="h-8 rounded border bg-background px-2 text-xs"
           value={filterKind}
           onChange={(event) => setFilterKind(event.target.value as ArtifactKind | "all")}

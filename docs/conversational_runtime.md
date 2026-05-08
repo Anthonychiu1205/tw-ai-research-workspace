@@ -1,26 +1,20 @@
 # Conversational Runtime
 
-v0.4 introduces a local assistant-style chat hook with deterministic JSONL streaming.
+v0.5 keeps assistant-style local runtime with deterministic mock behavior.
 
-## Core hook
+## Prompt mapping
 
-`useResearchChat` returns:
-- messages/input state
-- send/stop/retry/clear actions
-- active tool calls
-- token usage
-- last error
+- analyze + 2330 -> runResearch
+- report -> generateReport
+- strategy -> compareStrategies
+- pipeline/trace -> runPipeline
+- signal -> evaluateSignals
 
-## Prompt-to-tool mapping (mock runtime)
+## RC hardening
 
-- `analyze` + `2330` -> `runResearch`
-- `report` -> `generateReport`
-- `strategy` -> `compareStrategies`
-- `pipeline` or `trace` -> `runPipeline`
-- `signal` -> `evaluateSignals`
+- operation-to-chat linkage
+- tool-to-artifact linkage
+- retry/clear/error states
+- fallback-safe API mode
 
-## Boundaries
-
-- no live web browsing
-- no trading execution path
-- no financial advice intent
+No live web browsing. No autonomous trading behaviors.

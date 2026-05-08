@@ -1,0 +1,15 @@
+{
+  "checkedAt": "2026-05-08T02:45:51.277Z",
+  "requiredRouteFiles": [
+    "app/page.tsx",
+    "app/workspace/page.tsx",
+    "app/reports/page.tsx",
+    "app/strategies/page.tsx",
+    "app/traces/page.tsx",
+    "app/api/chat/route.ts",
+    "app/api/health/route.ts",
+    "app/api/backend/health/route.ts"
+  ],
+  "missing": [],
+  "buildManifestPresent": true
+}

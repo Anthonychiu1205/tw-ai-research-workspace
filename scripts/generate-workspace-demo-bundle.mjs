@@ -17,6 +17,7 @@ const plannerTrace = readJson("fixtures/demo/planner-trace-2330.json");
 const strategyComparison = readJson("fixtures/demo/strategy-comparison.json");
 
 const bundle = {
+  schemaVersion: "workspace-demo-bundle.v0.5",
   metadata: {
     provider: "mock",
     dataType: "synthetic_mock",
@@ -43,6 +44,14 @@ const bundle = {
   reportSections,
   plannerTrace,
   strategyComparison,
+  scenariosCompleted: [
+    "analyze_2330",
+    "generate_2330_report",
+    "compare_ai_server_watchlist",
+    "inspect_planner_trace",
+    "evaluate_phase2_signals",
+    "explore_strategy_presets",
+  ],
 };
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });

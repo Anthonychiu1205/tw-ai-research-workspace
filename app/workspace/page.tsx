@@ -15,6 +15,11 @@ import { BackendConnectionCard } from "@/components/workspace/backend-connection
 import { RuntimeSettingsPanel } from "@/components/workspace/runtime-settings-panel";
 import { WorkspaceExportActions } from "@/components/workspace/workspace-export-actions";
 import { BackendCapabilitiesPanel } from "@/components/workspace/backend-capabilities-panel";
+import { ScenarioLauncher } from "@/components/scenarios/scenario-launcher";
+import { WelcomePanel } from "@/components/onboarding/welcome-panel";
+import { DemoJourney } from "@/components/onboarding/demo-journey";
+import { QuickstartChecklist } from "@/components/onboarding/quickstart-checklist";
+import { WorkspaceModeExplainer } from "@/components/onboarding/workspace-mode-explainer";
 import { createSessionStore } from "@/lib/sessions/session-store";
 import { createArtifactStore } from "@/lib/artifacts/artifact-store";
 import { getModelOptions, getProviderUnavailableReason } from "@/lib/config/models";
@@ -102,6 +107,7 @@ export default function WorkspacePage() {
     defaultCapabilitiesReport(runtimeSettings.apiBaseUrl),
   );
   const [systemEvents, setSystemEvents] = useState<Array<{ id: string; content: string }>>([]);
+  const [scenariosCompleted, setScenariosCompleted] = useState<string[]>([]);
 
   const refreshSessions = () => setSessions(sessionStore.list());
   const refreshArtifacts = () => setArtifacts(artifactStore.listAll());
@@ -203,6 +209,8 @@ export default function WorkspacePage() {
     return result;
   };
 
+  const showOnboarding = artifacts.length === 0;
+
   return (
     <AppShell
       sessions={sessions.map((session) => ({ id: session.id, title: session.title }))}
@@ -261,6 +269,29 @@ export default function WorkspacePage() {
         </aside>
 
         <section className="col-span-6 min-h-0 space-y-3 overflow-auto">
+          {showOnboarding ? (
+            <div className="space-y-3" data-testid="workspace-onboarding">
+              <WelcomePanel
+                onStart2330={async () => {
+                  await runOperationAndTrack(createDefaultOperationRequest("run_research"));
+                }}
+                onCompareWatchlist={async () => {
+                  await runOperationAndTrack(createDefaultOperationRequest("compare_strategies"));
+                }}
+                onOpenTrace={async () => {
+                  setActiveView("trace");
+                  await runOperationAndTrack(createDefaultOperationRequest("run_pipeline"));
+                }}
+                onConnectBackend={() => {
+                  applySettings({ mode: "api", apiBridgeMode: "proxy" });
+                }}
+              />
+              <DemoJourney />
+              <QuickstartChecklist />
+              <WorkspaceModeExplainer />
+            </div>
+          ) : null}
+
           <ResearchChat
             runtimeSettings={runtimeSettings}
             connectionState={connectionState}
@@ -293,6 +324,19 @@ export default function WorkspacePage() {
             }}
           />
 
+          <ScenarioLauncher
+            artifactStore={artifactStore}
+            onScenarioMessage={(content) => emitSystemEvent(content)}
+            onArtifactCreated={(artifactId) => {
+              setSelectedArtifactId(artifactId);
+              refreshArtifacts();
+            }}
+            onScenarioCompleted={(scenarioId) => {
+              setScenariosCompleted((prev) => (prev.includes(scenarioId) ? prev : [...prev, scenarioId]));
+              emitSystemEvent(`Completed scenario ${scenarioId}. Synthetic workflow only, not financial advice.`);
+            }}
+          />
+
           <ResearchOperationPanel
             artifactStore={artifactStore}
             onOperationCompleted={(result) => {
@@ -315,6 +359,7 @@ export default function WorkspacePage() {
             settings={runtimeSettings}
             models={modelOptions}
             providerUnavailableReason={getProviderUnavailableReason(runtimeSettings.selectedProvider)}
+            fallbackActive={connectionState.fallbackActive}
             onChange={applySettings}
             onReset={() => {
               const defaults = resetRuntimeSettings();
@@ -329,12 +374,14 @@ export default function WorkspacePage() {
             sessions={sessions}
             artifacts={artifacts}
             runtimeSettings={runtimeSettings}
-            onImport={({ sessions: importedSessions, artifacts: importedArtifacts, runtimeSettings: importedSettings }) => {
+            scenariosCompleted={scenariosCompleted}
+            onImport={({ sessions: importedSessions, artifacts: importedArtifacts, runtimeSettings: importedSettings, scenariosCompleted: importedScenarios }) => {
               sessionStore.clear();
               importedSessions.forEach((session) => sessionStore.upsert(session));
               artifactStore.clear();
               artifactStore.importJson(JSON.stringify(importedArtifacts));
               setRuntimeSettings(importedSettings);
+              setScenariosCompleted(Array.isArray(importedScenarios) ? importedScenarios : []);
               refreshSessions();
               refreshArtifacts();
             }}
@@ -345,6 +392,7 @@ export default function WorkspacePage() {
               refreshArtifacts();
               setSelectedSessionId(null);
               setSelectedArtifactId(null);
+              setScenariosCompleted([]);
               const defaults = resetRuntimeSettings();
               setRuntimeSettings(defaults);
             }}

@@ -1,0 +1,62 @@
+{
+  "checkedAt": "2026-05-08T02:45:51.339Z",
+  "passed": true,
+  "docs": [
+    {
+      "file": "docs/runtime.md",
+      "exists": true
+    },
+    {
+      "file": "docs/api-integration.md",
+      "exists": true
+    },
+    {
+      "file": "docs/workspace-ux.md",
+      "exists": true
+    },
+    {
+      "file": "docs/scenarios.md",
+      "exists": true
+    },
+    {
+      "file": "docs/share_bundle.md",
+      "exists": true
+    },
+    {
+      "file": "docs/backend_live_mode.md",
+      "exists": true
+    },
+    {
+      "file": "docs/workspace_final_audit.md",
+      "exists": true
+    }
+  ],
+  "scripts": [
+    {
+      "file": "scripts/check-env.mjs",
+      "exists": true
+    },
+    {
+      "file": "scripts/smoke-test.mjs",
+      "exists": true
+    },
+    {
+      "file": "scripts/check-pages.mjs",
+      "exists": true
+    },
+    {
+      "file": "scripts/workspace-final-audit.mjs",
+      "exists": true
+    },
+    {
+      "file": "scripts/generate-share-bundle.mjs",
+      "exists": true
+    }
+  ],
+  "missingPackageScripts": [],
+  "forbiddenHits": [],
+  "envMockDefault": true,
+  "sessionSchemaVersionPresent": true,
+  "noTradingTools": true,
+  "shareBundleExists": true
+}

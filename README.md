@@ -32,6 +32,15 @@ All bundled demo data is synthetic mock data and non-advice.
 - no vector DB / full RAG
 - no production deployment stack
 
+## v0.5 Highlights
+
+- guided scenario workflows for demo-ready research journeys
+- onboarding panels (welcome, quickstart checklist, demo journey)
+- workspace share bundle export/import with checksum validation
+- route/page QA scripts (`check-pages`) and final RC audit (`workspace-final-audit`)
+- backend live-mode dry-run guide in runtime UI
+- stronger local workspace state validation and expanded QA tests
+
 ## v0.4 Highlights
 
 - live API bridge/proxy routes under `/api/backend/*` for optional `tw-ai-investment-research` integration
@@ -100,6 +109,9 @@ node scripts/export-workspace-schema.mjs
 node scripts/check-backend-contract.mjs
 node scripts/sync-demo-artifacts.mjs
 node scripts/generate-workspace-demo-bundle.mjs
+node scripts/generate-share-bundle.mjs
+node scripts/check-pages.mjs
+node scripts/workspace-final-audit.mjs
 ```
 
 ## Lint status
@@ -157,6 +169,7 @@ Final responses include non-advice disclaimer metadata.
 - artifact CRUD/pin/filter + import/export
 - runtime settings persistence
 - workspace backup import/export
+- workspace share bundle import/export (`workspace-share-bundle.v0.5`)
 
 ## Limitations
 

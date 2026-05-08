@@ -19,6 +19,10 @@ const schemaSummary = {
       "WorkspaceRuntimeConfig",
       "WorkspaceRuntimeStatus",
       "WorkspaceContextState"
+    ],
+    bundles: [
+      "WorkspaceBackup(workspace-backup.v0.3)",
+      "WorkspaceShareBundle(workspace-share-bundle.v0.5)"
     ]
   }
 };
