@@ -163,6 +163,17 @@ node scripts/prepare-github-publish.mjs
 If backend is unreachable, workspace falls back to synthetic mock output with explicit fallback metadata.
 No server-side persistence is used; sessions and artifacts remain local-only.
 
+## Live backend integration
+
+For cross-repo local integration checks (workspace + backend), use:
+
+```bash
+TW_AI_RESEARCH_API_BASE_URL=http://127.0.0.1:8000 node scripts/check-live-backend-integration.mjs --strict
+TW_AI_RESEARCH_API_BASE_URL=http://127.0.0.1:8000 node scripts/check-workspace-api-mode.mjs --strict
+```
+
+Full walkthrough: [docs/live_backend_integration.md](/Volumes/DEV_USB/Projects/tw-ai-research-workspace/docs/live_backend_integration.md)
+
 ## Workspace UX
 
 - `/workspace`: chat-first runtime + operations + artifact workbench

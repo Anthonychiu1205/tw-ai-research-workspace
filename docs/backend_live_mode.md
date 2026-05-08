@@ -12,6 +12,11 @@ This workspace remains mock-first and backend-optional.
 3. Start workspace with `npm run dev`.
 4. In Runtime Settings, click **Test backend connection**.
 
+For script-based validation from this repo:
+
+- `TW_AI_RESEARCH_API_BASE_URL=http://127.0.0.1:8000 node scripts/check-live-backend-integration.mjs --strict`
+- `TW_AI_RESEARCH_API_BASE_URL=http://127.0.0.1:8000 node scripts/check-workspace-api-mode.mjs --strict`
+
 ## Fallback behavior
 
 If backend is unreachable, workspace falls back to synthetic mock output and displays fallback state.

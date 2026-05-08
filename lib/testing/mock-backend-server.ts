@@ -82,6 +82,13 @@ export async function startMockBackendServer(options: StartMockBackendServerOpti
       return;
     }
 
+    if (method === "POST" && path === "/v1/portfolio/review") {
+      await readJsonBody(req);
+      hit(200);
+      sendJson(res, 200, mockBackendResponses.portfolioReview);
+      return;
+    }
+
     if (method === "POST" && path === "/v1/strategies/compare") {
       await readJsonBody(req);
       hit(200);

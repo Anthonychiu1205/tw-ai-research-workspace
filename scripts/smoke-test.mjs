@@ -38,5 +38,7 @@ execSync("node scripts/generate-workspace-demo-bundle.mjs", { stdio: "inherit" }
 execSync("node scripts/generate-share-bundle.mjs", { stdio: "inherit" });
 execSync("node scripts/check-pages.mjs", { stdio: "inherit" });
 execSync("node scripts/export-routes.mjs", { stdio: "inherit" });
+execSync("node scripts/check-live-backend-integration.mjs", { stdio: "inherit" });
+execSync("node scripts/check-workspace-api-mode.mjs", { stdio: "inherit" });
 
 console.log("smoke-test: OK");

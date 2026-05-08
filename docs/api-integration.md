@@ -30,4 +30,12 @@ v0.5 keeps API optional and mock-first.
 - use runtime panel test button
 - if unavailable, keep mock mode for demos
 
+## Live integration checks
+
+- `node scripts/check-live-backend-integration.mjs`
+- `node scripts/check-workspace-api-mode.mjs`
+
+Both scripts are non-strict by default and pass when backend is unavailable.
+Use `--strict` for demo gating when backend is expected to be running.
+
 No backend required by default. No trading/broker execution paths.

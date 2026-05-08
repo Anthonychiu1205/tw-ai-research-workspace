@@ -1,15 +1,18 @@
 "use client";
 
 import type { BackendConnectionState } from "@/lib/schemas/workspace";
+import type { LiveIntegrationSnapshot } from "@/lib/utils/live-integration-cache";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function BackendConnectionCard({
   state,
+  lastLiveIntegration,
   onRefresh,
 }: {
   state: BackendConnectionState;
+  lastLiveIntegration?: LiveIntegrationSnapshot | null;
   onRefresh?: () => void;
 }) {
   const { t } = useI18n();
@@ -31,6 +34,16 @@ export function BackendConnectionCard({
       {state.error ? <div className="rounded border border-yellow-500/30 bg-yellow-500/10 p-2 text-xs">{state.error}</div> : null}
       {state.fallbackReason ? (
         <div className="rounded border border-yellow-500/30 bg-yellow-500/10 p-2 text-xs">{t("runtime.fallback")}: {state.fallbackReason}</div>
+      ) : null}
+      {lastLiveIntegration ? (
+        <div className="rounded border p-2 text-xs" data-testid="last-live-integration">
+          <div className="font-medium">Last live integration check</div>
+          <div>base URL: {lastLiveIntegration.baseUrl}</div>
+          <div>reachable: {lastLiveIntegration.reachable ? "yes" : "no"}</div>
+          <div>checked: {new Date(lastLiveIntegration.checkedAt).toLocaleString()}</div>
+          {lastLiveIntegration.fallbackActive ? <div>fallback active</div> : null}
+          {lastLiveIntegration.fallbackReason ? <div>reason: {lastLiveIntegration.fallbackReason}</div> : null}
+        </div>
       ) : null}
       {onRefresh ? (
         <Button type="button" size="sm" variant="outline" onClick={onRefresh}>

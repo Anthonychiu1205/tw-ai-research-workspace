@@ -37,6 +37,11 @@ import { discoverBackendCapabilities, type BackendCapabilitiesReport } from "@/l
 import { useWorkspaceShortcuts } from "@/lib/keyboard/shortcuts";
 import { parseWorkspaceUrlState, serializeWorkspaceUrlState, type WorkspaceView } from "@/lib/utils/url-state";
 import { createId } from "@/lib/utils/ids";
+import {
+  readLiveIntegrationSnapshot,
+  writeLiveIntegrationSnapshot,
+  type LiveIntegrationSnapshot,
+} from "@/lib/utils/live-integration-cache";
 import type { BackendConnectionState, WorkspaceSession } from "@/lib/schemas/workspace";
 import type { WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
 import { useI18n } from "@/lib/i18n/use-i18n";
@@ -110,6 +115,7 @@ export default function WorkspacePage() {
   const [capabilitiesReport, setCapabilitiesReport] = useState<BackendCapabilitiesReport>(
     defaultCapabilitiesReport(runtimeSettings.apiBaseUrl),
   );
+  const [lastLiveIntegration, setLastLiveIntegration] = useState<LiveIntegrationSnapshot | null>(null);
   const [systemEvents, setSystemEvents] = useState<Array<{ id: string; content: string }>>([]);
   const [scenariosCompleted, setScenariosCompleted] = useState<string[]>([]);
 
@@ -118,6 +124,10 @@ export default function WorkspacePage() {
 
   const selectedArtifact = artifacts.find((artifact) => artifact.id === selectedArtifactId);
   const modelOptions = getModelOptions();
+
+  useEffect(() => {
+    setLastLiveIntegration(readLiveIntegrationSnapshot());
+  }, []);
 
   useEffect(() => {
     const urlState = parseWorkspaceUrlState(window.location.search);
@@ -147,6 +157,16 @@ export default function WorkspacePage() {
   const checkConnection = async () => {
     const next = await buildBackendConnectionState(runtimeSettings);
     setConnectionState(next);
+    const snapshot: LiveIntegrationSnapshot = {
+      checkedAt: next.checkedAt ?? new Date().toISOString(),
+      baseUrl: next.apiBaseUrl,
+      reachable: next.reachable,
+      fallbackActive: next.fallbackActive,
+      fallbackReason: next.fallbackReason,
+      source: "connection_check",
+    };
+    writeLiveIntegrationSnapshot(snapshot);
+    setLastLiveIntegration(snapshot);
   };
 
   useEffect(() => {
@@ -155,6 +175,16 @@ export default function WorkspacePage() {
       const next = await buildBackendConnectionState(runtimeSettings);
       if (!cancelled) {
         setConnectionState(next);
+        const snapshot: LiveIntegrationSnapshot = {
+          checkedAt: next.checkedAt ?? new Date().toISOString(),
+          baseUrl: next.apiBaseUrl,
+          reachable: next.reachable,
+          fallbackActive: next.fallbackActive,
+          fallbackReason: next.fallbackReason,
+          source: "connection_check",
+        };
+        writeLiveIntegrationSnapshot(snapshot);
+        setLastLiveIntegration(snapshot);
       }
     })();
 
@@ -358,7 +388,11 @@ export default function WorkspacePage() {
         </section>
 
         <aside className="col-span-3 min-h-0 space-y-3 overflow-auto">
-          <BackendConnectionCard state={connectionState} onRefresh={() => void checkConnection()} />
+          <BackendConnectionCard
+            state={connectionState}
+            lastLiveIntegration={lastLiveIntegration}
+            onRefresh={() => void checkConnection()}
+          />
 
           <RuntimeSettingsPanel
             settings={runtimeSettings}

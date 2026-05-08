@@ -2,6 +2,8 @@ import researchRunFixture from "@/fixtures/mock-api/research-run.json";
 import reportFixture from "@/fixtures/mock-api/report.json";
 import pipelineFixture from "@/fixtures/mock-api/pipeline-result.json";
 import signalEvaluationFixture from "@/fixtures/mock-api/signal-evaluation.json";
+import portfolioReviewFixture from "@/fixtures/mock-api/portfolio-review.json";
+import backtestV2Fixture from "@/fixtures/mock-api/backtest-v2.json";
 import strategyFixture from "@/fixtures/demo/strategy-comparison.json";
 import type { HarnessMockMeta } from "@/lib/testing/backend-harness-types";
 
@@ -31,11 +33,8 @@ export const mockBackendResponses = {
   researchRun: withHarnessMeta(researchRunFixture as Record<string, unknown>),
   report: withHarnessMeta(reportFixture as Record<string, unknown>),
   pipeline: withHarnessMeta(pipelineFixture as Record<string, unknown>),
-  backtest: {
-    metadata: harnessMeta,
-    status: "mock_backtest_preview",
-    summary: "Synthetic backtest preview from harness",
-  },
+  portfolioReview: withHarnessMeta(portfolioReviewFixture as Record<string, unknown>),
+  backtest: withHarnessMeta(backtestV2Fixture as Record<string, unknown>),
   strategies: withHarnessMeta(strategyFixture as Record<string, unknown>),
   signals: withHarnessMeta(signalEvaluationFixture as Record<string, unknown>),
   systemStorage: {

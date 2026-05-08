@@ -17,6 +17,7 @@ const requiredDocs = [
   "docs/portfolio_workspace.md",
   "docs/backtesting_v2_workspace.md",
   "docs/multi_model_runtime.md",
+  "docs/live_backend_integration.md",
 ];
 
 const requiredScripts = [
@@ -25,6 +26,8 @@ const requiredScripts = [
   "scripts/check-pages.mjs",
   "scripts/workspace-final-audit.mjs",
   "scripts/generate-share-bundle.mjs",
+  "scripts/check-live-backend-integration.mjs",
+  "scripts/check-workspace-api-mode.mjs",
 ];
 
 const requiredPackageScripts = ["dev", "build", "start", "test:run", "typecheck", "smoke", "lint"];
@@ -109,6 +112,10 @@ const packageScripts = readPackageScripts();
 const missingPackageScripts = requiredPackageScripts.filter((name) => !packageScripts[name]);
 const forbiddenHits = scanForbidden();
 const shareBundleExists = fs.existsSync(path.resolve(root, "artifacts/workspace-share-bundle.json"));
+const readmeHasLiveIntegration = fs
+  .readFileSync(path.resolve(root, "README.md"), "utf-8")
+  .toLowerCase()
+  .includes("live backend integration");
 
 const passed =
   docs.every((item) => item.exists) &&
@@ -118,7 +125,8 @@ const passed =
   ensureEnvMockDefault() &&
   ensureSessionSchemaVersion() &&
   ensureNoTradingTools() &&
-  shareBundleExists;
+  shareBundleExists &&
+  readmeHasLiveIntegration;
 
 const report = {
   checkedAt: new Date().toISOString(),
@@ -131,6 +139,7 @@ const report = {
   sessionSchemaVersionPresent: ensureSessionSchemaVersion(),
   noTradingTools: ensureNoTradingTools(),
   shareBundleExists,
+  readmeHasLiveIntegration,
 };
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true });
