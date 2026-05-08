@@ -7,6 +7,7 @@ import timelineFixture from "@/fixtures/demo/evidence-timeline-2330.json";
 import signalMatrixFixture from "@/fixtures/demo/signal-matrix-watchlist.json";
 import { getEnvConfig } from "@/lib/config/env";
 import { normalizeRuntimeConfig } from "@/lib/config/runtime";
+import type { WorkspaceRuntimeConfig } from "@/lib/schemas/workspace";
 import { toWorkspaceApiError, WorkspaceApiError } from "@/lib/api/errors";
 
 export type FrontendSafeMeta = {
@@ -43,7 +44,7 @@ type SafeResult<T> =
 
 type ClientOptions = {
   timeoutMs?: number;
-  runtimeOverrides?: Partial<ReturnType<typeof normalizeRuntimeConfig>>;
+  runtimeOverrides?: Partial<WorkspaceRuntimeConfig>;
 };
 
 function nowIso() {
@@ -62,13 +63,12 @@ function createMeta(input: Partial<FrontendSafeMeta> = {}): FrontendSafeMeta {
   };
 }
 
-async function fetchJson<T>(path: string, init?: RequestInit, timeoutMs = 5000): Promise<T> {
-  const env = getEnvConfig();
+async function fetchJson<T>(baseUrl: string, path: string, init?: RequestInit, timeoutMs = 5000): Promise<T> {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
   try {
-    const res = await fetch(`${env.apiBaseUrl}${path}`, {
+    const res = await fetch(`${baseUrl}${path}`, {
       ...init,
       signal: controller.signal,
       headers: {
@@ -89,6 +89,8 @@ async function fetchJson<T>(path: string, init?: RequestInit, timeoutMs = 5000):
     } catch {
       throw new WorkspaceApiError(`API ${path} returned invalid JSON`, "INVALID_RESPONSE");
     }
+  } catch (error) {
+    throw toWorkspaceApiError(error);
   } finally {
     clearTimeout(timeout);
   }
@@ -108,7 +110,7 @@ function getRuntimeOptions(options?: ClientOptions) {
 }
 
 async function withFallback<T>(
-  apiCall: (timeoutMs: number) => Promise<T>,
+  apiCall: (runtime: WorkspaceRuntimeConfig, timeoutMs: number) => Promise<T>,
   fallbackData: T,
   options?: ClientOptions,
 ): Promise<SafeResult<T>> {
@@ -123,7 +125,7 @@ async function withFallback<T>(
   }
 
   try {
-    const data = await apiCall(timeoutMs);
+    const data = await apiCall(runtime, timeoutMs);
     return {
       ok: true,
       data,
@@ -167,7 +169,7 @@ export async function checkBackendHealth(options?: ClientOptions): Promise<Backe
   }
 
   try {
-    const data = await fetchJson<{ status?: string; appTitle?: string }>("/health", undefined, timeoutMs);
+    const data = await fetchJson<{ status?: string; appTitle?: string }>(runtime.apiBaseUrl, "/health", undefined, timeoutMs);
     return {
       reachable: true,
       status: data.status ?? "ok",
@@ -188,7 +190,8 @@ export async function checkBackendHealth(options?: ClientOptions): Promise<Backe
 
 export async function getHealth(options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) => fetchJson<{ status: string; provider: string }>("/health", undefined, timeoutMs),
+    async (runtime, timeoutMs) =>
+      fetchJson<{ status: string; provider: string }>(runtime.apiBaseUrl, "/health", undefined, timeoutMs),
     { status: "mock-ok", provider: "mock" },
     options,
   );
@@ -196,21 +199,25 @@ export async function getHealth(options?: ClientOptions) {
 
 export async function runResearch(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) =>
-      fetchJson("/research/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, timeoutMs) =>
+      fetchJson(runtime.apiBaseUrl, "/research/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
     researchRunFixture,
     options,
   );
 }
 
 export async function getResearchRun(runId: string, options?: ClientOptions) {
-  return withFallback(async (timeoutMs) => fetchJson(`/research/run/${runId}`, undefined, timeoutMs), researchRunFixture, options);
+  return withFallback(
+    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, `/research/run/${runId}`, undefined, timeoutMs),
+    researchRunFixture,
+    options,
+  );
 }
 
 export async function generateReport(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) =>
-      fetchJson("/reports/generate", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, timeoutMs) =>
+      fetchJson(runtime.apiBaseUrl, "/reports/generate", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
     reportFixture,
     options,
   );
@@ -218,7 +225,8 @@ export async function generateReport(request: Record<string, unknown>, options?:
 
 export async function runPipeline(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) => fetchJson("/pipeline/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, timeoutMs) =>
+      fetchJson(runtime.apiBaseUrl, "/pipeline/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
     pipelineFixture,
     options,
   );
@@ -226,7 +234,7 @@ export async function runPipeline(request: Record<string, unknown>, options?: Cl
 
 export async function getPipeline(pipelineId: string, options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) => fetchJson(`/pipeline/${pipelineId}`, undefined, timeoutMs),
+    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, `/pipeline/${pipelineId}`, undefined, timeoutMs),
     {
       ...pipelineFixture,
       pipelineId,
@@ -237,7 +245,8 @@ export async function getPipeline(pipelineId: string, options?: ClientOptions) {
 
 export async function runBacktest(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) => fetchJson("/backtesting/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, timeoutMs) =>
+      fetchJson(runtime.apiBaseUrl, "/backtesting/run", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
     {
       metadata: researchRunFixture.metadata,
       status: "mock-disabled",
@@ -249,8 +258,8 @@ export async function runBacktest(request: Record<string, unknown>, options?: Cl
 
 export async function compareStrategies(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) =>
-      fetchJson("/strategies/compare", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, timeoutMs) =>
+      fetchJson(runtime.apiBaseUrl, "/strategies/compare", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
     strategyComparisonFixture,
     options,
   );
@@ -258,8 +267,8 @@ export async function compareStrategies(request: Record<string, unknown>, option
 
 export async function evaluateSignals(request: Record<string, unknown>, options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) =>
-      fetchJson("/signals/evaluate", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
+    async (runtime, timeoutMs) =>
+      fetchJson(runtime.apiBaseUrl, "/signals/evaluate", { method: "POST", body: JSON.stringify(request) }, timeoutMs),
     signalEvalFixture,
     options,
   );
@@ -267,7 +276,7 @@ export async function evaluateSignals(request: Record<string, unknown>, options?
 
 export async function getProviderConformance(options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) => fetchJson("/providers/conformance", undefined, timeoutMs),
+    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, "/providers/conformance", undefined, timeoutMs),
     {
       metadata: researchRunFixture.metadata,
       providers: [
@@ -282,7 +291,7 @@ export async function getProviderConformance(options?: ClientOptions) {
 
 export async function getSystemStatus(options?: ClientOptions) {
   return withFallback(
-    async (timeoutMs) => fetchJson("/system/status", undefined, timeoutMs),
+    async (runtime, timeoutMs) => fetchJson(runtime.apiBaseUrl, "/system/status", undefined, timeoutMs),
     {
       metadata: researchRunFixture.metadata,
       backend: "optional",

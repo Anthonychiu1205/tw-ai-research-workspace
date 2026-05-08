@@ -4,48 +4,65 @@ AI-native Taiwan financial research workspace UI layer.
 
 ## What is this?
 
-This is the workspace layer for AI-native Taiwan financial research workflows.
-It is not a dashboard, not a backend, and not a trading system.
+`tw-ai-research-workspace` is a local-first workspace layer for conversational Taiwan research workflows.
 
-This repo is a local-first, mock-first workspace that combines:
-- financial-agent-ui style workspace orchestration
-- Dexter-inspired planning/trace UX
-- Vercel AI SDK inspired streaming/tool architecture
-- assistant-ui-inspired chat/workspace interaction patterns
-- `tw-ai-investment-research` API consumption (optional backend)
+It is intentionally **not**:
+- a dashboard/SaaS analytics product
+- a backend research engine
+- a broker/trading execution system
+
+All bundled demo data is synthetic mock data and non-advice.
 
 ## Relationship to existing repos
 
-- `tw-feature-engine`: Taiwan market data platform (data/source layer)
-- `tw-ai-investment-research`: AI research backend engine (planner/executor/reflection/reports/backtesting/APIs)
-- `tw-ai-research-workspace` (this repo): frontend workspace layer consuming APIs and mock artifacts
+- `tw-feature-engine`
+  - Taiwan market data platform (data/source layer)
+- `tw-ai-investment-research`
+  - AI research backend engine (planner/executor/reflection/reports/backtesting/APIs)
+- `tw-ai-research-workspace` (this repo)
+  - frontend workspace layer that consumes optional backend APIs and local mock artifacts
 
 ## Scope boundaries
 
-- Not a SaaS dashboard
-- Not a backend system
-- Not broker integration
-- Not trading execution
-- Not financial advice
+- not financial advice
+- no buy/sell recommendation engine
+- no broker integration
+- no trading execution
+- no auth or billing
+- no vector DB / full RAG
+- no production deployment stack
 
-All demo artifacts are synthetic mock data.
+## v0.3 Highlights
 
-## v0.2 Highlights
+- interactive research operations panel (run research/report/pipeline/backtest-preview/strategy compare/signal evaluate)
+- artifact workbench (browser, metadata, lineage, JSON, pin/unpin, export/import)
+- backend live mode controls (mock/api switching, health checks, fallback visibility)
+- runtime settings persistence in localStorage
+- command palette quick actions
+- evidence/report interaction (click evidence IDs from report to timeline)
+- planner trace interaction tabs (plan/execution/reflection)
+- workspace backup export/import
 
-- conversational runtime hardening
-- streaming lifecycle events (`message_delta`, `tool_call_*`, `token_usage`, `final`)
-- visible tool rendering lifecycle
-- API mode fallback and typed error hardening
-- session/artifact persistence improvements
-- backend contract check script for local fixtures
+## Runtime model
 
-## Mock-first runtime
-
-Default mode requires no API keys and no backend process.
+Default behavior is **mock-first**:
 
 - `NEXT_PUBLIC_WORKSPACE_MODE=mock`
 - `AI_PROVIDER=mock`
-- real providers are env-gated
+- no API key required
+- no backend server required
+
+API mode is optional and fallback-safe.
+
+## Environment variables
+
+See [`.env.example`](/Volumes/DEV_USB/Projects/tw-ai-research-workspace/.env.example).
+
+Key behavior:
+- `NEXT_PUBLIC_WORKSPACE_MODE`: `mock` (default) or `api`
+- `TW_AI_RESEARCH_API_BASE_URL`: optional backend URL
+- `NEXT_PUBLIC_ENABLE_REAL_MODELS`: controls real provider enablement
+- `OPENAI_API_KEY` / `ANTHROPIC_API_KEY`: optional, env-gated only
 
 ## Setup
 
@@ -55,56 +72,41 @@ cp .env.example .env.local
 npm run dev
 ```
 
-## Env vars
-
-See `.env.example`.
-
-Key behavior:
-- default mode: mock
-- backend API optional via `TW_AI_RESEARCH_API_BASE_URL`
-- OpenAI/Anthropic keys are optional and disabled by default
-
-## Run checks
+## Verification
 
 ```bash
 npm run typecheck
-npm run lint
 npm run test:run
+npm run build
 node scripts/check-env.mjs
 node scripts/smoke-test.mjs
-node scripts/check-backend-contract.mjs
 node scripts/export-workspace-schema.mjs
-npm run build
+node scripts/check-backend-contract.mjs
+node scripts/sync-demo-artifacts.mjs
 ```
 
-Note: `npm run lint` currently uses a typecheck fallback in this local setup due to an ESLint `@rushstack/eslint-patch` compatibility issue. Typecheck/test/build gates are still enforced.
+## Lint status
 
-## Connect to local tw-ai-investment-research API
+`npm run lint` currently uses a **typecheck fallback** in this environment. This is documented and intentional to avoid spending excessive time on local ESLint ecosystem compatibility.
+
+## Connect to local `tw-ai-investment-research` API
 
 1. set `NEXT_PUBLIC_WORKSPACE_MODE=api`
 2. set `TW_AI_RESEARCH_API_BASE_URL=http://localhost:8000` (or your local URL)
-3. keep fallback behavior enabled: API failure returns synthetic fixtures
+3. keep `fallbackToMock=true` in runtime settings for graceful degradation
+
+If backend is unreachable, workspace falls back to synthetic mock output with explicit fallback metadata.
 
 ## Workspace UX
 
-- `/workspace`: chat-first workspace with streaming conversation, tool results, session/artifact panel
+- `/workspace`: chat-first runtime + operations + artifact workbench
 - `/reports`: synthetic report viewer
 - `/strategies`: synthetic strategy comparison
-- `/traces`: planner/executor/reflection visualization
-
-## Model runtime
-
-Providers:
-- `mock` (default)
-- `openai` (env-gated)
-- `anthropic` (env-gated)
-- `local` (placeholder, env-gated)
-
-No provider keys are required for demo.
+- `/traces`: planner/executor/reflection view
 
 ## Tool calls
 
-Tool registry includes:
+Workspace tools:
 - `runResearch`
 - `generateReport`
 - `runPipeline`
@@ -114,26 +116,25 @@ Tool registry includes:
 - `getSignalMatrix`
 - `getAgentConsensus`
 
-No trading tools are provided.
+No trading tools are included.
 
-## Session persistence
+## Session and artifact persistence
 
-Client-only localStorage persistence:
-- create/rename/update/delete session
-- duplicate/clear session
-- import/export session JSON
-- artifact pin/unpin and import/export
-- no auth and no backend DB
+- localStorage only
+- session CRUD + import/export
+- artifact CRUD/pin/filter + import/export
+- runtime settings persistence
+- workspace backup import/export
 
 ## Limitations
 
-- assistant-ui package integration is planned; current build uses assistant-ui-inspired local components
-- real LLM provider path remains env-gated and fallback-safe
-- no live web browsing, no autonomous uncontrolled loops
-- no broker integration or real trading execution
+- assistant-ui package integration remains optional/planned; current implementation is assistant-ui-inspired local components
+- real model providers remain env-gated placeholders
+- no live web browsing by default
+- no autonomous uncontrolled loops
 
 ## Roadmap
 
+- deeper OpenAPI contract mapping
+- richer artifact lineage visualizations
 - optional assistant-ui package integration after dependency alignment
-- richer trace event timeline rendering
-- stronger OpenAPI contract-driven adapters

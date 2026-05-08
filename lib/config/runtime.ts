@@ -1,10 +1,20 @@
 import { getEnvConfig } from "@/lib/config/env";
+import { checkBackendHealth } from "@/lib/api/client";
 import {
   workspaceRuntimeConfigSchema,
+  runtimeSettingsSchema,
   workspaceRuntimeStatusSchema,
+  backendConnectionStateSchema,
   type WorkspaceRuntimeConfig,
   type WorkspaceRuntimeStatus,
+  type RuntimeSettings,
+  type BackendConnectionState,
 } from "@/lib/schemas/workspace";
+import {
+  readRuntimeSettingsFromLocalStorage,
+  writeRuntimeSettingsToLocalStorage,
+  clearRuntimeSettingsFromLocalStorage,
+} from "@/lib/sessions/local-storage";
 
 export function getDefaultRuntimeConfig(): WorkspaceRuntimeConfig {
   const env = getEnvConfig();
@@ -20,6 +30,20 @@ export function getDefaultRuntimeConfig(): WorkspaceRuntimeConfig {
   });
 }
 
+export function getDefaultRuntimeSettings(): RuntimeSettings {
+  const config = getDefaultRuntimeConfig();
+  return runtimeSettingsSchema.parse({
+    mode: config.mode,
+    apiBaseUrl: config.apiBaseUrl,
+    selectedProvider: config.selectedProvider,
+    selectedModel: config.selectedModel,
+    fallbackToMock: config.fallbackToMock,
+    showToolCalls: config.streamToolCalls,
+    showTokenUsage: config.showTokenUsage,
+    maxToolSteps: config.maxToolSteps,
+  });
+}
+
 export function normalizeRuntimeConfig(input?: Partial<WorkspaceRuntimeConfig>): WorkspaceRuntimeConfig {
   const merged = {
     ...getDefaultRuntimeConfig(),
@@ -28,6 +52,63 @@ export function normalizeRuntimeConfig(input?: Partial<WorkspaceRuntimeConfig>):
   return workspaceRuntimeConfigSchema.parse({
     ...merged,
     maxToolSteps: Math.min(8, Math.max(1, merged.maxToolSteps ?? 3)),
+  });
+}
+
+export function normalizeRuntimeSettings(input?: Partial<RuntimeSettings>): RuntimeSettings {
+  const merged = {
+    ...getDefaultRuntimeSettings(),
+    ...(input ?? {}),
+  };
+
+  return runtimeSettingsSchema.parse({
+    ...merged,
+    maxToolSteps: Math.min(8, Math.max(1, merged.maxToolSteps ?? 3)),
+  });
+}
+
+export function restoreRuntimeSettings(): RuntimeSettings {
+  const raw = readRuntimeSettingsFromLocalStorage();
+  return normalizeRuntimeSettings(raw ?? undefined);
+}
+
+export function persistRuntimeSettings(next: Partial<RuntimeSettings>): RuntimeSettings {
+  const normalized = normalizeRuntimeSettings({
+    ...restoreRuntimeSettings(),
+    ...next,
+  });
+  writeRuntimeSettingsToLocalStorage(normalized);
+  return normalized;
+}
+
+export function resetRuntimeSettings(): RuntimeSettings {
+  clearRuntimeSettingsFromLocalStorage();
+  const defaults = getDefaultRuntimeSettings();
+  writeRuntimeSettingsToLocalStorage(defaults);
+  return defaults;
+}
+
+export async function buildBackendConnectionState(
+  settings: RuntimeSettings,
+  fallbackReason?: string,
+): Promise<BackendConnectionState> {
+  const health = await checkBackendHealth({
+    runtimeOverrides: {
+      mode: settings.mode,
+      apiBaseUrl: settings.apiBaseUrl,
+      fallbackToMock: settings.fallbackToMock,
+    },
+  });
+
+  return backendConnectionStateSchema.parse({
+    mode: settings.mode,
+    apiBaseUrl: settings.apiBaseUrl,
+    reachable: health.reachable,
+    checkedAt: health.checkedAt,
+    appTitle: health.appTitle,
+    error: health.error,
+    fallbackActive: settings.mode === "api" ? !health.reachable && settings.fallbackToMock : false,
+    fallbackReason: fallbackReason ?? health.error,
   });
 }
 

@@ -4,16 +4,32 @@ export type ArtifactKind =
   | "pipeline_trace"
   | "strategy_comparison"
   | "signal_evaluation"
-  | "evidence_timeline";
+  | "evidence_timeline"
+  | "backtest_summary";
 
 export type WorkspaceArtifactRecord = {
   id: string;
-  sessionId: string;
-  kind: ArtifactKind;
+  type: ArtifactKind;
+  kind?: ArtifactKind;
   title: string;
-  pinned: boolean;
+  summary?: string;
+  createdAt: string;
+  updatedAt?: string;
+  sessionId?: string;
+  ticker?: string;
+  tickers?: string[];
+  asOfDate?: string;
+  source: "mock" | "api" | "mock_fallback";
   synthetic: boolean;
   notFinancialAdvice: true;
   noTradingExecution: true;
-  createdAt: string;
+  evidenceIds: string[];
+  relatedArtifactIds: string[];
+  lineage?: {
+    operationId?: string;
+    toolCallId?: string;
+    sourceArtifactIds?: string[];
+  };
+  data?: unknown;
+  pinned: boolean;
 };

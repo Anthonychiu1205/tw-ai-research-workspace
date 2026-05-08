@@ -1,14 +1,23 @@
 # Backend Contracts
 
-`node scripts/check-backend-contract.mjs` validates workspace artifact contracts.
+`node scripts/check-backend-contract.mjs` validates local fixture contracts and optional backend demo artifacts.
 
-Checks:
-- local `fixtures/demo/*.json`
-- local `fixtures/mock-api/*.json`
-- optional backend source: `../tw-ai-investment-research/artifacts/demo/*.json`
+## Required fixture metadata
+
+- `provider: mock`
+- `dataType: synthetic_mock`
+- `notFinancialAdvice: true`
+- `noTradingExecution: true`
+
+## Contract checks
+
+- report fixture includes `sections`
+- pipeline/trace fixtures include `plan`, `execution`, `reflection`
+- signal matrix fixtures include `watchlist`, `signals`
+- strategy comparison fixtures include `strategies`
+- session demo artifacts use known workspace artifact types
 
 Output:
 - `artifacts/backend-contract-check.json`
 
-Behavior:
-- if backend source folder is absent, script exits `0` and validates local fixtures only.
+If `../tw-ai-investment-research/artifacts/demo` is missing, script warns and exits `0`.

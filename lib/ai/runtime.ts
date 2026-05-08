@@ -15,10 +15,11 @@ function extractTicker(text: string) {
   return match?.[0] ?? "2330";
 }
 
-function selectToolsFromPrompt(prompt: string): string[] {
+export function selectToolsFromPrompt(prompt: string): string[] {
   const lower = prompt.toLowerCase();
   const names: string[] = [];
 
+  if (lower.includes("analyze")) names.push("runResearch");
   if (lower.includes("report")) names.push("generateReport");
   if (lower.includes("pipeline") || lower.includes("trace") || lower.includes("planner")) names.push("runPipeline");
   if (lower.includes("compare") || lower.includes("strategy")) names.push("compareStrategies");
@@ -73,6 +74,18 @@ export async function runAssistantRuntime(input: {
   }
 
   const selectedTools = selectToolsFromPrompt(prompt).slice(0, config.maxToolSteps);
+
+  events.push({
+    type: "trace_update",
+    id: `${messageId}-trace-start`,
+    timestamp: nowIso(),
+    payload: {
+      phase: "planning",
+      selectedTools,
+      boundedSteps: config.maxToolSteps,
+      note: "Deterministic workspace workflow with bounded tool steps.",
+    },
+  });
 
   if (config.streamToolCalls) {
     for (const toolName of selectedTools) {

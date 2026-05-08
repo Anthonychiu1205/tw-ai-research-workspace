@@ -16,9 +16,12 @@ export async function POST(req: Request) {
     modelId,
     runtimeConfig: {
       mode: body.runtimeMode ?? env.workspaceMode,
+      apiBaseUrl: body.apiBaseUrl ?? env.apiBaseUrl,
       maxToolSteps: body.maxToolSteps ?? 3,
       fallbackToMock: body.fallbackToMock ?? true,
       streamToolCalls: body.streamToolCalls ?? true,
+      selectedProvider: provider,
+      selectedModel: modelId,
     },
   });
 

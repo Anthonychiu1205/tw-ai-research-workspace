@@ -72,3 +72,16 @@ export function getModelAvailability(modelId: string): {
   }
   return { available: found.available, reasonUnavailable: found.reasonUnavailable };
 }
+
+export function getProviderUnavailableReason(provider: ModelProvider): string | undefined {
+  if (provider === "mock") {
+    return undefined;
+  }
+
+  const option = getModelOptions().find((item) => item.provider === provider);
+  if (!option) {
+    return "Unknown provider";
+  }
+
+  return option.available ? undefined : option.reasonUnavailable;
+}

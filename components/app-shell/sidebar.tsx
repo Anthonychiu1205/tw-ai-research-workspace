@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 const items = [
   { href: "/workspace", label: "Workspace" },
@@ -11,12 +12,14 @@ const items = [
 export function Sidebar({
   sessions = [],
   artifacts = [],
+  onQuickAnalyze,
 }: {
   sessions?: Array<{ id: string; title: string }>;
   artifacts?: Array<{ id: string; title: string }>;
+  onQuickAnalyze?: () => void;
 }) {
   return (
-    <aside className="w-64 border-r border-border p-3">
+    <aside className="w-64 border-r border-border p-3" data-testid="sidebar">
       <div className="mb-4 text-sm font-semibold">TW AI Research</div>
       <div className="space-y-2">
         {items.map((item) => (
@@ -29,6 +32,13 @@ export function Sidebar({
       <div className="mt-4 flex items-center gap-2">
         <Badge>mock-first</Badge>
         <Badge>local-only</Badge>
+      </div>
+
+      <div className="mt-4 space-y-2" id="quick-actions">
+        <div className="text-xs uppercase text-muted-foreground">Quick actions</div>
+        <Button type="button" size="sm" variant="outline" onClick={onQuickAnalyze}>
+          Analyze 2330
+        </Button>
       </div>
 
       <div className="mt-4 space-y-2">
@@ -44,7 +54,7 @@ export function Sidebar({
         )}
       </div>
 
-      <div className="mt-4 space-y-2">
+      <div className="mt-4 space-y-2" id="artifacts">
         <div className="text-xs uppercase text-muted-foreground">Artifacts</div>
         {artifacts.length === 0 ? (
           <div className="text-xs text-muted-foreground">No artifacts</div>

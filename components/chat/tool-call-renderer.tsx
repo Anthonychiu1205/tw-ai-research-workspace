@@ -1,7 +1,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SignalCard } from "@/components/research/signal-card";
-import { ReportSectionCard } from "@/components/research/report-section-card";
+import { ReportViewer } from "@/components/workspace/report-viewer";
 import { PlannerTraceViewer } from "@/components/workspace/planner-trace-viewer";
 import { StrategyComparison } from "@/components/workspace/strategy-comparison";
 import { SignalExplorer } from "@/components/workspace/signal-explorer";
@@ -16,13 +16,7 @@ function renderToolContent(event: any) {
   }
 
   if (event.toolName === "generateReport") {
-    return (
-      <div className="space-y-2">
-        {(data.sections ?? []).map((section: any) => (
-          <ReportSectionCard key={section.id} title={section.title} content={section.content} />
-        ))}
-      </div>
-    );
+    return <ReportViewer sections={data.sections ?? []} timelinePoints={data.timelinePoints ?? []} />;
   }
 
   if (event.toolName === "runPipeline") {

@@ -1,19 +1,24 @@
-# Conversational Runtime (v0.2)
+# Conversational Runtime
 
-The conversational runtime emits normalized stream events for UI rendering:
-- `message_delta`
-- `tool_call_start`
-- `tool_call_delta`
-- `tool_call_result`
-- `trace_update`
-- `token_usage`
-- `final`
-- `error`
+v0.3 runtime extends v0.2 with stronger operation/tool integration.
 
-This keeps the workspace chat-first while preserving explicit tool lifecycle visibility.
+## Prompt-to-tool mapping (mock runtime)
 
-Safety boundaries:
-- synthetic outputs by default
-- no buy/sell recommendations
-- no trading execution
-- final disclaimer included
+- prompt contains `2330` + `analyze` -> `runResearch`
+- prompt contains `report` -> `generateReport`
+- prompt contains `strategy` -> `compareStrategies`
+- prompt contains `pipeline` or `trace` -> `runPipeline`
+- prompt contains `signal` -> `evaluateSignals`
+
+## Response model
+
+- deterministic synthetic stream chunks
+- visible tool-call lifecycle events
+- token usage summary event
+- final disclaimer event
+
+## Boundaries
+
+- no live web browsing
+- no trading execution path
+- no financial advice output intent

@@ -1,13 +1,29 @@
 # Session Memory
 
-Session persistence is local only:
-- localStorage storage keys for sessions and artifacts
-- no auth and no backend DB
-- SSR-safe guards for `window`
-- corrupted JSON fallback to empty state
+Session and artifact memory is local-only.
 
-Session store supports:
-- create/rename/update/delete
-- duplicate/clear
+## Storage
+
+- `tw-ai-research-workspace:sessions`
+- `tw-ai-research-workspace:artifacts`
+- `tw-ai-research-workspace:runtime-settings`
+
+## Session features
+
+- create, rename, update, delete
+- duplicate and clear
 - import/export JSON
-- schema version `workspace-session.v0.2`
+- schema version: `workspace-session.v0.2`
+
+## Artifact features
+
+- create/update/delete
+- pin/unpin
+- filter by type/ticker/session
+- import/export JSON
+
+## Resilience
+
+- SSR-safe guards for `window`
+- corrupted JSON falls back safely
+- no backend DB and no auth dependency

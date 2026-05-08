@@ -1,11 +1,18 @@
 # Model Runtime
 
-Model providers:
-- mock
-- openai (env-gated)
-- anthropic (env-gated)
-- local (env-gated placeholder)
+Providers:
+- `mock` (default)
+- `openai` (env-gated)
+- `anthropic` (env-gated)
+- `local` (env-gated placeholder)
 
-`lib/config/models.ts` exposes provider availability and reason-unavailable metadata.
+`lib/config/models.ts` exposes:
+- model list
+- provider
+- availability flag
+- unavailable reason
+- tool/stream support flags
 
-`lib/ai/runtime.ts` normalizes provider/runtime config, emits stream lifecycle events, executes local tool registry, and falls back to mock safely when providers are unavailable.
+When a real provider is unavailable, runtime falls back to mock and surfaces warning metadata.
+
+No secrets are shown in UI.

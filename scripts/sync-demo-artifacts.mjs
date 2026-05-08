@@ -3,6 +3,7 @@ import path from "node:path";
 
 const args = new Set(process.argv.slice(2));
 const force = args.has("--force");
+const dryRun = !force;
 
 const src = path.resolve(process.cwd(), "../tw-ai-investment-research/artifacts/demo");
 const dest = path.resolve(process.cwd(), "fixtures/demo");
@@ -16,6 +17,7 @@ const srcFiles = fs.readdirSync(src).filter((name) => name.endsWith(".json")).so
 const report = {
   source: src,
   destination: dest,
+  dryRun,
   force,
   available: srcFiles,
   wouldCopy: [],
@@ -28,11 +30,12 @@ for (const file of srcFiles) {
   const to = path.join(dest, file);
 
   if (!force) {
-    if (!fs.existsSync(to)) {
-      report.wouldCopy.push(file);
-    } else {
-      report.skipped.push(file);
-    }
+    report.wouldCopy.push(file);
+    continue;
+  }
+
+  if (fs.existsSync(to)) {
+    report.skipped.push(file);
     continue;
   }
 
@@ -40,11 +43,12 @@ for (const file of srcFiles) {
   report.copied.push(file);
 }
 
-if (!force) {
-  console.log(`sync-demo-artifacts: dry-run, wouldCopy=${report.wouldCopy.length}, skipped=${report.skipped.length}`);
+if (dryRun) {
+  console.log(`sync-demo-artifacts: dry-run=true available=${report.available.length} wouldCopy=${report.wouldCopy.length}`);
   if (report.wouldCopy.length > 0) {
-    console.log(`sync-demo-artifacts: use --force to copy -> ${report.wouldCopy.join(", ")}`);
+    console.log(`sync-demo-artifacts: preview -> ${report.wouldCopy.join(", ")}`);
   }
+  console.log("sync-demo-artifacts: pass --force to copy non-existing files (non-destructive)");
 } else {
-  console.log(`sync-demo-artifacts: copied=${report.copied.length}, skipped=${report.skipped.length}, force=true`);
+  console.log(`sync-demo-artifacts: dry-run=false copied=${report.copied.length} skipped=${report.skipped.length}`);
 }

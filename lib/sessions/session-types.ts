@@ -1,4 +1,4 @@
-import type { WorkspaceMessage, WorkspaceSession } from "@/lib/schemas/workspace";
+import type { WorkspaceMessage, WorkspaceSession, RuntimeSettings, BackendConnectionState } from "@/lib/schemas/workspace";
 
 export type SessionStoreApi = {
   list(): WorkspaceSession[];
@@ -12,4 +12,11 @@ export type SessionStoreApi = {
   clear(): void;
   exportJson(): string;
   importJson(raw: string): { imported: number; skipped: number };
+};
+
+export type RuntimeStoreApi = {
+  getSettings(): RuntimeSettings;
+  setSettings(next: Partial<RuntimeSettings>): RuntimeSettings;
+  resetSettings(): RuntimeSettings;
+  checkConnection(): Promise<BackendConnectionState>;
 };

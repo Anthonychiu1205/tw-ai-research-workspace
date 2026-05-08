@@ -25,6 +25,14 @@ function checkMetadata(json, file) {
     return `${file}: invalid metadata object`;
   }
 
+  if (meta.provider !== "mock") {
+    return `${file}: metadata.provider must be mock`;
+  }
+
+  if (meta.dataType !== "synthetic_mock") {
+    return `${file}: metadata.dataType must be synthetic_mock`;
+  }
+
   if (meta.notFinancialAdvice !== true) {
     return `${file}: notFinancialAdvice must be true`;
   }
@@ -36,6 +44,58 @@ function checkMetadata(json, file) {
   return null;
 }
 
+function hasFields(obj, keys) {
+  return keys.every((key) => Object.prototype.hasOwnProperty.call(obj, key));
+}
+
+function validateContractByFileName(fileName, json, label) {
+  const issues = [];
+
+  if (fileName.includes("report") && !hasFields(json, ["sections"])) {
+    issues.push(`${label}/${fileName}: report must include sections`);
+  }
+
+  if (fileName.includes("pipeline") || fileName.includes("trace")) {
+    if (!hasFields(json, ["plan", "execution", "reflection"])) {
+      issues.push(`${label}/${fileName}: trace must include plan/execution/reflection`);
+    }
+  }
+
+  if (fileName.includes("signal-matrix")) {
+    if (!hasFields(json, ["watchlist", "signals"])) {
+      issues.push(`${label}/${fileName}: signal matrix must include watchlist/signals`);
+    }
+  }
+
+  if (fileName.includes("strategy")) {
+    if (!hasFields(json, ["strategies"])) {
+      issues.push(`${label}/${fileName}: strategy comparison must include strategies`);
+    }
+  }
+
+  if (fileName === "session-demo.json") {
+    const allowed = new Set([
+      "research_card",
+      "report",
+      "pipeline_trace",
+      "strategy_comparison",
+      "signal_evaluation",
+      "evidence_timeline",
+      "backtest_summary",
+    ]);
+
+    const artifacts = Array.isArray(json.artifacts) ? json.artifacts : [];
+    for (const artifact of artifacts) {
+      const type = artifact.type ?? artifact.kind;
+      if (type && !allowed.has(type)) {
+        issues.push(`${label}/${fileName}: unknown artifact type ${type}`);
+      }
+    }
+  }
+
+  return issues;
+}
+
 function validateDir(label, dir, strict = true) {
   const files = listJsonFiles(dir);
   const errors = [];
@@ -45,11 +105,18 @@ function validateDir(label, dir, strict = true) {
     const full = path.join(dir, name);
     try {
       const json = JSON.parse(fs.readFileSync(full, "utf-8"));
-      const issue = checkMetadata(json, `${label}/${name}`);
-      if (issue && strict) {
-        errors.push(issue);
-      } else if (issue) {
-        warnings.push(issue);
+      const metaIssue = checkMetadata(json, `${label}/${name}`);
+      if (metaIssue && strict) {
+        errors.push(metaIssue);
+      } else if (metaIssue) {
+        warnings.push(metaIssue);
+      }
+
+      const issues = validateContractByFileName(name, json, label);
+      if (strict) {
+        errors.push(...issues);
+      } else {
+        warnings.push(...issues);
       }
     } catch (error) {
       if (strict) {
@@ -67,7 +134,14 @@ const localDemo = validateDir("fixtures/demo", localDemoDir, true);
 const localMockApi = validateDir("fixtures/mock-api", localMockApiDir, true);
 const backendDemo = fs.existsSync(backendDemoDir)
   ? validateDir("backend/demo", backendDemoDir, false)
-  : { label: "backend/demo", dir: backendDemoDir, files: [], errors: [], warnings: [], skipped: true };
+  : {
+      label: "backend/demo",
+      dir: backendDemoDir,
+      files: [],
+      errors: [],
+      warnings: ["backend demo artifacts not found (optional)"],
+      skipped: true,
+    };
 
 const errors = [...localDemo.errors, ...localMockApi.errors];
 
