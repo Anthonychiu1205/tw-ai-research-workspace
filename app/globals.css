@@ -7,7 +7,7 @@
 }
 
 body {
-  @apply bg-background text-foreground antialiased;
+  @apply bg-workspace-canvas text-foreground antialiased;
 }
 
 * {

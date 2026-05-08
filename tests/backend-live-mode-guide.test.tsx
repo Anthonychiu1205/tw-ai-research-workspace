@@ -16,11 +16,11 @@ describe("backend live mode guide", () => {
 
   test("fallback warning", () => {
     render(<BackendLiveModeGuide apiBaseUrl="http://localhost:8000" fallbackActive />);
-    expect(screen.getByText(/Fallback is active/i)).toBeInTheDocument();
+    expect(screen.getByText(/Fallback is active|fallback 模式/i)).toBeInTheDocument();
   });
 
   test("no trading/broker claim", () => {
     render(<BackendLiveModeGuide apiBaseUrl="http://localhost:8000" fallbackActive={false} />);
-    expect(screen.getByText(/No broker integration. No trading execution./i)).toBeInTheDocument();
+    expect(screen.getByText(/No broker integration. No trading execution.|不提供下單、交易或券商串接。/i)).toBeInTheDocument();
   });
 });

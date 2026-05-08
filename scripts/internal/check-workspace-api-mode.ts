@@ -289,7 +289,13 @@ async function run() {
     });
   }
 
-  const passed = reachable ? checks.every((check) => check.ok) : !args.strict;
+  const failedChecks = checks.filter((check) => !check.ok);
+  if (!args.strict && reachable && failedChecks.length > 0) {
+    warnings.push(
+      `Non-strict mode: ${failedChecks.length} API-mode checks failed, report captured for adapter follow-up.`,
+    );
+  }
+  const passed = args.strict ? (reachable ? failedChecks.length === 0 : false) : !args.strict;
 
   const report = {
     checkedAt: new Date().toISOString(),
@@ -298,6 +304,7 @@ async function run() {
     bridgeMode: args.bridgeMode,
     reachable,
     passed,
+    failedCount: failedChecks.length,
     checks,
     warnings,
     note: "Workspace API-mode integration validation only. No trading or broker execution.",

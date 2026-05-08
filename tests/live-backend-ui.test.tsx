@@ -49,7 +49,7 @@ describe("live backend UI states", () => {
     );
 
     expect(screen.getByTestId("last-live-integration")).toBeInTheDocument();
-    expect(screen.getByText(/fallback/i)).toBeInTheDocument();
+    expect(screen.getAllByText(/fallback/i).length).toBeGreaterThan(0);
   });
 
   test("capabilities include portfolio and backtests", () => {

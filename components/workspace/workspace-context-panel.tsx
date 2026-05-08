@@ -1,3 +1,5 @@
+"use client";
+
 import type { WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
 import { SignalCard } from "@/components/research/signal-card";
 import { ReportViewer } from "@/components/workspace/report-viewer";
@@ -9,12 +11,17 @@ import { ArtifactJsonViewer } from "@/components/workspace/artifact-json-viewer"
 import { PortfolioReviewPanel } from "@/components/portfolio/portfolio-review-panel";
 import { RebalancePlanView } from "@/components/portfolio/rebalance-plan-view";
 import { BacktestV2SummaryView } from "@/components/backtesting/backtest-v2-summary";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { useI18n } from "@/lib/i18n/use-i18n";
+
+const FALLBACK_AS_OF_DATE = "2026-01-01";
 
 export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifactRecord }) {
+  const { t } = useI18n();
   if (!artifact) {
     return (
       <div className="rounded-md border border-dashed p-3 text-xs text-muted-foreground" data-testid="workspace-context-empty">
-        Select an artifact to open context views.
+        {t("emptyStates.noSelection")}
       </div>
     );
   }
@@ -23,7 +30,9 @@ export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifa
 
   return (
     <div className="space-y-3" data-testid="workspace-context-panel">
-      <div className="rounded border p-2 text-xs text-yellow-300">synthetic/mock/non-advice metadata is displayed for every context artifact.</div>
+      <div className="rounded border p-2 text-xs">
+        <StatusBadge tone="mock">{t("disclaimers.syntheticBadge")}</StatusBadge>
+      </div>
 
       {(artifact.type === "research_card" || artifact.kind === "research_card") && (
         <SignalCard label="Research Card" value={data.summary ?? artifact.summary ?? "Synthetic research card"} />
@@ -64,7 +73,7 @@ export function WorkspaceContextPanel({ artifact }: { artifact?: WorkspaceArtifa
               ? (data as any)
               : {
                   planId: "rebalance-plan-missing",
-                  asOfDate: new Date().toISOString().slice(0, 10),
+                  asOfDate: FALLBACK_AS_OF_DATE,
                   targetWeights: {},
                   cashWeight: 1,
                   turnoverEstimate: 0,

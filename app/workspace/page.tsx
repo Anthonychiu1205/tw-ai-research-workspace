@@ -96,22 +96,16 @@ export default function WorkspacePage() {
   const [commandMenuOpen, setCommandMenuOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [sidebarHidden, setSidebarHidden] = useState(false);
-  const [runtimeSettings, setRuntimeSettings] = useState(() => {
-    try {
-      return restoreRuntimeSettings();
-    } catch {
-      return getDefaultRuntimeSettings();
-    }
-  });
+  const [runtimeSettings, setRuntimeSettings] = useState<ReturnType<typeof getDefaultRuntimeSettings>>(getDefaultRuntimeSettings);
   const [connectionState, setConnectionState] = useState<BackendConnectionState>({
-    mode: runtimeSettings.mode,
-    apiBaseUrl: runtimeSettings.apiBaseUrl,
+    mode: "mock",
+    apiBaseUrl: getDefaultRuntimeSettings().apiBaseUrl,
     reachable: false,
     checkedAt: undefined,
     appTitle: "TW AI Research Backend",
     error: undefined,
-    fallbackActive: runtimeSettings.mode === "api",
-    fallbackReason: runtimeSettings.mode === "api" ? "Backend not checked yet" : undefined,
+    fallbackActive: false,
+    fallbackReason: undefined,
   });
   const [capabilitiesReport, setCapabilitiesReport] = useState<BackendCapabilitiesReport>(
     defaultCapabilitiesReport(runtimeSettings.apiBaseUrl),
@@ -127,6 +121,11 @@ export default function WorkspacePage() {
   const modelOptions = getModelOptions();
 
   useEffect(() => {
+    try {
+      setRuntimeSettings(restoreRuntimeSettings());
+    } catch {
+      setRuntimeSettings(getDefaultRuntimeSettings());
+    }
     setLastLiveIntegration(readLiveIntegrationSnapshot());
   }, []);
 
@@ -261,6 +260,7 @@ export default function WorkspacePage() {
     >
       <div className="grid h-full grid-cols-12 gap-4" data-testid="workspace-page-grid">
         <aside className="col-span-3 min-h-0 space-y-3 overflow-auto">
+          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("app.workspace")}</div>
           <SessionHistory
             sessions={sessions.map((session) => ({ id: session.id, title: session.title }))}
             selectedSessionId={selectedSessionId}
@@ -305,6 +305,7 @@ export default function WorkspacePage() {
         </aside>
 
         <section className="col-span-6 min-h-0 space-y-3 overflow-auto">
+          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("chat.title")}</div>
           {showOnboarding ? (
             <div className="space-y-3" data-testid="workspace-onboarding">
               <WelcomePanel
@@ -390,12 +391,14 @@ export default function WorkspacePage() {
         </section>
 
         <aside className="col-span-3 min-h-0 space-y-3 overflow-auto">
+          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("runtime.connectionSection")}</div>
           <BackendConnectionCard
             state={connectionState}
             lastLiveIntegration={lastLiveIntegration}
             onRefresh={() => void checkConnection()}
           />
 
+          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("runtime.settingsSection")}</div>
           <RuntimeSettingsPanel
             settings={runtimeSettings}
             models={modelOptions}
@@ -451,6 +454,7 @@ export default function WorkspacePage() {
             }}
           />
 
+          <div className="rounded-lg border border-border/80 bg-workspace-section px-3 py-2 text-sm font-medium">{t("runtime.contextSection")}</div>
           <WorkspaceContextPanel artifact={selectedArtifact} />
         </aside>
       </div>

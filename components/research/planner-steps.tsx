@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 export function PlannerSteps({
   steps,
@@ -8,10 +8,10 @@ export function PlannerSteps({
   maxSteps?: number;
 }) {
   return (
-    <div className="space-y-2 rounded-md border p-3" data-testid="planner-steps">
+    <div className="space-y-2 rounded-md border border-border/80 bg-card/60 p-3" data-testid="planner-steps">
       <div className="flex items-center justify-between text-xs">
         <span className="uppercase text-muted-foreground">Plan</span>
-        <span>bounded workflow: {steps.length}{typeof maxSteps === "number" ? ` / ${maxSteps}` : ""}</span>
+        <StatusBadge tone="trace">bounded workflow: {steps.length}{typeof maxSteps === "number" ? ` / ${maxSteps}` : ""}</StatusBadge>
       </div>
 
       {steps.map((step, index) => (
@@ -20,7 +20,9 @@ export function PlannerSteps({
             <span>
               {index + 1}. {step.title}
             </span>
-            <Badge>{step.status}</Badge>
+            <StatusBadge tone={step.status === "done" || step.status === "completed" ? "success" : step.status === "failed" ? "danger" : "trace"}>
+              {step.status}
+            </StatusBadge>
           </div>
           {step.toolName ? <div className="text-xs text-muted-foreground">tool: {step.toolName}</div> : null}
           {step.dependsOn?.length ? <div className="text-xs text-muted-foreground">depends on: {step.dependsOn.join(", ")}</div> : null}

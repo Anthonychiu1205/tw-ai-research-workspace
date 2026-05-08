@@ -26,7 +26,7 @@ export function AppShell({
   sidebarHidden?: boolean;
 }) {
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex h-screen w-full bg-workspace-canvas">
       <Sidebar sessions={sessions} artifacts={artifacts} onQuickAnalyze={onQuickAnalyze} hidden={sidebarHidden} />
       <div className="flex min-w-0 flex-1 flex-col">
         <Topbar
@@ -35,7 +35,7 @@ export function AppShell({
           modelLabel={modelLabel}
           connection={connection}
         />
-        <main className="min-h-0 flex-1 p-4">{children}</main>
+        <main className="min-h-0 flex-1 p-4 md:p-5">{children}</main>
       </div>
     </div>
   );

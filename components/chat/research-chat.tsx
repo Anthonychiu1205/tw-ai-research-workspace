@@ -6,11 +6,13 @@ import { MessageComposer } from "@/components/chat/message-composer";
 import { ModelSwitcher } from "@/components/chat/model-switcher";
 import { RetryMessageButton } from "@/components/chat/retry-message-button";
 import { resolveModelProvider, getModelAvailability } from "@/lib/config/models";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useResearchChat } from "@/lib/ai/use-research-chat";
 import type { BackendConnectionState, RuntimeSettings } from "@/lib/schemas/workspace";
 import { useI18n } from "@/lib/i18n/use-i18n";
+import { StatusBadge } from "@/components/ui/status-badge";
+
+const WELCOME_MESSAGE_CREATED_AT = "2026-01-01T00:00:00.000Z";
 
 export function ResearchChat({
   runtimeSettings,
@@ -45,7 +47,7 @@ export function ResearchChat({
         id: "m-welcome",
         role: "assistant",
         content: t("chat.welcome"),
-        createdAt: new Date().toISOString(),
+        createdAt: WELCOME_MESSAGE_CREATED_AT,
         status: "complete",
         metadata: {
           provider: "mock",
@@ -71,22 +73,22 @@ export function ResearchChat({
   }, [chat, systemEvents]);
 
   return (
-    <div className="space-y-3" data-testid="research-chat">
+    <div className="space-y-3 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="research-chat">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="text-sm font-medium">{t("chat.title")}</div>
         <div className="flex items-center gap-2 text-xs">
-          <Badge>
+          <StatusBadge tone={runtimeSettings.mode === "mock" ? "mock" : "backend"}>
             {t("runtime.mode")}: {runtimeSettings.mode === "mock" ? t("runtime.mockMode") : t("runtime.apiMode")}
-          </Badge>
-          <Badge>
+          </StatusBadge>
+          <StatusBadge tone="trace">
             {t("runtime.provider")}: {selectedProvider}
-          </Badge>
-          <Badge>
+          </StatusBadge>
+          <StatusBadge tone="trace">
             {t("runtime.model")}: {runtimeSettings.selectedModel}
-          </Badge>
-          <Badge>
+          </StatusBadge>
+          <StatusBadge tone={connectionState.reachable ? "success" : "warning"}>
             {t("runtime.backend")}: {connectionState.reachable ? t("backend.connected") : t("backend.optional")}
-          </Badge>
+          </StatusBadge>
         </div>
       </div>
 
@@ -105,7 +107,9 @@ export function ResearchChat({
           <option value="mock">{t("runtime.mockMode")}</option>
           <option value="api">{t("runtime.apiMode")}</option>
         </select>
-        {!modelAvailability.available ? <Badge>{t("runtime.fallback")}: {modelAvailability.reasonUnavailable ?? t("model.unavailable")}</Badge> : null}
+        {!modelAvailability.available ? (
+          <StatusBadge tone="warning">{t("runtime.fallback")}: {modelAvailability.reasonUnavailable ?? t("model.unavailable")}</StatusBadge>
+        ) : null}
       </div>
 
       {runtimeWarning ? <div className="rounded-md border border-yellow-500/40 bg-yellow-500/10 p-2 text-xs">{runtimeWarning}</div> : null}
@@ -121,7 +125,7 @@ export function ResearchChat({
         </div>
       ) : null}
 
-      <div className="flex flex-wrap gap-2" data-testid="prompt-examples">
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2" data-testid="prompt-examples">
         {promptExamples.map((example) => (
           <Button key={example} type="button" size="sm" variant="outline" onClick={() => void chat.sendMessage(example)} disabled={chat.isStreaming}>
             {example}

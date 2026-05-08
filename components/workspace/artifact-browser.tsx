@@ -2,9 +2,9 @@
 
 import { useMemo, useState } from "react";
 import type { ArtifactKind, WorkspaceArtifactRecord } from "@/lib/artifacts/artifact-types";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/use-i18n";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 const filterKinds: Array<ArtifactKind | "all"> = [
   "all",
@@ -33,6 +33,17 @@ function artifactTypeLabel(kind: ArtifactKind, t: (path: string) => string) {
   return kind;
 }
 
+function artifactTone(kind: ArtifactKind) {
+  if (kind === "research_card") return "backend" as const;
+  if (kind === "report") return "trace" as const;
+  if (kind === "pipeline_trace") return "evidence" as const;
+  if (kind === "strategy_comparison") return "success" as const;
+  if (kind === "signal_evaluation") return "backend" as const;
+  if (kind === "backtest_summary" || kind === "backtest_v2_summary") return "warning" as const;
+  if (kind === "portfolio_review" || kind === "rebalance_plan") return "mock" as const;
+  return "neutral" as const;
+}
+
 export function ArtifactBrowser({
   artifacts,
   selectedArtifactId,
@@ -51,9 +62,9 @@ export function ArtifactBrowser({
   }, [artifacts, filterKind]);
 
   return (
-    <div className="space-y-2" data-testid="artifact-browser">
+    <div className="space-y-2 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="artifact-browser">
       <div className="flex items-center justify-between">
-        <div className="text-xs uppercase text-muted-foreground">{t("artifacts.title")}</div>
+        <div className="text-xs uppercase tracking-wide text-muted-foreground">{t("artifacts.title")}</div>
         <select
           aria-label="Artifact type filter"
           className="h-8 rounded border bg-background px-2 text-xs"
@@ -74,15 +85,15 @@ export function ArtifactBrowser({
         const selected = selectedArtifactId === artifact.id;
 
         return (
-          <div key={artifact.id} className="rounded-md border p-2 text-sm">
+          <div key={artifact.id} className="rounded-md border border-border/70 bg-background/40 p-2 text-sm">
             <div className="mb-1 flex items-center justify-between">
               <div>{artifact.title}</div>
-              <Badge>{artifactTypeLabel(artifact.type, t)}</Badge>
+              <StatusBadge tone={artifactTone(artifact.type)}>{artifactTypeLabel(artifact.type, t)}</StatusBadge>
             </div>
             <div className="mb-2 flex flex-wrap gap-1 text-[10px] text-muted-foreground">
-              <Badge>{artifact.source}</Badge>
-              <Badge>{artifact.synthetic ? "synthetic" : "api"}</Badge>
-              <Badge>{t("disclaimers.nonAdvice")}</Badge>
+              <StatusBadge tone={artifact.source === "api" ? "backend" : "mock"}>{artifact.source}</StatusBadge>
+              <StatusBadge tone="mock">{artifact.synthetic ? "synthetic" : "api"}</StatusBadge>
+              <StatusBadge tone="warning">{t("disclaimers.nonAdvice")}</StatusBadge>
             </div>
             <Button type="button" size="sm" variant={selected ? "default" : "outline"} onClick={() => onSelect?.(artifact.id)}>
               {selected ? t("common.selected") : t("common.open")}

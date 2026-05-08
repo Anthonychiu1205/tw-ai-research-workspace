@@ -18,9 +18,9 @@ export function SessionHistory({
 }) {
   const { t } = useI18n();
   return (
-    <div className="space-y-2" data-testid="session-history">
+    <div className="space-y-2 rounded-lg border border-border/80 bg-workspace-panel p-3" data-testid="session-history">
       <div className="flex items-center justify-between">
-        <div className="text-xs uppercase text-muted-foreground">{t("sessions.history")}</div>
+        <div className="text-xs uppercase tracking-wide text-muted-foreground">{t("sessions.history")}</div>
         <Button type="button" size="sm" variant="outline" onClick={onCreate}>
           {t("common.create")}
         </Button>

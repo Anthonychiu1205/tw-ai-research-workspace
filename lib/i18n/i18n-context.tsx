@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useMemo, useState } from "react";
+import { createContext, useCallback, useEffect, useMemo, useState } from "react";
 import { enUSDictionary } from "@/lib/i18n/dictionaries/en-us";
 import { zhTWDictionary } from "@/lib/i18n/dictionaries/zh-tw";
 import { DEFAULT_LOCALE, FALLBACK_LOCALE, getSavedLocale, saveLocale } from "@/lib/i18n/i18n-store";
@@ -49,7 +49,11 @@ export const I18nContext = createContext<I18nContextValue>({
 });
 
 export function I18nProvider({ children }: { children: React.ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => getSavedLocale());
+  const [locale, setLocaleState] = useState<Locale>(DEFAULT_LOCALE);
+
+  useEffect(() => {
+    setLocaleState(getSavedLocale());
+  }, []);
 
   const setLocale = useCallback((next: Locale) => {
     setLocaleState(next);

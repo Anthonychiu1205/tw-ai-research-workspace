@@ -1,7 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { getModelOptions } from "@/lib/config/models";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function ModelSwitcher({
@@ -14,6 +15,10 @@ export function ModelSwitcher({
   onUnavailableSelect?: (reason: string) => void;
 }) {
   const { t } = useI18n();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const models = getModelOptions();
   const selected = models.find((model) => model.id === value) ?? models[0];
 
@@ -37,7 +42,13 @@ export function ModelSwitcher({
           </option>
         ))}
       </select>
-      {selected && !selected.available ? <Badge>{t("model.unavailable")}</Badge> : <Badge>available</Badge>}
+      {!mounted ? (
+        <StatusBadge tone="neutral">{t("runtime.initializing")}</StatusBadge>
+      ) : selected && !selected.available ? (
+        <StatusBadge tone="warning">{t("model.unavailable")}</StatusBadge>
+      ) : (
+        <StatusBadge tone="success">{t("common.available")}</StatusBadge>
+      )}
     </div>
   );
 }

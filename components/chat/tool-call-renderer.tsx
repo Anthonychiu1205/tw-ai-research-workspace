@@ -1,5 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { StatusBadge } from "@/components/ui/status-badge";
 import { SignalCard } from "@/components/research/signal-card";
 import { ReportViewer } from "@/components/workspace/report-viewer";
 import { PlannerTraceViewer } from "@/components/workspace/planner-trace-viewer";
@@ -66,9 +66,11 @@ export function ToolCallRenderer({ event }: { event: any }) {
       <CardContent>
         <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
           <span>tool: {event.toolName}</span>
-          <Badge>{event.status}</Badge>
-          <Badge>{event.source}</Badge>
-          {event.fallbackUsed ? <Badge>fallback</Badge> : null}
+          <StatusBadge tone={event.status === "succeeded" ? "success" : event.status === "failed" ? "danger" : "trace"}>
+            {event.status}
+          </StatusBadge>
+          <StatusBadge tone={event.source === "api" ? "backend" : "mock"}>{event.source}</StatusBadge>
+          {event.fallbackUsed ? <StatusBadge tone="warning">fallback</StatusBadge> : null}
         </div>
         <div className="mb-2 text-sm">{event.summary}</div>
         {event.evidenceIds?.length > 0 ? (

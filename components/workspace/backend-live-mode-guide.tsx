@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/lib/i18n/use-i18n";
 
 export function BackendLiveModeGuide({
   apiBaseUrl,
@@ -9,25 +10,26 @@ export function BackendLiveModeGuide({
   fallbackActive: boolean;
   onTestConnection?: () => void;
 }) {
+  const { t } = useI18n();
   return (
     <div className="space-y-2 rounded-md border p-3 text-xs" data-testid="backend-live-mode-guide">
-      <div className="text-sm font-medium">Backend Live Mode Dry-Run</div>
-      <div className="text-muted-foreground">API base URL: {apiBaseUrl}</div>
+      <div className="text-sm font-medium">{t("backend.liveModeGuideTitle")}</div>
+      <div className="text-muted-foreground">{t("runtime.apiBaseUrl")}: {apiBaseUrl}</div>
       <ol className="list-decimal space-y-1 pl-4 text-muted-foreground">
-        <li>Start local tw-ai-investment-research backend service.</li>
-        <li>Set NEXT_PUBLIC_WORKSPACE_MODE=api.</li>
-        <li>Set NEXT_PUBLIC_API_BRIDGE_MODE=proxy.</li>
-        <li>Test backend connection from runtime settings.</li>
+        <li>{t("backend.liveStepStart")}</li>
+        <li>{t("backend.liveStepMode")}</li>
+        <li>{t("backend.liveStepBridge")}</li>
+        <li>{t("backend.liveStepTest")}</li>
       </ol>
-      <div className="rounded border border-yellow-500/30 bg-yellow-500/10 p-2 text-muted-foreground">
+      <div className="rounded border border-orange-500/30 bg-orange-500/10 p-2 text-muted-foreground">
         {fallbackActive
-          ? "Fallback is active: workspace will stay demo-safe in mock fallback mode if backend is unreachable."
-          : "Fallback-ready: workspace can switch to mock-safe mode if backend fails."}
+          ? t("backend.liveFallbackActive")
+          : t("backend.liveFallbackReady")}
       </div>
-      <div className="text-muted-foreground">No broker integration. No trading execution. Not financial advice.</div>
+      <div className="text-muted-foreground">{t("disclaimers.noTrading")}</div>
       {onTestConnection ? (
         <Button type="button" size="sm" variant="outline" onClick={onTestConnection} aria-label="Test backend live mode connection">
-          Test connection
+          {t("backend.testConnection")}
         </Button>
       ) : null}
     </div>

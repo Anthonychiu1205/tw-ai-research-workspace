@@ -21,6 +21,11 @@ const config: Config = {
         "primary-foreground": "hsl(220 22% 10%)",
         card: "hsl(222 30% 10%)",
         "card-foreground": "hsl(210 40% 96%)",
+        workspace: {
+          canvas: "hsl(224 33% 7%)",
+          panel: "hsl(222 30% 10%)",
+          section: "hsl(222 24% 12%)",
+        },
       },
     },
   },

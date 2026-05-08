@@ -1,9 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useI18n } from "@/lib/i18n/use-i18n";
+import { StatusBadge } from "@/components/ui/status-badge";
 
 const items = [{ href: "/workspace", key: "workspace" }, { href: "/reports", key: "reports" }, { href: "/strategies", key: "strategies" }, { href: "/traces", key: "traces" }] as const;
 
@@ -25,19 +25,19 @@ export function Sidebar({
   }
 
   return (
-    <aside className="w-64 border-r border-border p-3" data-testid="sidebar">
+    <aside className="w-72 border-r border-border/80 bg-workspace-panel px-4 py-4" data-testid="sidebar">
       <div className="mb-4 text-sm font-semibold">{t("app.shortTitle")}</div>
-      <div className="space-y-2">
+      <div className="space-y-1.5">
         {items.map((item) => (
-          <Link key={item.href} href={item.href} className="block rounded-md px-3 py-2 text-sm hover:bg-muted">
+          <Link key={item.href} href={item.href} className="block rounded-md px-3 py-2.5 text-sm hover:bg-muted">
             {t(`nav.${item.key}`)}
           </Link>
         ))}
       </div>
 
       <div className="mt-4 flex items-center gap-2">
-        <Badge>{t("runtime.mockFirst")}</Badge>
-        <Badge>{t("runtime.localOnly")}</Badge>
+        <StatusBadge tone="mock">{t("runtime.mockFirst")}</StatusBadge>
+        <StatusBadge tone="neutral">{t("runtime.localOnly")}</StatusBadge>
       </div>
 
       <div className="mt-4 space-y-2" id="quick-actions">
@@ -47,8 +47,8 @@ export function Sidebar({
         </Button>
       </div>
 
-      <div className="mt-4 space-y-2">
-        <div className="text-xs uppercase text-muted-foreground">{t("sessions.history")}</div>
+      <div className="mt-5 space-y-2">
+        <div className="text-xs uppercase tracking-wide text-muted-foreground">{t("sessions.history")}</div>
         {sessions.length === 0 ? (
           <div className="text-xs text-muted-foreground">{t("sessions.noSessions")}</div>
         ) : (
@@ -60,8 +60,8 @@ export function Sidebar({
         )}
       </div>
 
-      <div className="mt-4 space-y-2" id="artifacts">
-        <div className="text-xs uppercase text-muted-foreground">{t("artifacts.title")}</div>
+      <div className="mt-5 space-y-2" id="artifacts">
+        <div className="text-xs uppercase tracking-wide text-muted-foreground">{t("artifacts.title")}</div>
         {artifacts.length === 0 ? (
           <div className="text-xs text-muted-foreground">{t("artifacts.noArtifacts")}</div>
         ) : (
