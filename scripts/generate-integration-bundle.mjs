@@ -1,24 +1,48 @@
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 
 const WORKSPACE_PATH = process.cwd();
-const BACKEND_PATH = "/Volumes/DEV_USB/Projects/tw-ai-investment-research";
+const BACKEND_PATH = path.resolve(WORKSPACE_PATH, "../tw-ai-investment-research");
 const BASE_URL = process.env.TW_AI_RESEARCH_API_BASE_URL || "http://127.0.0.1:8000";
 
-function run(command, cwd = WORKSPACE_PATH) {
-  return execSync(command, { cwd, encoding: "utf-8", stdio: "pipe" }).trim();
-}
+function runCommand(command, args, options = {}) {
+  const result = spawnSync(command, args, {
+    cwd: options.cwd ?? WORKSPACE_PATH,
+    encoding: "utf-8",
+    stdio: "pipe",
+    shell: false,
+    env: options.env ?? process.env,
+  });
 
-function safeRun(command, cwd = WORKSPACE_PATH) {
-  try {
-    return { ok: true, output: run(command, cwd) };
-  } catch (error) {
+  if (result.error) {
     return {
       ok: false,
-      output: error instanceof Error ? error.message : "command_failed",
+      output: result.error.message,
     };
   }
+
+  if (result.status !== 0) {
+    return {
+      ok: false,
+      output: (result.stderr ?? result.stdout ?? "").toString().trim(),
+    };
+  }
+
+  return {
+    ok: true,
+    output: (result.stdout ?? "").toString().trim(),
+  };
+}
+
+function runNodeScript(scriptPath, args = [], env = {}) {
+  return runCommand(process.execPath, [scriptPath, ...args], {
+    cwd: WORKSPACE_PATH,
+    env: {
+      ...process.env,
+      ...env,
+    },
+  });
 }
 
 function readJsonIfExists(filePath) {
@@ -31,14 +55,25 @@ function readJsonIfExists(filePath) {
 }
 
 function getGitInfo(repoPath) {
-  const branch = safeRun("git branch --show-current", repoPath).output || "unknown";
-  const commit = safeRun("git log --oneline -1", repoPath).output || "unknown";
-  const status = safeRun("git status --short", repoPath).output || "";
+  if (!fs.existsSync(repoPath)) {
+    return {
+      path: repoPath,
+      branch: "unknown",
+      commit: "unknown",
+      statusClean: false,
+      error: "repo_not_found",
+    };
+  }
+
+  const branch = runCommand("git", ["branch", "--show-current"], { cwd: repoPath });
+  const commit = runCommand("git", ["log", "--oneline", "-1"], { cwd: repoPath });
+  const status = runCommand("git", ["status", "--short"], { cwd: repoPath });
+
   return {
     path: repoPath,
-    branch: String(branch).trim(),
-    commit: String(commit).trim(),
-    statusClean: String(status).trim().length === 0,
+    branch: branch.ok ? String(branch.output).trim() || "unknown" : "unknown",
+    commit: commit.ok ? String(commit.output).trim() || "unknown" : "unknown",
+    statusClean: status.ok ? String(status.output).trim().length === 0 : false,
   };
 }
 
@@ -109,11 +144,11 @@ function main() {
   const workspace = getGitInfo(WORKSPACE_PATH);
 
   const steps = [
-    safeRun("node scripts/local-stack.mjs doctor"),
-    safeRun("node scripts/check-backend-compatibility.mjs"),
-    safeRun("node scripts/evaluate-workspace.mjs"),
-    safeRun(`TW_AI_RESEARCH_API_BASE_URL=${BASE_URL} node scripts/check-live-backend-integration.mjs`),
-    safeRun(`TW_AI_RESEARCH_API_BASE_URL=${BASE_URL} node scripts/check-workspace-api-mode.mjs`),
+    runNodeScript("scripts/local-stack.mjs", ["doctor"]),
+    runNodeScript("scripts/check-backend-compatibility.mjs"),
+    runNodeScript("scripts/evaluate-workspace.mjs"),
+    runNodeScript("scripts/check-live-backend-integration.mjs", [], { TW_AI_RESEARCH_API_BASE_URL: BASE_URL }),
+    runNodeScript("scripts/check-workspace-api-mode.mjs", [], { TW_AI_RESEARCH_API_BASE_URL: BASE_URL }),
   ];
 
   const doctor = readJsonIfExists(path.resolve(WORKSPACE_PATH, "artifacts/local-stack-doctor.json"));

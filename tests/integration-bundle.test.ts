@@ -1,14 +1,29 @@
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { describe, expect, test } from "vitest";
 
+function runNodeScript(scriptPath: string, args: string[] = [], extraEnv: Record<string, string> = {}) {
+  return spawnSync(process.execPath, [scriptPath, ...args], {
+    cwd: process.cwd(),
+    stdio: "pipe",
+    encoding: "utf-8",
+    shell: false,
+    env: {
+      ...process.env,
+      ...extraEnv,
+    },
+  });
+}
+
 describe("integration bundle script", () => {
   test("script runs without backend", () => {
-    execSync("TW_AI_RESEARCH_API_BASE_URL=http://127.0.0.1:1 node scripts/generate-integration-bundle.mjs", {
-      cwd: process.cwd(),
-      stdio: "pipe",
+    const result = runNodeScript("scripts/generate-integration-bundle.mjs", [], {
+      TW_AI_RESEARCH_API_BASE_URL: "http://127.0.0.1:1",
+      CI: process.env.CI ?? "true",
     });
+    expect(result.error).toBeUndefined();
+    expect(result.status).toBe(0);
     expect(true).toBe(true);
   });
 

@@ -19,4 +19,11 @@ describe("workspace final audit", () => {
     const json = JSON.parse(fs.readFileSync(outPath, "utf-8"));
     expect(json.passed).toBe(true);
   });
+
+  test("does not depend on rg", () => {
+    const scriptPath = path.resolve(process.cwd(), "scripts/workspace-final-audit.mjs");
+    const source = fs.readFileSync(scriptPath, "utf-8");
+    expect(source.includes("rg --files")).toBe(false);
+    expect(source.includes("execSync(\"rg")).toBe(false);
+  });
 });

@@ -1,10 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { execSync } from "node:child_process";
+import { spawnSync } from "node:child_process";
 
 const WORKSPACE_PATH = process.cwd();
-const BACKEND_PATH = "/Volumes/DEV_USB/Projects/tw-ai-investment-research";
-const PYTHON_PATH = "/Users/ant/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/bin/python3";
+const BACKEND_PATH = path.resolve(WORKSPACE_PATH, "../tw-ai-investment-research");
 const DEFAULT_BASE_URL = process.env.TW_AI_RESEARCH_API_BASE_URL || "http://127.0.0.1:8000";
 
 function parseArgs(argv) {
@@ -39,42 +38,88 @@ function writeArtifact(filename, payload) {
   return outPath;
 }
 
-function runGit(cwd, args) {
-  return execSync(`git ${args}`, { cwd, encoding: "utf-8" }).trim();
+function runCommand(command, args, options = {}) {
+  const result = spawnSync(command, args, {
+    cwd: options.cwd ?? process.cwd(),
+    encoding: "utf-8",
+    stdio: "pipe",
+    shell: false,
+    env: options.env ?? process.env,
+  });
+
+  if (result.error) {
+    return {
+      ok: false,
+      code: null,
+      stdout: "",
+      stderr: result.error.message,
+    };
+  }
+
+  return {
+    ok: result.status === 0,
+    code: result.status,
+    stdout: (result.stdout ?? "").trim(),
+    stderr: (result.stderr ?? "").trim(),
+  };
+}
+
+function runGit(args, cwd = process.cwd()) {
+  return runCommand("git", args, { cwd });
 }
 
 function getGitInfo(cwd) {
-  const branch = runGit(cwd, "branch --show-current");
-  const commit = runGit(cwd, "log --oneline -1");
-  const status = runGit(cwd, "status --short");
-  const remotes = runGit(cwd, "remote -v");
-  const tags = runGit(cwd, "tag --list");
+  if (!fs.existsSync(cwd)) {
+    return {
+      path: cwd,
+      branch: "unknown",
+      latestCommit: "unknown",
+      statusClean: false,
+      statusShort: "",
+      remotes: [],
+      tags: [],
+      error: "repo_not_found",
+    };
+  }
+
+  const branchResult = runGit(["branch", "--show-current"], cwd);
+  const commitResult = runGit(["log", "--oneline", "-1"], cwd);
+  const statusResult = runGit(["status", "--short"], cwd);
+  const remotesResult = runGit(["remote", "-v"], cwd);
+  const tagsResult = runGit(["tag", "--list"], cwd);
+
+  const errors = [branchResult, commitResult, statusResult, remotesResult, tagsResult]
+    .filter((result) => !result.ok)
+    .map((result) => result.stderr)
+    .filter(Boolean);
+
+  const statusShort = statusResult.ok ? statusResult.stdout : "";
 
   return {
     path: cwd,
-    branch,
-    latestCommit: commit,
-    statusClean: status.length === 0,
-    statusShort: status,
-    remotes: remotes ? remotes.split("\n").filter(Boolean) : [],
-    tags: tags ? tags.split("\n").filter(Boolean) : [],
+    branch: branchResult.ok ? branchResult.stdout || "unknown" : "unknown",
+    latestCommit: commitResult.ok ? commitResult.stdout || "unknown" : "unknown",
+    statusClean: statusResult.ok ? statusShort.length === 0 : false,
+    statusShort,
+    remotes: remotesResult.ok && remotesResult.stdout ? remotesResult.stdout.split("\n").filter(Boolean) : [],
+    tags: tagsResult.ok && tagsResult.stdout ? tagsResult.stdout.split("\n").filter(Boolean) : [],
+    ...(errors.length > 0 ? { error: errors.join("; ") } : {}),
   };
 }
 
 function terminalCommands(baseUrl) {
   return {
     terminalA: [
-      "cd /Volumes/DEV_USB/Projects/tw-ai-investment-research",
-      `PYTHON=${PYTHON_PATH}`,
-      "$PYTHON -m uvicorn apps.api.main:app --host 127.0.0.1 --port 8000",
+      `cd ${BACKEND_PATH}`,
+      "python3 -m uvicorn apps.api.main:app --host 127.0.0.1 --port 8000",
     ],
     terminalB: [
-      "cd /Volumes/DEV_USB/Projects/tw-ai-research-workspace",
+      `cd ${WORKSPACE_PATH}`,
       `TW_AI_RESEARCH_API_BASE_URL=${baseUrl} node scripts/check-live-backend-integration.mjs --strict`,
       `TW_AI_RESEARCH_API_BASE_URL=${baseUrl} node scripts/check-workspace-api-mode.mjs --strict`,
     ],
     terminalC: [
-      "cd /Volumes/DEV_USB/Projects/tw-ai-research-workspace",
+      `cd ${WORKSPACE_PATH}`,
       "NEXT_PUBLIC_WORKSPACE_MODE=api \\",
       "NEXT_PUBLIC_API_BRIDGE_MODE=proxy \\",
       `TW_AI_RESEARCH_API_BASE_URL=${baseUrl} \\`,
@@ -154,25 +199,27 @@ function safeReadJson(filePath) {
   }
 }
 
-function runIntegrationChecks(baseUrl, strict, asJson) {
-  const strictFlag = strict ? " --strict" : "";
-  try {
-    execSync(`TW_AI_RESEARCH_API_BASE_URL=${baseUrl} node scripts/check-live-backend-integration.mjs${strictFlag}`, {
-      cwd: WORKSPACE_PATH,
-      stdio: "pipe",
-    });
-  } catch (error) {
-    if (strict) throw error;
-  }
+function runNodeScript(scriptPath, args = [], options = {}) {
+  return runCommand(process.execPath, [scriptPath, ...args], {
+    cwd: options.cwd ?? WORKSPACE_PATH,
+    env: {
+      ...process.env,
+      ...(options.env ?? {}),
+    },
+  });
+}
 
-  try {
-    execSync(`TW_AI_RESEARCH_API_BASE_URL=${baseUrl} node scripts/check-workspace-api-mode.mjs${strictFlag}`, {
-      cwd: WORKSPACE_PATH,
-      stdio: "pipe",
-    });
-  } catch (error) {
-    if (strict) throw error;
-  }
+function runIntegrationChecks(baseUrl, strict, asJson) {
+  const liveResult = runNodeScript(
+    "scripts/check-live-backend-integration.mjs",
+    strict ? ["--strict"] : [],
+    { env: { TW_AI_RESEARCH_API_BASE_URL: baseUrl } },
+  );
+  const apiModeResult = runNodeScript(
+    "scripts/check-workspace-api-mode.mjs",
+    strict ? ["--strict"] : [],
+    { env: { TW_AI_RESEARCH_API_BASE_URL: baseUrl } },
+  );
 
   const liveReport = safeReadJson(path.resolve(WORKSPACE_PATH, "artifacts/live-backend-integration-report.json"));
   const apiModeReport = safeReadJson(path.resolve(WORKSPACE_PATH, "artifacts/workspace-api-mode-report.json"));
@@ -182,8 +229,20 @@ function runIntegrationChecks(baseUrl, strict, asJson) {
     strict,
     liveBackendIntegration: liveReport,
     workspaceApiMode: apiModeReport,
-    passed: Boolean((liveReport?.passed ?? !strict) && (apiModeReport?.passed ?? !strict)),
+    passed:
+      Boolean(liveResult.ok && apiModeResult.ok) &&
+      Boolean((liveReport?.passed ?? !strict) && (apiModeReport?.passed ?? !strict)),
     note: "Integration checks are local-stack readiness checks only. No trading or broker execution.",
+    scriptStatus: {
+      liveBackendIntegration: {
+        ok: liveResult.ok,
+        code: liveResult.code,
+      },
+      workspaceApiMode: {
+        ok: apiModeResult.ok,
+        code: apiModeResult.code,
+      },
+    },
   };
   const outPath = writeArtifact("local-stack-integration-report.json", report);
   if (asJson) {
@@ -200,51 +259,99 @@ function exists(filePath) {
 }
 
 function runDoctor(asJson) {
-  const checks = {
-    repos: {
-      backendExists: fs.existsSync(BACKEND_PATH),
-      workspaceExists: fs.existsSync(WORKSPACE_PATH),
-    },
-    runtimes: {
-      nodeAvailable: Boolean(process.version),
-      npmVersion: execSync("npm --version", { cwd: WORKSPACE_PATH, encoding: "utf-8" }).trim(),
-      pythonRuntimeExists: fs.existsSync(PYTHON_PATH),
-    },
-    backendScripts: {
-      smoke: fs.existsSync(path.resolve(BACKEND_PATH, "scripts/smoke_test.sh")),
-      releaseCheck: fs.existsSync(path.resolve(BACKEND_PATH, "scripts/release_check.py")),
-      localApiSurface: fs.existsSync(path.resolve(BACKEND_PATH, "scripts/check_local_api_surface.py")),
-    },
-    workspaceScripts: {
-      liveIntegration: exists("scripts/check-live-backend-integration.mjs"),
-      apiMode: exists("scripts/check-workspace-api-mode.mjs"),
-      smoke: exists("scripts/smoke-test.mjs"),
-      finalAudit: exists("scripts/workspace-final-audit.mjs"),
-    },
-  };
+  const warnings = [];
+  const checks = [];
 
-  const passed =
-    Object.values(checks.repos).every(Boolean) &&
-    checks.runtimes.nodeAvailable &&
-    checks.runtimes.pythonRuntimeExists &&
-    Object.values(checks.backendScripts).every(Boolean) &&
-    Object.values(checks.workspaceScripts).every(Boolean);
+  const workspaceRequiredChecks = [
+    { name: "workspace_path_exists", passed: fs.existsSync(WORKSPACE_PATH), message: WORKSPACE_PATH },
+    { name: "workspace_package_json", passed: exists("package.json"), message: "package.json" },
+    { name: "workspace_app_dir", passed: exists("app"), message: "app/" },
+    {
+      name: "workspace_live_integration_script",
+      passed: exists("scripts/check-live-backend-integration.mjs"),
+      message: "scripts/check-live-backend-integration.mjs",
+    },
+    {
+      name: "workspace_api_mode_script",
+      passed: exists("scripts/check-workspace-api-mode.mjs"),
+      message: "scripts/check-workspace-api-mode.mjs",
+    },
+  ];
+
+  for (const check of workspaceRequiredChecks) {
+    checks.push({
+      scope: "workspace",
+      ...check,
+      severity: "required",
+    });
+  }
+
+  const npmVersionResult = runCommand("npm", ["--version"], { cwd: WORKSPACE_PATH });
+  checks.push({
+    scope: "workspace",
+    name: "node_available",
+    passed: Boolean(process.version),
+    message: process.version,
+    severity: "required",
+  });
+  checks.push({
+    scope: "workspace",
+    name: "npm_available",
+    passed: npmVersionResult.ok,
+    message: npmVersionResult.ok ? npmVersionResult.stdout : npmVersionResult.stderr,
+    severity: "required",
+  });
+
+  const backendOptionalChecks = [
+    { name: "backend_repo_exists", passed: fs.existsSync(BACKEND_PATH), message: BACKEND_PATH },
+    {
+      name: "backend_smoke_script",
+      passed: fs.existsSync(path.resolve(BACKEND_PATH, "scripts/smoke_test.sh")),
+      message: "scripts/smoke_test.sh",
+    },
+    {
+      name: "backend_release_check_script",
+      passed: fs.existsSync(path.resolve(BACKEND_PATH, "scripts/release_check.py")),
+      message: "scripts/release_check.py",
+    },
+    {
+      name: "backend_local_api_surface_script",
+      passed: fs.existsSync(path.resolve(BACKEND_PATH, "scripts/check_local_api_surface.py")),
+      message: "scripts/check_local_api_surface.py",
+    },
+  ];
+
+  for (const check of backendOptionalChecks) {
+    checks.push({
+      scope: "backend_sibling",
+      ...check,
+      severity: "optional",
+    });
+    if (!check.passed) {
+      warnings.push(`[backend_sibling] ${check.name} missing (${check.message})`);
+    }
+  }
+
+  const requiredPassed = checks
+    .filter((check) => check.severity === "required")
+    .every((check) => check.passed);
 
   const report = {
     checkedAt: new Date().toISOString(),
-    passed,
+    passed: requiredPassed,
+    warnings,
     checks,
-    warning: "Backend service does not need to be running for doctor checks.",
+    warning: "Backend sibling repository is optional for CI doctor checks.",
   };
 
   const outPath = writeArtifact("local-stack-doctor.json", report);
   if (asJson) {
     console.log(JSON.stringify({ ...report, outPath }, null, 2));
   } else {
-    console.log(`local-stack doctor: ${passed ? "OK" : "FAILED"} (${outPath})`);
+    console.log(`local-stack doctor: ${requiredPassed ? "OK" : "FAILED"} (${outPath})`);
   }
 
-  if (!passed) process.exit(1);
+  if (!requiredPassed) process.exit(1);
 }
 
 function runSummary(asJson) {
