@@ -9,7 +9,7 @@ const src = path.resolve(process.cwd(), "../tw-ai-investment-research/artifacts/
 const dest = path.resolve(process.cwd(), "fixtures/demo");
 
 if (!fs.existsSync(src)) {
-  console.log("sync-demo-artifacts: source repo artifacts/demo not found, keep local fixtures");
+  console.log("sync-demo-artifacts: dry-run=true; source repo artifacts/demo not found, keep local fixtures");
   process.exit(0);
 }
 

@@ -43,6 +43,9 @@ const forbiddenPhrases = [
 ];
 
 const allowNegativeContext = ["no broker integration", "not broker integration"];
+const scanRoots = ["app", "components", "lib", "docs", "README.md"];
+const textExtensions = new Set([".ts", ".tsx", ".js", ".mjs", ".md", ".json", ".css"]);
+const excludedDirs = new Set(["node_modules", ".next", ".git", "coverage", "dist", "build", "artifacts"]);
 
 function existsAll(items) {
   return items.map((file) => ({ file, exists: fs.existsSync(path.resolve(root, file)) }));
@@ -53,19 +56,52 @@ function readPackageScripts() {
   return pkg.scripts ?? {};
 }
 
-function scanForbidden() {
-  const dirs = ["app", "components", "lib", "docs", "README.md"];
-  const issues = [];
+function isTextFile(filePath) {
+  return textExtensions.has(path.extname(filePath).toLowerCase());
+}
 
-  const files = execSync(
-    `rg --files ${dirs
-      .map((d) => `"${d}"`)
-      .join(" ")}`,
-    { cwd: root, encoding: "utf-8" },
-  )
-    .split("\n")
-    .map((line) => line.trim())
-    .filter(Boolean);
+function walkFiles(pathsToScan) {
+  const collected = [];
+
+  function walk(targetPath) {
+    if (!fs.existsSync(targetPath)) {
+      console.warn(`workspace-final-audit: scan target missing, skip -> ${path.relative(root, targetPath)}`);
+      return;
+    }
+
+    const stat = fs.statSync(targetPath);
+    if (stat.isDirectory()) {
+      const entries = fs.readdirSync(targetPath, { withFileTypes: true });
+      for (const entry of entries) {
+        if (entry.isDirectory() && excludedDirs.has(entry.name)) {
+          continue;
+        }
+        walk(path.join(targetPath, entry.name));
+      }
+      return;
+    }
+
+    if (!stat.isFile()) {
+      return;
+    }
+
+    if (!isTextFile(targetPath)) {
+      return;
+    }
+
+    collected.push(path.relative(root, targetPath));
+  }
+
+  for (const item of pathsToScan) {
+    walk(path.resolve(root, item));
+  }
+
+  return collected.sort();
+}
+
+function scanForbidden() {
+  const issues = [];
+  const files = walkFiles(scanRoots);
 
   for (const file of files) {
     if (file.startsWith("lib/evaluation/")) {
